@@ -800,6 +800,8 @@ input[type='search']::-webkit-search-decoration
     cursor pointer
   span + span
     margin-left 16px
+body.desktop .q-select-highlight
+  background $item-highlight-color !important
 ul.breadcrumb
   list-style none
   display inline-flex
@@ -869,6 +871,13 @@ body.desktop ul.breadcrumb a
       border-left-color transparent
     &:after
       border-left-color $breadcrumb-hover
+.q-breadcrumbs
+  .q-icon, .q-breadcrumbs-separator
+    font-size 150%
+.q-breadcrumbs-last a
+  pointer-events none
+[dir=rtl] .q-breadcrumbs-separator .q-icon
+  transform scaleX(-1) /* rtl:ignore */
 button-round-factor($size)
   if $size == 'small'
     .54
@@ -1376,6 +1385,91 @@ $checkbox-size = 21px
     margin-bottom 0
 .q-collapsible.router-link-active > .q-item
   background $collapsible-active-color
+.q-color
+  max-width 100vw
+  border 1px solid $grey-4
+  display inline-block
+  width 240px
+  background white
+.q-color-saturation
+  width 100%
+  height 123px
+.q-color-saturation-white
+  background linear-gradient(to right, white, rgba(255, 255, 255, 0))
+.q-color-saturation-black
+  background linear-gradient(to top, black, rgba(0, 0, 0, 0))
+.q-color-saturation-circle
+  cursor grab
+  width 10px
+  height 10px
+  box-shadow 0 0 0 1.5px white, inset 0 0 1px 1px rgba(0, 0, 0, .3), 0 0 1px 2px rgba(0, 0, 0, .4)
+  border-radius 50%
+  transform translate(-5px, -5px)
+.q-color-swatch, .q-color-alpha .q-slider-track
+  background-image url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAH0lEQVQoU2NkYGAwZkAFZ5G5jPRRgOYEVDeB3EBjBQBOZwTVugIGyAAAAABJRU5ErkJggg==') !important
+.q-color-swatch
+  position relative
+  width 32px
+  height 32px
+  border-radius 50%
+  background white
+.q-color-hue .q-slider-track
+  border-radius 2px
+  background linear-gradient(to right, #f00 0%, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00 100%) 
+  opacity 1
+  height $dot-size * .8
+  &.active-track
+    opacity 0
+.q-color-alpha .q-slider-track
+  position relative
+  background white
+  opacity 1
+  height $dot-size * .8
+  &:after
+    content ''
+    position absolute
+    left 0
+    right 0
+    top 0
+    bottom 0
+    background linear-gradient(90deg, rgba(255, 255, 255, 0), $grey-7)
+  &.active-track
+    opacity 0
+.q-color-sliders
+  height 66px
+  .q-slider
+    height 24px
+  .q-slider-handle
+    height 18px
+    width 18px
+    box-shadow 0 1px 4px 0 rgba(0, 0, 0, .37)
+  .q-slider-ring
+    display none
+.q-color-inputs
+  font-size 11px
+  color $grey-7
+  input
+    border 1px solid $grey-4
+    outline 0
+.q-color-padding
+  padding 0 2px
+.q-color-label
+  padding-top 4px
+.q-color-dark
+  background black
+  border 1px solid $grey-9
+  input
+    background black
+    color $light
+    color var(--q-color-light)
+    border 1px solid $dark
+    border 1px solid var(--q-color-dark)
+  .q-color-inputs
+    color $light
+    color var(--q-color-light)
+  .q-color-swatch
+    border 1px solid $dark
+    border 1px solid var(--q-color-dark)
 .q-data-table
   font-size $datatable-font-size
   border $datatable-border
@@ -2038,6 +2132,21 @@ input.q-input-target
   visibility hidden
   pointer-events none
   height auto
+.q-jumbotron
+  position relative
+  padding $jumbotron-padding
+  border-radius $jumbotron-border-radius
+  background-color $jumbotron-bg
+  background-repeat no-repeat
+  background-size cover
+.q-jumbotron-dark
+  color $jumbotron-dark-color
+  background-color $jumbotron-dark-bg
+  hr.q-hr
+    background rgba(255, 255, 255, .36)
+@media (min-width $breakpoint-md-min)
+  .q-jumbotron
+    padding $jumbotron-large-padding
 .q-knob, .q-knob > div
   position relative
   display inline-block
@@ -2600,6 +2709,8 @@ $radio-size = 21px
   background rgba(255, 255, 255, .25)
   flex 1 1 auto
   margin 0
+body.desktop .q-select-highlight
+  background $item-highlight-color !important
 $slider-height              = 28px
 $slider-track-height        = 2px
 $slider-mark-height         = 10px
@@ -3002,6 +3113,328 @@ body.mobile .q-tabs-scroller
   overflow-x auto
   will-change scroll-position
   -webkit-overflow-scrolling touch
+.q-table-container
+  border-radius $table-border-radius
+  box-shadow $table-box-shadow
+  position relative
+  &.fullscreen
+    background-color inherit
+.q-table-top
+  min-height 64px
+  padding 8px 24px
+  &:before
+    content ''
+    position absolute
+    pointer-events none
+    top 0
+    right 0
+    bottom 0
+    left 0
+    opacity .2
+    transition $table-transition
+  .q-table-control
+    min-height 36px
+    padding 8px 0
+    flex-wrap wrap
+.q-table-title
+  font-size 20px
+  letter-spacing 0.005em
+  font-weight 400
+.q-table-separator
+  min-width 8px !important
+.q-table-nodata .q-icon
+  font-size 200%
+  padding-right 15px
+.q-table-progress
+  height 0 !important
+  td
+    padding 0 !important
+    border-bottom 1px solid transparent !important
+  .q-progress
+    position absolute
+    height 2px
+    bottom 0
+.q-table-middle
+  max-width 100%
+.q-table-bottom
+  min-height 48px
+  padding 4px 14px 4px 24px
+  font-size 12px
+  .q-table-control
+    min-height 24px
+.q-table-control
+  display flex
+  align-items center
+.q-table-sort-icon
+  transition $table-transition
+  will-change opacity, transform
+  opacity 0
+  font-size 120%
+.q-table-sort-icon-left,
+.q-table-sort-icon-center
+  margin-left 4px
+.q-table-sort-icon-right
+  margin-right 4px
+.q-table
+  width 100%
+  max-width 100%
+  border-collapse collapse
+  border-spacing 0
+  thead tr
+    height 56px
+  th
+    font-weight 500
+    font-size 12px
+    transition $table-transition
+    user-select none
+    &.sortable
+      cursor pointer
+      &:hover .q-table-sort-icon
+        opacity .5
+    &.sorted .q-table-sort-icon
+      opacity 1 !important
+    &.sort-desc .q-table-sort-icon
+      transform rotate(180deg)
+  tbody tr
+    transition $table-transition
+    will-change background
+  th, td
+    white-space nowrap
+    padding 7px 24px
+    position relative
+  thead, td, th
+    border-style solid
+    border-width 0
+  tbody td
+    height 48px
+    font-weight 400
+    font-size 13px
+  .q-radial-ripple
+    margin-bottom -100%
+.q-table-col-auto-width
+  width 1px
+.q-table-bottom-item
+  margin-right 24px
+.q-table-horizontal-separator
+  thead, tbody td
+    border-width 0 0 1px 0
+.q-table-vertical-separator
+  thead
+    border-width 0 0 1px 0
+  td
+    border-width 0 0 0 1px
+  td:first-child
+    border-left 0
+.q-table-cell-separator
+  td
+    border-width 1px
+  td:first-child
+    border-left 0
+  td:last-child
+    border-right 0
+table-dense()
+  .q-table-top
+    min-height 48px
+  .q-table-top, .q-table-bottom
+    padding-left 8px
+    padding-right 8px
+  .q-table-bottom
+    min-height 42px
+  .q-table-sort-icon
+    font-size 110%
+  .q-table
+    th, td
+      padding 4px 8px
+    thead tr
+      height 40px
+    tbody td
+      height 28px
+  .q-table-bottom-item
+    margin-right 8px
+.q-table-dense
+  table-dense()
+@media (max-width $breakpoint-sm-max)
+  table-dense()
+.q-table-bottom 
+  color $table-header-color
+  border-top 1px solid $table-border-color
+.q-table 
+  color $table-color
+  thead, tr, th, td
+    border-color $table-border-color
+  th
+    color $table-header-color
+    &.sortable:hover, &.sorted
+      color $table-color
+  tbody tr
+    &.selected
+      background $table-selected-background
+    &:hover
+      background $table-hover-background
+.q-table-dark
+  color $table-dark-color
+  .q-table-bottom, .q-table-top
+    color $table-dark-header-color
+    border-top 1px solid $table-dark-border-color
+  thead, tr, th, td
+    border-color $table-dark-border-color
+  th
+    color $table-dark-header-color
+    &.sortable:hover, &.sorted
+      color $table-dark-color
+  tbody tr
+    &.selected
+      background $table-dark-selected-background
+    &:hover
+      background $table-dark-hover-background
+.q-timeline
+  padding 0
+  width 100%
+  list-style none
+  h6
+    line-height inherit
+.q-timeline-title
+  margin-top 0
+  margin-bottom 16px
+.q-timeline-subtitle
+  font-size 12px
+  margin-bottom 8px
+  opacity .4
+  text-transform uppercase
+  letter-spacing 1px
+  font-weight 700
+.q-timeline-dot
+  position absolute
+  top 0
+  bottom 0
+  left 0
+  width 15px
+  &:before, &:after
+    content ''
+    background currentColor
+    display block
+    position absolute
+  &:before
+    border 3px solid transparent
+    border-radius 100%
+    height 15px
+    width 15px
+    top 4px
+    left 0
+    transition background .3s ease-in-out, border .3s ease-in-out
+  &:after
+    width 3px
+    opacity .4
+    top 24px
+    bottom 0
+    left 6px
+.q-timeline-entry-with-icon
+  .q-timeline-dot
+    width 31px
+    left -8px
+    &:before
+      height 31px
+      width 31px
+    &:after
+      top 41px
+      left 14px
+    .q-icon
+      position absolute
+      top 8px
+      left 4px
+      font-size 23px
+      color white
+      transition color .3s ease-in-out
+  .q-timeline-subtitle
+    padding-top 8px
+.q-timeline-dark
+  color white
+  .q-timeline-subtitle
+    opacity .7
+.q-timeline-entry
+  padding-left 40px
+  position relative
+  line-height 22px
+  &:last-child
+    padding-bottom 0
+    .q-timeline-dot:after
+      content none
+  &:hover
+    .q-timeline-dot:before
+      background transparent
+      border 3px solid currentColor
+  &.q-timeline-entry-with-icon:hover .q-timeline-dot .q-icon
+    color currentColor
+.q-timeline-content
+  padding-bottom 24px
+.q-timeline-heading
+  position relative
+  &:first-child .q-timeline-heading-title
+    padding-top 0
+  &:last-child .q-timeline-heading-title
+    padding-bottom 0
+.q-timeline-heading-title
+  padding 32px 0
+  margin 0
+@media (min-width $breakpoint-md-min) and (max-width $breakpoint-md-max)
+  .q-timeline-heading
+    display table-row
+    font-size 200%
+    > div
+      display table-cell
+  .q-timeline-heading-title
+    margin-left -50px
+  .q-timeline
+    display table
+  .q-timeline-entry
+    display table-row
+    padding 0
+  .q-timeline-subtitle, .q-timeline-dot, .q-timeline-content
+    display table-cell
+    vertical-align top
+  .q-timeline-subtitle
+    text-align right
+    width 35%
+  .q-timeline-dot
+    position relative
+  .q-timeline-content
+    padding-left 30px
+  .q-timeline-entry-with-icon .q-timeline-content
+    padding-top 8px
+  .q-timeline-subtitle
+    padding-right 30px
+@media (min-width $breakpoint-lg-min)
+  .q-timeline-heading-title
+    text-align center
+    margin-left 0
+  .q-timeline-entry, .q-timeline-subtitle, .q-timeline-dot, .q-timeline-content
+    display block
+    margin 0
+    padding 0
+  .q-timeline-dot
+    position absolute
+    left 50%
+    margin-left -7.15px
+  .q-timeline-entry-with-icon .q-timeline-dot
+    left 50%
+    margin-left -15px
+  .q-timeline-subtitle, .q-timeline-content
+    width 50%
+  .q-timeline-entry-left .q-timeline-content,
+  .q-timeline-entry-right .q-timeline-subtitle
+    float left
+    padding-right 30px
+    text-align right
+  .q-timeline-entry-left .q-timeline-subtitle,
+  .q-timeline-entry-right .q-timeline-content
+    float right
+    text-align left
+    padding-left 30px
+  .q-timeline-entry-with-icon .q-timeline-content
+    padding-top 8px
+  .q-timeline-entry
+    padding-bottom 24px
+    overflow hidden
 .q-toast-container
   pointer-events none
   position fixed
