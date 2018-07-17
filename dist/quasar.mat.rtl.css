@@ -3721,7 +3721,6 @@ body.mobile .q-tabs-scroller {
 .q-table {
   width: 100%;
   max-width: 100%;
-  border-collapse: collapse;
   border-spacing: 0;
 }
 .q-table thead tr {
@@ -3760,11 +3759,6 @@ body.mobile .q-tabs-scroller {
 .q-table th {
   border-style: solid;
   border-width: 0;
-}
-.q-table tbody td {
-  height: 48px;
-  font-weight: 400;
-  font-size: 13px;
 }
 .q-table .q-radial-ripple {
   margin-bottom: -100%;
