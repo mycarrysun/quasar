@@ -87,7 +87,7 @@ export function getPositions (anchor, target) {
   }
 }
 
-export function repositionIfNeeded (anchor, target, selfOrigin, anchorOrigin, targetPosition) {
+export function applyAutoPositionIfNeeded (anchor, target, selfOrigin, anchorOrigin, targetPosition) {
   const {positions, anchorPos} = getPositions(anchorOrigin, selfOrigin)
 
   if (targetPosition.top < 0 || targetPosition.top + target.bottom > window.innerHeight) {
@@ -114,7 +114,6 @@ export function repositionIfNeeded (anchor, target, selfOrigin, anchorOrigin, ta
       }
     }
   }
-
   return targetPosition
 }
 
@@ -122,7 +121,17 @@ export function parseHorizTransformOrigin (pos) {
   return pos === 'middle' ? 'center' : pos
 }
 
-export function setPosition ({el, animate, anchorEl, anchorOrigin, selfOrigin, maxHeight, event, anchorClick, touchPosition, offset}) {
+export function getTransformProperties ({selfOrigin}) {
+  let
+    vert = selfOrigin.vertical,
+    horiz = parseHorizTransformOrigin(selfOrigin.horizontal)
+
+  return {
+    'transform-origin': vert + ' ' + horiz + ' 0px'
+  }
+}
+
+export function setPosition ({el, anchorEl, anchorOrigin, selfOrigin, maxHeight, event, anchorClick, touchPosition, offset}) {
   let anchor
   el.style.maxHeight = maxHeight || '65vh'
 
@@ -140,16 +149,10 @@ export function setPosition ({el, animate, anchorEl, anchorOrigin, selfOrigin, m
     left: anchor[anchorOrigin.horizontal] - target[selfOrigin.horizontal]
   }
 
-  targetPosition = repositionIfNeeded(anchor, target, selfOrigin, anchorOrigin, targetPosition)
+  targetPosition = applyAutoPositionIfNeeded(anchor, target, selfOrigin, anchorOrigin, targetPosition)
 
   el.style.top = Math.max(0, targetPosition.top) + 'px'
   el.style.left = Math.max(0, targetPosition.left) + 'px'
-
-  if (animate) {
-    const directions = targetPosition.top < anchor.top ? ['up', 'down'] : ['down', 'up']
-    el.classList.add(`animate-popup-${directions[0]}`)
-    el.classList.remove(`animate-popup-${directions[1]}`)
-  }
 }
 
 export function positionValidator (pos) {

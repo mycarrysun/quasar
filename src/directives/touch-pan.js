@@ -1,7 +1,7 @@
-import { position, leftClick, listenOpts } from '../utils/event'
+import { position } from '../utils/event'
 
 function getDirection (mod) {
-  if (!mod.horizontal && !mod.vertical) {
+  if (Object.keys(mod).length === 0) {
     return {
       horizontal: true,
       vertical: true
@@ -17,6 +17,21 @@ function getDirection (mod) {
   })
 
   return dir
+}
+
+function updateClasses (el, dir, scroll) {
+  el.classList.add('q-touch')
+
+  if (!scroll) {
+    if (dir.horizontal && !dir.vertical) {
+      el.classList.add('q-touch-y')
+      el.classList.remove('q-touch-x')
+    }
+    else if (!dir.horizontal && dir.vertical) {
+      el.classList.add('q-touch-x')
+      el.classList.remove('q-touch-y')
+    }
+  }
 }
 
 function processChanges (evt, ctx, isFinal) {
@@ -74,104 +89,95 @@ function shouldTrigger (ctx, changes) {
 export default {
   name: 'touch-pan',
   bind (el, binding) {
-    const
-      mouse = !binding.modifiers.noMouse,
-      stopPropagation = binding.modifiers.stop,
-      preventDefault = binding.modifiers.prevent,
-      evtOpts = preventDefault || binding.modifiers.mightPrevent ? null : listenOpts.passive
+    const mouse = !binding.modifiers.nomouse
 
     let ctx = {
       handler: binding.value,
+      scroll: binding.modifiers.scroll,
       direction: getDirection(binding.modifiers),
 
       mouseStart (evt) {
-        if (leftClick(evt)) {
-          document.addEventListener('mousemove', ctx.move, evtOpts)
-          document.addEventListener('mouseup', ctx.mouseEnd, evtOpts)
-          ctx.start(evt)
+        if (mouse) {
+          document.addEventListener('mousemove', ctx.mouseMove)
+          document.addEventListener('mouseup', ctx.mouseEnd)
         }
+        ctx.start(evt)
       },
-      mouseEnd (evt) {
-        document.removeEventListener('mousemove', ctx.move, evtOpts)
-        document.removeEventListener('mouseup', ctx.mouseEnd, evtOpts)
-        ctx.end(evt)
-      },
-
       start (evt) {
-        const pos = position(evt)
-
+        let pos = position(evt)
         ctx.event = {
           x: pos.left,
           y: pos.top,
           time: new Date().getTime(),
-          detected: ctx.direction.horizontal && ctx.direction.vertical,
-          abort: false,
+          detected: false,
+          prevent: ctx.direction.horizontal && ctx.direction.vertical,
           isFirst: true,
           lastX: pos.left,
           lastY: pos.top
         }
-
-        if (ctx.event.detected) {
-          stopPropagation && evt.stopPropagation()
-          preventDefault && evt.preventDefault()
-        }
+      },
+      mouseMove (evt) {
+        ctx.event.prevent = true
+        ctx.move(evt)
       },
       move (evt) {
-        if (ctx.event.abort) {
-          return
-        }
-
-        if (ctx.event.detected) {
-          stopPropagation && evt.stopPropagation()
-          preventDefault && evt.preventDefault()
-
-          const changes = processChanges(evt, ctx, false)
+        if (ctx.event.prevent) {
+          if (!ctx.scroll) {
+            evt.preventDefault()
+          }
+          let changes = processChanges(evt, ctx, false)
           if (shouldTrigger(ctx, changes)) {
             ctx.handler(changes)
             ctx.event.lastX = changes.position.left
             ctx.event.lastY = changes.position.top
             ctx.event.isFirst = false
           }
-
           return
         }
-
-        const
-          pos = position(evt),
-          distX = Math.abs(pos.left - ctx.event.x),
-          distY = Math.abs(pos.top - ctx.event.y)
-
-        if (distX === distY) {
+        if (ctx.event.detected) {
           return
         }
 
         ctx.event.detected = true
-        ctx.event.abort = ctx.direction.vertical
-          ? distX > distY
-          : distX < distY
+        let
+          pos = position(evt),
+          distX = pos.left - ctx.event.x,
+          distY = pos.top - ctx.event.y
 
-        ctx.move(evt)
+        if (ctx.direction.horizontal && !ctx.direction.vertical) {
+          if (Math.abs(distX) > Math.abs(distY)) {
+            evt.preventDefault()
+            ctx.event.prevent = true
+          }
+        }
+        else if (Math.abs(distX) < Math.abs(distY)) {
+          ctx.event.prevent = true
+        }
+      },
+      mouseEnd (evt) {
+        if (mouse) {
+          document.removeEventListener('mousemove', ctx.mouseMove)
+          document.removeEventListener('mouseup', ctx.mouseEnd)
+        }
+        ctx.end(evt)
       },
       end (evt) {
-        if (ctx.event.abort || !ctx.event.detected || ctx.event.isFirst) {
+        if (!ctx.event.prevent || ctx.event.isFirst) {
           return
         }
 
-        stopPropagation && evt.stopPropagation()
-        preventDefault && evt.preventDefault()
         ctx.handler(processChanges(evt, ctx, true))
       }
     }
 
     el.__qtouchpan = ctx
-    el.classList.add('q-touch')
-
+    updateClasses(el, ctx.direction, ctx.scroll)
     if (mouse) {
-      el.addEventListener('mousedown', ctx.mouseStart, evtOpts)
+      el.addEventListener('mousedown', ctx.mouseStart)
     }
-    el.addEventListener('touchstart', ctx.start, evtOpts)
-    el.addEventListener('touchmove', ctx.move, evtOpts)
-    el.addEventListener('touchend', ctx.end, evtOpts)
+    el.addEventListener('touchstart', ctx.start)
+    el.addEventListener('touchmove', ctx.move)
+    el.addEventListener('touchend', ctx.end)
   },
   update (el, binding) {
     if (binding.oldValue !== binding.value) {
@@ -180,15 +186,10 @@ export default {
   },
   unbind (el, binding) {
     let ctx = el.__qtouchpan
-    if (!ctx) { return }
-    const evtOpts = binding.modifiers.prevent ? null : listenOpts.passive
-
-    el.removeEventListener('mousedown', ctx.mouseStart, evtOpts)
-
-    el.removeEventListener('touchstart', ctx.start, evtOpts)
-    el.removeEventListener('touchmove', ctx.move, evtOpts)
-    el.removeEventListener('touchend', ctx.end, evtOpts)
-
+    el.removeEventListener('touchstart', ctx.start)
+    el.removeEventListener('mousedown', ctx.mouseStart)
+    el.removeEventListener('touchmove', ctx.move)
+    el.removeEventListener('touchend', ctx.end)
     delete el.__qtouchpan
   }
 }

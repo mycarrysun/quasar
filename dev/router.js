@@ -19,15 +19,14 @@ function component (path) {
 let routes = [
   {path: '/', component: load('index')},
   {
-    path: '/tabs',
-    component: load('components/tabs-playground'),
+    path: '/test-layout',
+    component: load('test-layout/layout'),
     children: [
-      { path: 'a' },
-      { path: 'a/a' },
-      { path: 'a/b' },
-      { path: 'b' },
-      { path: 'b/a' },
-      { path: 'c' }
+      {path: 'about', component: load('test-layout/about')},
+      {path: 'layout', redirect: '/test-layout/about'},
+      {path: 'toolbar', component: load('test-layout/toolbar')},
+      {path: 'tabs', component: load('test-layout/tabs')},
+      {path: 'drawer', component: load('test-layout/drawer')}
     ]
   },
   {
@@ -38,27 +37,16 @@ let routes = [
       {path: 'b', component: load('web-tests/b')},
       {path: 'c', component: load('web-tests/c')}
     ]
-  },
-  {
-    path: '/layout-quick',
-    component: load('new-layout/new-layout'),
-    children: [
-      {path: '', redirect: 'default'},
-      {path: 'default', component: load('new-layout/pages/default')},
-      {path: 'a', component: load('new-layout/pages/a')},
-      {path: 'b', component: load('new-layout/pages/b')},
-      {path: 'c', component: load('new-layout/pages/c')}
-    ]
   }
 ]
 
-pages.forEach(page => {
+pages.filter(page => page.indexOf('test-layout') === -1).forEach(page => {
   routes.push(component(page))
 })
 
-export function createRouter () {
-  return new VueRouter({
-    mode: 'history',
-    routes
-  })
-}
+routes.push({path: '*', component: load('error404')})
+
+export default new VueRouter({
+  // mode: 'history',
+  routes
+})

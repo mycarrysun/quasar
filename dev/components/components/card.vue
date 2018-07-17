@@ -6,9 +6,9 @@
           <img src="~assets/donuts.png">
         </q-card-media>
         <q-card-title class="relative-position">
-          <q-btn fab color="primary" icon="place" class="absolute" style="top: 0; right: 8px; transform: translateY(-50%);" />
+          <q-btn round color="primary" icon="place" class="absolute" style="top: 0; right: 8px; transform: translateY(-50%);" />
 
-          <div class="ellipsis">Cafe Basilico Cafe Basilico Cafe Basilico Cafe Basilico Cafe Basilico Cafe Basilico Cafe Basilico</div>
+          Cafe Basilico
           <q-rating slot="subtitle" v-model="stars" :max="5" />
           <div slot="right" class="row items-center">
             <q-icon name="place" /> 250 ft
@@ -20,7 +20,7 @@
         </q-card-main>
         <q-card-separator />
         <q-card-actions>
-          <q-btn flat round icon="event" />
+          <q-btn flat round small><q-icon name="event" /></q-btn>
           <q-btn flat>5:30PM</q-btn>
           <q-btn flat>7:30PM</q-btn>
           <q-btn flat>9:00PM</q-btn>
@@ -30,7 +30,7 @@
 
       <q-card inline>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
       </q-card>
 
@@ -40,7 +40,7 @@
           <span slot="subtitle">Subtitle</span>
         </q-card-title>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
       </q-card>
 
@@ -51,7 +51,7 @@
           <q-icon slot="right" name="alarm" />
         </q-card-title>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
         <q-card-separator />
         <q-card-actions>
@@ -64,24 +64,24 @@
         <q-card-title>
           Title
           <span slot="subtitle">Subtitle</span>
-          <q-btn round flat icon="more_vert" slot="right">
+          <q-icon slot="right" name="more_vert">
             <q-popover ref="popover">
               <q-list link class="no-border">
-                <q-item @click.native="$refs.popover.hide()">
+                <q-item @click="$refs.popover.close()">
                   <q-item-main label="Remove Card" />
                 </q-item>
-                <q-item @click.native="$refs.popover.hide()">
+                <q-item @click="$refs.popover.close()">
                   <q-item-main label="Send Feedback" />
                 </q-item>
-                <q-item @click.native="$refs.popover.hide()">
+                <q-item @click="$refs.popover.close()">
                   <q-item-main label="Share" />
                 </q-item>
               </q-list>
             </q-popover>
-          </q-btn>
+          </q-icon>
         </q-card-title>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
         <q-card-separator />
         <q-card-actions>
@@ -122,7 +122,7 @@
           <span slot="subtitle">Subtitle</span>
         </q-card-title>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
       </q-card>
 
@@ -146,7 +146,7 @@
           </q-card-title>
         </q-card-media>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
       </q-card>
 
@@ -304,7 +304,7 @@
           <span slot="subtitle">Subtitle</span>
         </q-card-title>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
       </q-card>
 
@@ -313,11 +313,11 @@
           Title
         </q-card-title>
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
         <q-card-separator inset />
         <q-card-main>
-          {{ lorem }}
+          {{lorem}}
         </q-card-main>
       </q-card>
 
@@ -326,9 +326,9 @@
           <img src="~assets/mountains.jpg">
         </q-card-media>
         <q-card-actions align="around">
-          <q-btn flat round color="red" icon="favorite" />
-          <q-btn flat round color="faded" icon="bookmark" />
-          <q-btn flat round color="primary" icon="share" />
+          <q-btn flat round small color="red"><q-icon name="favorite" /></q-btn>
+          <q-btn flat round small color="faded"><q-icon name="bookmark" /></q-btn>
+          <q-btn flat round small color="primary"><q-icon name="share" /></q-btn>
         </q-card-actions>
       </q-card>
 
@@ -363,7 +363,6 @@ export default {
 .card-examples
   .q-card
     width 300px
-    margin 0 12px 12px 0
   .bigger
     width 450px
   @media (max-width $breakpoint-xs-max)

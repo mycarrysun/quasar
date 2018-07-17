@@ -1,496 +1,246 @@
 <template>
   <div>
     <div class="layout-padding buttons-test">
-      <q-toggle v-model="tag" :label="tag === 'button' ? 'Button' : 'Link'" true-value="button" false-value="a" />
-      <div class="group">
-        <template v-for="n in ['xs', 'sm', 'md', 'lg', 'xl']">
-          <q-btn :key="`n_1_1_${ n }`" :type="tag" :size="n" dense icon="android" color="primary" />
-          <q-btn :key="`n_1_2_${ n }`" :type="tag" :size="n" icon="android" color="primary" />
-          <q-btn :key="`n_1_3_${ n }`" :type="tag" :size="n" label="Test" color="primary" />
-          <q-btn :key="`n_1_4_${ n }`" :type="tag" :size="n" icon="android" color="primary" label="Test"/>
-          <q-btn :key="`n_1_5_${ n }`" :type="tag" :size="n" round icon="android" color="primary" />
-          <q-btn :key="`n_1_6_${ n }`" :type="tag" :size="n" round icon="android" color="primary" dense />
-          <q-btn :key="`n_1_7_${ n }`" :type="tag" :size="n" label="Test" color="primary" />
-          <span :key="`n_1_8_${ n }`">{{ n }}</span>
-          <br :key="`n_1_9_${ n }`"><br :key="`n_1_10_${ n }`">
-        </template>
-        <template v-for="n in ['xs', 'sm', 'md', 'lg', 'xl']">
-          <q-btn :key="`n_2_1_${ n }`" :type="tag" :size="n" dense label="Test" color="primary" />
-          <q-btn :key="`n_2_2_${ n }`" :type="tag" :size="n" dense icon="android" color="primary" />
-          <q-btn :key="`n_2_3_${ n }`" :type="tag" :size="n" dense icon="android" color="primary" label="Test"/>
-          <q-btn :key="`n_2_4_${ n }`" :type="tag" :size="n" dense round icon="android" color="primary" />
-          <span :key="`n_2_5_${ n }`">{{ n }}</span>
-          <br :key="`n_2_6_${ n }`"><br :key="`n_2_7_${ n }`">
-        </template>
-      </div>
-      <q-toolbar color="secondary" style="width: 500px">
-        <q-btn :type="tag" flat dense round icon="menu" />
-        <q-btn :type="tag" flat round dense icon="android" />
-        <q-btn :type="tag" flat dense icon="assignment_ind" />
-        <q-btn :type="tag" flat dense icon="android" />
-        <q-toolbar-title>
-          Toolbar
-        </q-toolbar-title>
-        <q-btn :type="tag" flat dense icon="sim_card" />
-        <q-btn :type="tag" flat dense icon="gamepad" />
-      </q-toolbar>
-      <q-toolbar color="amber" text-color="black" style="width: 500px">
-        <q-btn :type="tag" flat dense round icon="menu" />
-        <q-btn :type="tag" flat dense round icon="android" />
-        <q-btn :type="tag" flat dense round icon="assignment_ind" />
-        <q-btn :type="tag" flat dense round icon="android" />
-        <q-toolbar-title>
-          Toolbar
-        </q-toolbar-title>
-        <q-btn :type="tag" flat dense round icon="sim_card" />
-        <q-btn :type="tag" flat dense round icon="gamepad" />
-      </q-toolbar>
-      <q-toolbar color="black" style="width: 500px">
-        <q-btn :type="tag" flat round icon="menu" />
-        <q-btn :type="tag" flat round icon="android" />
-        <q-btn :type="tag" flat dense icon="assignment_ind" />
-        <q-btn :type="tag" flat round icon="android" />
-        <q-toolbar-title>
-          Toolbar
-        </q-toolbar-title>
-        <q-btn :type="tag" flat round icon="sim_card" />
-        <q-btn :type="tag" flat round icon="gamepad" />
-      </q-toolbar>
+      <p class="caption">Regular (rectangle) and Circular</p>
+      <q-btn color="primary">Some very, but very long button title that should wrap to the next line without any problems</q-btn>
+      <p class="group">
+        <q-btn icon="alarm" color="orange">Icoon</q-btn>
+        <q-btn icon="alarm" color="orange">Icoon</q-btn>
+        <q-btn icon="ion-shuffle">Icoon</q-btn>
+        <q-btn icon="fa-bath">Icoon</q-btn>
+        <q-btn icon-right="check">Icoon</q-btn>
+        <q-btn icon-right="more_horiz">Icoon</q-btn>
+        <q-btn icon="cloud" icon-right="alarm">Icoon</q-btn>
+        <q-btn icon="edit" icon-right="alarm">Icoon</q-btn>
+        <q-btn icon="edit" icon-right="alarm" small>Icoon</q-btn>
+        <q-btn icon="edit" icon-right="alarm" big color="amber">Icoon</q-btn>
 
-      <br><br>
-      <div class="heading-3">Links</div>
-      <q-btn to="/" label="To index" outline color="secondary" />
-      <q-btn type="a" href="#/gigi" label="Type 'a' - bogus href" push color="secondary" class="q-ml-md" />
-      <q-btn type="a" href="#/gigi" target="_blank" label="Type 'a' - external" color="secondary" class="q-ml-md" />
-      <q-btn to="/" label="To index in 2s" @click="linkClick" glossy color="secondary" class="q-ml-md" />
-      <br><br>
-      <div>
-        <q-toggle v-model="testD" label="Disable form buttons" />
-        <q-toggle v-model="testR" label="Wait for ripple" />
-        <form @submit.prevent="submit" @reset.prevent="reset" class="shadow-2 q-pa-md row items-center">
-          <div class="col row items-center gutter-md">
-            <div class="col">
-              <q-input v-model="test" />
-            </div>
-            <div class="col">
-              <q-input :value="testC" @change="v => testC = v" />
-            </div>
-            <div class="col">
-              <q-input type="number" v-model="testN" />
-            </div>
-          </div>
-          <q-btn :tag="tag" fab-mini color="primary" icon="android" type="reset" class="on-right" title="Reset" @click="onClick" :disable="testD" :wait-for-ripple="testR" />
-          <q-btn :tag="tag" fab color="primary" icon="android" type="submit" class="on-right" title="Submit" @click="onClick" :disable="testD" :wait-for-ripple="testR" />
-        </form>
-      </div>
+        <q-btn small color="primary"><q-icon name="mail" /></q-btn>
+        <q-btn color="primary"><q-icon name="mail" /></q-btn>
+        <q-btn big color="primary"><q-icon name="mail" /></q-btn>
 
-      <br><br>
-      <q-btn :type="tag" color="amber" text-color="black" icon="map" label="Some label" />
-      <q-btn :type="tag" text-color="amber" icon="map" label="Some label" />
+        <q-btn round color="primary" small><q-icon name="mail" /></q-btn>
+        <q-btn round color="primary"><q-icon name="mail" /></q-btn>
+        <q-btn round color="primary" big><q-icon name="mail" /></q-btn>
 
-      <br><br>
-      <div class="caption">Keep holding click</div>
-      <!-- Click and hold to triger every second -->
-      <q-btn :type="tag" @click="clickHandler" :repeat-timeout="1000" label="click me" />
-      <!-- Click and hold to triger faster over time -->
-      <q-btn :type="tag" @click="clickHandler" :repeat-timeout="repeatFunction" label="click me" />
-      <q-chip>{{ clickTimes }}</q-chip>
+        <q-btn>Button</q-btn>
+        <q-btn color="amber">Button</q-btn>
+        <q-btn round color="secondary"><q-icon name="card_giftcard" /></q-btn>
 
-      <div class="caption">Regular (rectangle) and Circular</div>
-      <q-btn :type="tag" color="primary" label="Some very, but very long button title that should wrap to the next line without any problems" />
-      <div class="group">
-        <q-btn :type="tag" icon="alarm" color="orange" label="No ripple" no-ripple />
-        <q-btn :type="tag" icon="alarm" color="orange" label="Icoon" />
-        <q-btn :type="tag" icon="ion-shuffle" label="Icoon" />
-        <q-btn :type="tag" icon="fa-bath" label="Icoon" />
-        <q-btn :type="tag" icon-right="check" label="Icoon" />
-        <q-btn :type="tag" icon-right="more_horiz" label="Icoon" />
-        <q-btn :type="tag" icon="cloud" icon-right="alarm" label="Icoon" />
-        <q-btn :type="tag" icon="edit" icon-right="alarm" label="Icoon" />
-        <q-btn :type="tag" icon="edit" icon-right="alarm" size="sm" label="Icoon" />
-        <q-btn :type="tag" icon="edit" icon-right="alarm" size="lg" color="amber" label="Icoon" />
+        <q-btn icon="alarm">Icoon</q-btn>
+        <q-btn icon-right="check">Icoon</q-btn>
+        <q-btn icon="ion-shuffle">Icoon</q-btn>
+        <q-btn icon="fa-bath">Icoon</q-btn>
+        <q-btn icon-right="more_horiz">Icoon</q-btn>
+        <q-btn icon="cloud" icon-right="alarm">Icoon</q-btn>
+        <q-btn icon="edit" icon-right="alarm">Icoon</q-btn>
+      </p>
 
-        <q-btn :type="tag" size="sm" color="primary" icon="mail" />
-        <q-btn :type="tag" color="primary" icon="mail" />
-        <q-btn :type="tag" size="lg" color="primary" icon="mail" />
-
-        <q-btn :type="tag" round color="primary" size="sm" icon="mail" />
-        <q-btn :type="tag" round color="primary" icon="mail" />
-        <q-btn :type="tag" round color="primary" size="lg" icon="mail" />
-
-        <q-btn :type="tag" label="Button" />
-        <q-btn :type="tag" color="amber" label="Button" />
-        <q-btn :type="tag" round icon="card_giftcard" />
-        <q-btn :type="tag" round color="secondary" icon="card_giftcard" />
-
-        <q-btn :type="tag" icon="alarm" label="Icoon" />
-        <q-btn :type="tag" icon-right="check" label="Icoon" />
-        <q-btn :type="tag" icon="ion-shuffle" label="Icoon" />
-        <q-btn :type="tag" icon="fa-bath" label="Icoon" />
-        <q-btn :type="tag" icon-right="more_horiz" label="Icoon" />
-        <q-btn :type="tag" icon="cloud" icon-right="alarm" label="Icoon" />
-        <q-btn :type="tag" icon="edit" icon-right="alarm" label="Icoon" />
-      </div>
-
-      <div class="group">
-        <q-btn :type="tag" :loading="!!loading[0]" @click="simulateProgress(0)" label="Button">
+      <p class="group">
+        <q-btn loader @click="simulateProgress">
+          Button
           <q-spinner-oval slot="loading" />
         </q-btn>
-        <q-btn :type="tag" :loading="!!loading[1]" @click="simulateProgress(1)" label="Button">
+        <q-btn loader  @click="simulateProgress">
+          Button
           <span slot="loading">Loading...</span>
         </q-btn>
-        <q-btn :type="tag" :loading="!!loading[2]" color="orange" @click="simulateProgress(2)" label="Button">
-          <q-spinner-bars slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[3]" color="secondary" @click="simulateProgress(3)" label="Button">
-          <q-spinner-circles slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[4]" color="amber" @click="simulateProgress(4)" label="Button">
-          <q-spinner-comment slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[5]" color="dark" size="xs" @click="simulateProgress(5)" label="Button">
-          <q-spinner-cube slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[6]" color="dark" size="sm" @click="simulateProgress(6)" label="Button">
-          <q-spinner-dots slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[7]" color="dark" size="md" @click="simulateProgress(7)" label="Button">
-          <q-spinner-facebook slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[8]" color="dark" size="lg" @click="simulateProgress(8)" label="Button">
-          <q-spinner-grid slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[9]" color="dark" size="xl" @click="simulateProgress(9)" label="Button">
-          <q-spinner-hearts slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" size="xs" round :loading="!!loading[10]" @click="simulateProgress(10)" color="primary" icon="mail">
-          <q-spinner-hourglass slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" size="sm" round :loading="!!loading[11]" @click="simulateProgress(11)" color="primary" icon="mail">
-          <q-spinner-infinity slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" round :loading="!!loading[12]" @click="simulateProgress(12)" color="primary" icon="mail">
-          <q-spinner-pie slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" size="lg" round :loading="!!loading[13]" @click="simulateProgress(13)" color="primary" icon="mail">
-          <q-spinner-puff slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" size="xl" round :loading="!!loading[14]" @click="simulateProgress(14)" color="primary" icon="mail">
-          <q-spinner-gears slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[15]" color="orange" @click="simulateProgress(15)" label="Button">
-          <q-spinner-radio slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[16]" color="orange" @click="simulateProgress(16)" label="Button">
-          <q-spinner-rings slot="loading" />
-        </q-btn>
-        <q-btn :type="tag" :loading="!!loading[17]" color="orange" @click="simulateProgress(17)" label="Button">
-          <q-spinner-tail slot="loading" />
-        </q-btn>
+        <q-btn loader color="orange" @click="simulateProgress">Button</q-btn>
+        <q-btn loader color="secondary" @click="simulateProgress">Button</q-btn>
+        <q-btn loader color="amber" @click="simulateProgress">Button</q-btn>
+        <q-btn loader color="dark" small @click="simulateProgress">Button</q-btn>
+        <q-btn small round loader @click="simulateProgress" color="primary"><q-icon name="mail" /></q-btn>
+        <q-btn round loader @click="simulateProgress" color="primary"><q-icon name="mail" /></q-btn>
+        <q-btn big round loader @click="simulateProgress" color="primary"><q-icon name="mail" /></q-btn>
 
-        <q-btn :type="tag" color="dark" :loading="!!loading[18]" size="sm" @click="simulateProgress(18)" icon-right="alarm" label="Button">
+        <q-btn color="dark" small @click="simulateProgress" icon-right="alarm">
+          Button
           <q-spinner-audio slot="loading" />
         </q-btn>
-        <q-btn :type="tag" round :loading="!!loading[19]" @click="simulateProgress(19)" color="primary" size="lg" icon="alarm">
-          <q-spinner-ball slot="loading" />
+        <q-btn round @click="simulateProgress" color="primary" big>
+          <q-spinner-audio slot="loading" />
+          <q-icon name="alarm" />
         </q-btn>
+        <q-btn color="negative" @click="stopProgress">Stop</q-btn>
+      </p>
 
-        <q-btn :type="tag" round :loading="!!loading[20]" color="black" @click="simulateProgress(20)" icon="camera_rear">
-          <q-spinner-gears slot="loading" />
-        </q-btn>
-
-        <br>
-        <q-btn :type="tag" color="negative" label="Stop" @click="stopProgress" />
-        <q-chip small v-for="(l, i) in loading" :key="i">{{ i }}: {{ l }}</q-chip>
-      </div>
-
-      <div class="group">
-        <q-btn :type="tag" color="primary" icon="alarm" label="Label" />
-        <q-btn :type="tag" color="primary" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" color="primary" icon="alarm" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" color="primary" icon="alarm" icon-right="alarm" />
-        <q-btn :type="tag" color="secondary" icon="alarm" label="Label">Slot</q-btn>
-        <q-btn :type="tag" color="secondary" icon-right="alarm" label="Label">Slot</q-btn>
-        <q-btn :type="tag" color="secondary" icon="alarm" icon-right="alarm" label="Label">Slot</q-btn>
-        <q-btn :type="tag" color="secondary" icon="alarm" icon-right="alarm">Slot</q-btn>
-        <q-btn :type="tag" color="positive" icon="alarm" label="Label" />
-        <q-btn :type="tag" color="positive" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" color="positive" icon="alarm" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" color="positive" icon="alarm" icon-right="alarm" />
-        <q-btn :type="tag" color="negative" icon="alarm" label="Label"><q-tooltip>Popover</q-tooltip></q-btn>
-        <q-btn :type="tag" color="negative" icon-right="alarm" label="Label"><q-tooltip>Popover</q-tooltip></q-btn>
-        <q-btn :type="tag" color="negative" icon="alarm" icon-right="alarm" label="Label"><q-tooltip>Popover</q-tooltip></q-btn>
-        <q-btn :type="tag" color="negative" icon="alarm" icon-right="alarm"><q-tooltip>Popover</q-tooltip></q-btn>
-      </div>
-      <div class="group">
-        <q-btn :type="tag" round color="primary" icon="alarm" label="Label" />
-        <q-btn :type="tag" round color="primary" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" round color="primary" icon="alarm" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" round color="primary" icon="alarm" icon-right="alarm" />
-        <q-btn :type="tag" round color="positive" icon="alarm" label="Label" />
-        <q-btn :type="tag" round color="positive" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" round color="positive" icon="alarm" icon-right="alarm" label="Label" />
-        <q-btn :type="tag" round color="positive" icon="alarm" icon-right="alarm" />
-        <q-btn :type="tag" round color="negative" icon="alarm" label="Label"><q-tooltip>Popover</q-tooltip></q-btn>
-        <q-btn :type="tag" round color="negative" icon-right="alarm" label="Label"><q-tooltip>Popover</q-tooltip></q-btn>
-        <q-btn :type="tag" round color="negative" icon="alarm" icon-right="alarm" label="Label"><q-tooltip>Popover</q-tooltip></q-btn>
-        <q-btn :type="tag" round color="negative" icon="alarm" icon-right="alarm"><q-tooltip>Popover</q-tooltip></q-btn>
-      </div>
-
-      <div class="group">
-        <q-btn :type="tag" :loading="loading2" :percentage="percentage" color="primary" @click="startProgress">
+      <p class="group">
+        <q-btn loader :percentage="percentage" color="primary" @click="startProgress">
           Btn with progress
-          <span slot="loading" class="row items-center">
+          <span slot="loading">
             <q-spinner class="on-left" />
             Computing...
           </span>
         </q-btn>
 
-        <q-btn :type="tag" round :loading="loading2" :percentage="percentage" color="primary" @click="startProgress" icon="wifi" />
+        <q-btn round loader :percentage="percentage" color="primary" @click="startProgress" icon="wifi" />
+      </p>
+
+      <p class="caption">Small, Medium (default) and Big</p>
+      <p class="group">
+        <q-btn small color="primary">Button</q-btn>
+        <q-btn color="primary">Button</q-btn>
+        <q-btn big color="primary">Button</q-btn>
+      </p>
+      <p class="group">
+        <q-btn icon="check" small color="primary">Button</q-btn>
+        <q-btn icon="cloud" color="primary">Button</q-btn>
+        <q-btn icon="alarm" big color="primary">Button</q-btn>
+      </p>
+      <p class="group">
+        <q-btn round small icon="check" color="primary"></q-btn>
+        <q-btn round icon="cloud" color="primary"></q-btn>
+        <q-btn round big icon="alarm" color="primary"></q-btn>
+      </p>
+
+      <p class="caption">Regular with Icons</p>
+      <p class="group">
+        <q-btn color="primary" icon="mail">
+          On Left
+        </q-btn>
+        <q-btn color="secondary" icon-right="mail">
+          On Right
+        </q-btn>
+      </p>
+
+      <p class="caption">Color Examples</p>
+      <p class="group">
+        <q-btn color="secondary">Secondary</q-btn>
+        <q-btn color="dark">Dark</q-btn>
+        <q-btn color="orange">Orange</q-btn>
+        <q-btn color="light" class="text-black">Light</q-btn>
+        <q-btn color="indigo">Indigo</q-btn>
+        <q-btn color="red">Red</q-btn>
+        <q-btn round color="teal"><q-icon name="alarm" /></q-btn>
+      </p>
+      <p class="caption">Custom Color Examples</p>
+      <p class="group">
+        <q-btn flat style="color: #FF0080">Fuchsia Flat</q-btn>
+        <q-btn style="background: #FF0080; color: white">Fuchsia</q-btn>
+        <q-btn style="background: goldenrod; color: white">Goldenrod</q-btn>
+        <q-btn outline style="color: goldenrod;">Goldenrod</q-btn>
+      </p>
+
+      <p class="caption">Disabled Buttons</p>
+      <p class="group">
+        <q-btn color="primary" disable>Disabled</q-btn>
+        <q-btn round color="primary" disable><q-icon name="card_giftcard" /></q-btn>
+      <p>
+
+      <p class="caption">Flat Buttons</p>
+      <p class="group">
+        <q-btn flat color="primary">Flat</q-btn>
+        <q-btn flat round color="primary"><q-icon name="card_giftcard" /></q-btn>
+      <p>
+
+      <p class="caption">Outline Buttons</p>
+      <p class="group">
+        <q-btn outline color="primary">Outline</q-btn>
+        <q-btn round outline color="primary"><q-icon name="card_giftcard" /></q-btn>
+      <p>
+
+      <p class="caption">Push Buttons</p>
+      <p class="group">
+        <q-btn push color="primary">Push</q-btn>
+        <q-btn push color="primary" round><q-icon name="card_giftcard" /></q-btn>
+      <p>
+
+      <p class="caption">Round Buttons</p>
+      <p class="group">
+        <q-btn round color="secondary" icon="alarm"></q-btn>
+      <p>
+
+      <p class="caption">Glossy Buttons</p>
+      <p class="group">
+        <q-btn color="primary" glossy>Glossy</q-btn>
+        <q-btn color="secondary" glossy>Glossy</q-btn>
+        <q-btn color="deep-orange" glossy>Glossy</q-btn>
+        <q-btn round color="primary" glossy><q-icon name="card_giftcard" /></q-btn>
+        <q-btn round color="secondary" glossy><q-icon name="card_giftcard" /></q-btn>
+        <q-btn round color="deep-orange" glossy><q-icon name="card_giftcard" /></q-btn>
+      <p>
+
+      <p class="caption">Block Buttons</p>
+      <div class="group">
+        <q-btn color="primary" class="block" icon="alarm">Block</q-btn>
+        <q-btn color="secondary" class="block">Block</q-btn>
       </div>
 
-      <div class="caption">Small, Medium (default) and Big</div>
+      <p class="caption">Full Width Buttons</p>
       <div class="group">
-        <q-btn :type="tag" size="sm" color="primary" label="Button" />
-        <q-btn :type="tag" color="primary" label="Button" />
-        <q-btn :type="tag" size="lg" color="primary" label="Button" />
-      </div>
-      <div class="group">
-        <q-btn :type="tag" icon="check" size="sm" color="primary" label="Button" />
-        <q-btn :type="tag" icon="cloud" color="primary" label="Button" />
-        <q-btn :type="tag" icon="alarm" size="lg" color="primary" label="Button" />
-      </div>
-      <div class="group">
-        <q-btn :type="tag" round size="sm" icon="check" color="primary" />
-        <q-btn :type="tag" round icon="cloud" color="primary" />
-        <q-btn :type="tag" round size="lg" icon="alarm" color="primary" />
-      </div>
-
-      <div class="group">
-        <q-btn :type="tag" v-for="i in 30" :key="'a' + i" round icon="cloud" color="primary" :size="`${8 + i * 4}px`" :title="`Size ${8 + i * 4}px`" />
-        <q-btn :type="tag" v-for="size in sizes" :key="'aq' + size" round icon="cloud" color="primary" :size="size" :title="`Size ${size}`" />
-      </div>
-
-      <div class="group">
-        <q-btn :type="tag" v-for="i in 15" :key="'b' + i" :label="`Size ${4 + i * 4}px`" color="primary" :size="`${4 + i * 4}px`" />
-        <q-btn :type="tag" v-for="size in sizes" :key="'c' + size" :label="`Size ${size}`" color="primary" :size="size" />
-      </div>
-
-      <div class="group">
-        <q-btn :type="tag" v-for="i in 15" :key="'d' + i" icon="cloud" :label="`Size ${4 + i * 4}px`" color="primary" :size="`${4 + i * 4}px`" />
-        <q-btn :type="tag" v-for="size in sizes" :key="'e' + size" icon="cloud" :label="`Size ${size}`" color="primary" :size="size" />
-      </div>
-
-      <div class="caption">dense - Small, Medium (default) and Big</div>
-      <div class="group">
-        <q-btn :type="tag" dense size="sm" color="primary" label="Button" />
-        <q-btn :type="tag" dense color="primary" label="Button" />
-        <q-btn :type="tag" dense size="lg" color="primary" label="Button" />
-      </div>
-      <div class="group">
-        <q-btn :type="tag" dense icon="check" size="sm" color="primary" label="Button" />
-        <q-btn :type="tag" dense icon="cloud" color="primary" label="Button" />
-        <q-btn :type="tag" dense icon="alarm" size="lg" color="primary" label="Button" />
-      </div>
-      <div class="group">
-        <q-btn :type="tag" dense round size="sm" icon="check" color="primary" />
-        <q-btn :type="tag" dense round icon="cloud" color="primary" />
-        <q-btn :type="tag" dense round size="lg" icon="alarm" color="primary" />
-      </div>
-
-      <div class="caption">Regular with Icons</div>
-      <div class="group">
-        <q-btn :type="tag" color="primary" icon="mail" label="On Left" />
-        <q-btn :type="tag" color="secondary" icon-right="mail" label="On Right" />
-      </div>
-
-      <div class="caption">Color Examples</div>
-      <div class="group">
-        <q-btn :type="tag" color="secondary" label="Secondary" />
-        <q-btn :type="tag" color="dark" label="Dark" />
-        <q-btn :type="tag" color="orange" label="Orange" />
-        <q-btn :type="tag" color="light" class="text-black" label="Light" />
-        <q-btn :type="tag" color="indigo" label="Indigo" />
-        <q-btn :type="tag" color="red" label="Red" />
-        <q-btn :type="tag" round color="teal" icon="alarm" />
-      </div>
-      <div class="caption">Custom Color Examples</div>
-      <div class="group">
-        <q-btn :type="tag" flat style="color: #FF0080" label="Fuchsia Flat" />
-        <q-btn :type="tag" style="background: #FF0080; color: white" label="Fuchsia" />
-        <q-btn :type="tag" style="background: goldenrod; color: white" label="Goldenrod" />
-        <q-btn :type="tag" outline style="color: goldenrod;" label="Goldenrod" />
-      </div>
-
-      <div class="caption">Disabled Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" color="primary" disable label="Disabled" />
-        <q-btn :type="tag" round color="primary" disable icon="card_giftcard" />
-        <q-btn :type="tag" push color="primary" disable label="Push" />
-        <q-btn :type="tag" push color="primary" disable round icon="card_giftcard" />
-        <q-btn :type="tag" push color="white" text-color="primary" disable label="Push" />
-        <q-btn :type="tag" push color="white" text-color="primary" disable round icon="card_giftcard" />
-      </div>
-
-      <div class="caption">Flat Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" flat color="primary" label="Flat" />
-        <q-btn :type="tag" flat round color="primary" icon="card_giftcard" />
-      </div>
-
-      <div class="caption">Outline Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" outline color="primary" label="Outline" />
-        <q-btn :type="tag" round outline color="primary" icon="card_giftcard" />
-      </div>
-
-      <div class="caption">Push Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" push color="primary" label="Push" />
-        <q-btn :type="tag" push color="primary" round icon="card_giftcard" />
-        <q-btn :type="tag" push color="white" text-color="primary" label="Push" />
-        <q-btn :type="tag" push color="white" text-color="primary" round icon="card_giftcard" />
-      </div>
-
-      <div class="caption">Round Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" round color="secondary" icon="alarm" />
-      </div>
-
-      <div class="caption">Glossy Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" color="primary" glossy label="Glossy" />
-        <q-btn :type="tag" color="secondary" glossy label="Glossy" />
-        <q-btn :type="tag" color="deep-orange" glossy label="Glossy" />
-        <q-btn :type="tag" round color="primary" glossy icon="card_giftcard" />
-        <q-btn :type="tag" round color="secondary" glossy icon="card_giftcard" />
-        <q-btn :type="tag" round color="deep-orange" glossy icon="card_giftcard" />
-      </div>
-
-      <div class="caption">Block Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" color="primary" class="block" icon="alarm" label="Block" />
-        <q-btn :type="tag" color="secondary" class="block" label="Block" />
-      </div>
-
-      <div class="caption">Full Width Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" color="primary" class="full-width" label="Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width" />
-        <q-btn :type="tag" color="secondary" class="full-width" label="Full-width" justify="start" />
-        <q-btn :type="tag" color="primary" icon="alarm" class="full-width" label="Full-width" justify="end" />
-        <q-btn :type="tag" color="secondary" icon-right="alarm" class="full-width" label="Full-width" justify="center" />
-        <q-btn :type="tag" color="secondary" icon="lock" icon-right="alarm" class="full-width" label="Full-width" justify="between" />
-        <q-btn :type="tag" color="secondary" icon="lock" icon-right="alarm" class="full-width" label="Full-width" justify="around" />
-      </div>
-
-      <div class="caption">Multiline Buttons</div>
-      <div class="group">
-        <q-btn :type="tag" color="primary" size="sm">Small<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary">Normal<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" size="lg">Big<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="alarm" size="sm">Small<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="alarm">Normal<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="alarm" size="lg">Big<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon-right="alarm" size="sm">Small<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon-right="alarm">Normal<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon-right="alarm" size="lg">Big<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="lock" icon-right="alarm" size="sm">Small<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="lock" icon-right="alarm">Normal<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="lock" icon-right="alarm" size="lg">Big<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" class="full-width" icon="lock" icon-right="alarm" size="sm">Very long text that should wrap on the next line. I really mean it, it's a very long text. Maybe it's not clear, but it should be very, very long, so long that even a fullscreen width is not enough. I know it's not easy, but we should try.</q-btn>
-        <q-btn :type="tag" color="primary" class="full-width" icon="lock" icon-right="alarm">Very long text that should wrap on the next line. I really mean it, it's a very long text. Maybe it's not clear, but it should be very, very long, so long that even a fullscreen width is not enough. I know it's not easy, but we should try.</q-btn>
-        <q-btn :type="tag" color="primary" class="full-width" icon="lock" icon-right="alarm" size="lg">Very long text that should wrap on the next line. I really mean it, it's a very long text. Maybe it's not clear, but it should be very, very long, so long that even a fullscreen width is not enough. I know it's not easy, but we should try.</q-btn>
-        <q-btn :type="tag" color="primary" size="sm" class="full-width">Small Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" class="full-width">Normal Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" size="lg" class="full-width">Big Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="alarm" size="sm" class="full-width">Small Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="alarm" class="full-width">Normal Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="alarm" size="lg" class="full-width">Big Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon-right="alarm" size="sm" class="full-width">Small Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon-right="alarm" class="full-width">Normal Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon-right="alarm" size="lg" class="full-width">Big Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="lock" icon-right="alarm" justify="between" size="sm" class="full-width">Small Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="lock" icon-right="alarm" justify="between" class="full-width">Normal Full-width<br>Multiline<br>Button</q-btn>
-        <q-btn :type="tag" color="primary" icon="lock" icon-right="alarm" justify="between" size="lg" class="full-width">Big Full-width<br>Multiline<br>Button</q-btn>
-      </div>
-
-      <div class="caption">Wrap test</div>
-      <div class="group" style="width: 610px">
-        <q-btn :type="tag" color="primary" label="Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width" />
-        <q-btn :type="tag" color="primary" no-wrap label="No wrap. Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width" />
-        <q-btn :type="tag" color="primary" no-wrap label="No wrap with label prop. Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width Full-width" />
+        <q-btn color="primary" class="full-width">Full-width</q-btn>
+        <q-btn color="secondary" class="full-width">Full-width</q-btn>
       </div>
 
       <h2>Sizes</h2>
-      <div v-for="size in sizes" :key="'f' + size">
-        <h3 class="capitalize">{{ size }}</h3>
-        <q-btn :type="tag" color="primary" :size="size" label="Btn" />
-        <q-btn :type="tag" color="primary" :size="size" :icon="icon" label="Btn" />
-        <q-btn :type="tag" color="primary" :size="size" :icon="icon" />
+      <template v-for="size in sizes">
+        <h3 class="capitalize">{{size}}</h3>
+        <q-btn color="primary" :small="size === 'small'" :big="size === 'big'">Btn</q-btn>
+        <q-btn color="primary" :small="size === 'small'" :big="size === 'big'" :icon="icon">Btn</q-btn>
+        <q-btn color="primary" :small="size === 'small'" :big="size === 'big'"><q-icon :name="icon" /></q-btn>
         text
-        <q-btn :type="tag" class="bg-primary text-white disabled" :size="size" label="Disabled" />
+        <q-btn class="bg-primary text-white disabled" :small="size === 'small'" :big="size === 'big'">Disabled</q-btn>
         <q-btn
           v-for="extra in extras"
-          :key="'g' + extra"
+          :key="extra"
           color="primary"
-          :size="size"
+          :small="size === 'small'"
+          :big="size === 'big'"
           :flat="extra === 'flat'"
           :outline="extra === 'outline'"
           :push="extra === 'push'"
           :rounded="extra === 'rounded'"
           :glossy="extra === 'glossy'"
-          :label="extra"
-        />
-      </div>
-      <div v-for="size in sizes" :key="'h' + size">
-        <h3 class="capitalize">{{ size }}</h3>
-        <q-btn :type="tag" color="primary" round :size="size" :icon="icon" />
+        >{{extra}}</q-btn>
+      </template>
+      <template v-for="size in sizes">
+        <h3 class="capitalize">{{size}}</h3>
+        <q-btn color="primary" round :small="size === 'small'" :big="size === 'big'"><q-icon :name="icon" /></q-btn>
         text
-        <q-btn :type="tag" color="primary" round disable :size="size" :icon="icon" />
+        <q-btn color="primary" round disable :small="size === 'small'" :big="size === 'big'"><q-icon :name="icon" /></q-btn>
         <q-btn
           v-for="extra in extras"
-          :key="'i' + extra"
+          :key="extra"
           color="primary"
           round
-          :size="size"
+          :small="size === 'small'"
+          :big="size === 'big'"
           :flat="extra === 'flat'"
           :outline="extra === 'outline'"
           :push="extra === 'push'"
           :rounded="extra === 'rounded'"
-          :icon="icon"
-        />
-      </div>
+        ><q-icon :name="icon" /></q-btn>
+      </template>
       <br><br>
       <h2>Types</h2>
       <h3 class="capitalize">Rectangular</h3>
-      <div v-for="color in colors" :key="'j' + color">
-        <h4 class="capitalize">{{ color }}</h4>
-        <q-btn :type="tag" :color="color" :label="color" />
-        <q-btn :type="tag" :color="color" :icon="icon" :label="color" />
-        <q-btn :type="tag" :color="color"><q-icon :name="icon" /></q-btn>
-        <q-btn :type="tag" class="disabled" :color="color"><q-icon :name="icon" /></q-btn>
+      <template v-for="color in colors">
+        <h4 class="capitalize">{{color}}</h4>
+        <q-btn :color="color">{{color}}</q-btn>
+        <q-btn :color="color" :icon="icon">{{color}}</q-btn>
+        <q-btn :color="color"><q-icon :name="icon" /></q-btn>
+        <q-btn class="disabled" :color="color"><q-icon :name="icon" /></q-btn>
         <q-btn
           v-for="extra in extras"
-          :key="'k' + extra"
+          :key="extra"
           :color="color"
           :flat="extra === 'flat'"
           :outline="extra === 'outline'"
           :push="extra === 'push'"
           :rounded="extra === 'rounded'"
           :glossy="extra === 'glossy'"
-          :label="`${ color }-${ extra }`"
-        />
-      </div>
+        >{{color}}-{{extra}}</q-btn>
+      </template>
 
       <h3 class="capitalize">Circular</h3>
-      <div v-for="color in colors" :key="'l' + color">
-        <h4 class="capitalize">{{ color }}</h4>
-        <q-btn :type="tag" round :color="color" :icon="icon" />
-        <q-btn :type="tag" round disable :color="color" :icon="icon" />
+      <template v-for="color in colors">
+        <h4 class="capitalize">{{color}}</h4>
+        <q-btn round :color="color"><q-icon :name="icon" /></q-btn>
+        <q-btn round disable :color="color"><q-icon :name="icon" /></q-btn>
         <q-btn
           v-for="extra in extras"
           round
-          :key="'m' + extra"
+          :key="extra"
           :color="color"
           :flat="extra === 'flat'"
           :outline="extra === 'outline'"
@@ -498,89 +248,47 @@
           :rounded="extra === 'rounded'"
           :glossy="extra === 'glossy'"
           icon="wifi"
-        />
-      </div>
+        ></q-btn>
+      </template>
     </div>
   </div>
 </template>
 
 <script>
-import { extend } from 'quasar'
-
 export default {
   data () {
     return {
       icon: 'alarm',
-      sizes: ['xs', 'sm', 'md', 'lg', 'xl'],
+      sizes: ['small', 'standard', 'big'],
       colors: [
         'primary', 'secondary', 'tertiary', 'positive', 'negative', 'warning', 'info', '', 'light', 'dark',
         'red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue', 'cyan', 'teal', 'green',
         'light-green', 'lime', 'yellow', 'amber', 'orange', 'deep-orange', 'brown', 'grey', 'blue-grey'
       ],
       extras: ['flat', 'outline', 'round', 'rounded', 'push', 'glossy'],
-      loading: {},
-      loading2: false,
-      percentage: 0,
-      clickTimes: 0,
-      test: 'Initial value',
-      testC: 'Initial value onChange',
-      testN: 0,
-      testD: false,
-      testR: false,
-      tag: 'button'
+      done: [],
+      percentage: 0
     }
   },
   methods: {
-    clickHandler (e) {
-      this.clickTimes++
-    },
-    repeatFunction (timesTriggered) {
-      // first time timesTriggered is 0, so we add 1
-      // to be sure we don't divide by 0
-      return Math.max(300, 1000 / (timesTriggered + 1))
-    },
-    startProgress () {
+    startProgress (e, done) {
       this.percentage = 0
-      this.loading2 = true
       this.interval = setInterval(() => {
         this.percentage += Math.floor(Math.random() * 8 + 10)
         if (this.percentage >= 100) {
           clearInterval(this.interval)
-          this.loading2 = false
+          done()
         }
       }, 700)
     },
-    simulateProgress (index) {
-      const timeout = setTimeout(() => {
-        if (index in this.loading) {
-          this.loading = extend({}, this.loading, { [index]: false })
-        }
-      }, 5 * 60 * 1000)
-      this.loading = extend({}, this.loading, { [index]: timeout })
+    simulateProgress (e, done) {
+      this.done.push(done)
     },
     stopProgress () {
-      Object.values(this.loading).filter(t => t).map(t => clearTimeout(t))
-      this.loading = {}
-    },
-    submit () {
-      this.$q.notify(`Submit called with: [${this.test}], [${this.testC}], [${this.testN}]`)
-    },
-    reset () {
-      this.test = 'Initial value'
-      this.testN = 0
-      this.$q.notify('Reset called')
-    },
-    onClick (e) {
-      this.$q.notify('Click called')
-    },
-    linkClick (e, go) {
-      e.navigate = false // we choose when we navigate
-
-      console.log('triggering navigation in 2s')
-      setTimeout(() => {
-        console.log('navigating as promised 2s ago')
-        go()
-      }, 2000)
+      if (this.done.length) {
+        this.done.forEach(d => d())
+      }
+      this.done = []
     }
   },
   beforeDestroy () {

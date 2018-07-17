@@ -1,19 +1,17 @@
 import install from './install'
-import { version } from '../package.json'
-import i18n from './i18n'
-import icons from './icons'
-import ssrUpdate from './ssr-update'
+import start from './start'
+import * as theme from './features/theme'
+import {version} from '../package.json'
 
 export * from './components'
 export * from './directives'
-export * from './plugins'
+export * from './features'
+export * from './globals'
 export * from './utils'
 
 export default {
-  version,
-  install,
-  i18n,
-  icons,
-  theme: process.env.THEME,
-  ssrUpdate
+    version,
+    install,
+    start,
+    theme
 }

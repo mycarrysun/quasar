@@ -1,12 +1,16 @@
 export default {
-  name: 'QCardSeparator',
+  name: 'q-card-separator',
+  functional: true,
   props: {
     inset: Boolean
   },
-  render (h) {
-    return h('div', {
-      staticClass: 'q-card-separator',
-      'class': { inset: this.inset }
-    }, this.$slots.default)
+  render (h, ctx) {
+    const
+      data = ctx.data,
+      cls = data.staticClass
+
+    data.staticClass = `q-card-separator${ctx.props.inset ? ' inset' : ''}${cls ? ` ${cls}` : ''}`
+
+    return h('div', data, ctx.children)
   }
 }

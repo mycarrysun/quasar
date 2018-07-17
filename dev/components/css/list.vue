@@ -1,251 +1,13 @@
 <template>
-  <div :class="dark ? 'bg-black text-white' : ''">
+  <div>
     <div class="layout-padding">
-      <q-toggle :dark="dark" v-model="dark" label="On dark background" />
       <p class="light-paragraph">
         You'll learn the <strong>List basics</strong> here then you can jump to the other sections
         to see how you can beatifully combine the List elements.
       </p>
 
-      <q-list :dark="dark" inset-separator>
-        <q-list-header>QItemSide</q-list-header>
-        <q-item>
-          <q-item-side avatar="/statics/boy-avatar.png" />
-          <q-item-main label="Jack" />
-          <q-item-side right avatar="/statics/boy-avatar.png" />
-        </q-item>
-        <q-item>
-          <q-item-side image="/statics/mountains.jpg" />
-          <q-item-main label="Jim's Photos" />
-          <q-item-side right image="/statics/mountains.jpg" />
-        </q-item>
-        <q-item>
-          <q-item-side icon="voice_chat" />
-          <q-item-main label="Voice Chat with Joe" />
-          <q-item-side right icon="voice_chat" />
-        </q-item>
-        <q-item>
-          <q-item-side inverted icon="voice_chat" />
-          <q-item-main label="Voice Chat with Joe" />
-          <q-item-side right inverted icon="voice_chat" />
-        </q-item>
-        <q-item>
-          <q-item-side letter="J" />
-          <q-item-main label="John Doe" />
-          <q-item-side right letter="J" />
-        </q-item>
-        <q-item>
-          <q-item-side inverted letter="J" />
-          <q-item-main label="John Doe" />
-          <q-item-side right inverted letter="J" />
-        </q-item>
-        <q-item>
-          <q-item-side inverted stamp="Stamp" />
-          <q-item-main label="John Doe" />
-          <q-item-side right inverted stamp="Stamp" />
-        </q-item>
-
-        <q-item-separator />
-
-        <q-item>
-          <q-item-side icon="voice_chat" color="amber" />
-          <q-item-main label="Voice Chat with Joe" />
-          <q-item-side right icon="voice_chat" color="amber" />
-        </q-item>
-        <q-item>
-          <q-item-side inverted icon="voice_chat" color="amber" />
-          <q-item-main label="Voice Chat with Joe" />
-          <q-item-side right inverted icon="voice_chat" color="amber" />
-        </q-item>
-        <q-item>
-          <q-item-side inverted icon="voice_chat" color="amber" text-color="black" />
-          <q-item-main label="Voice Chat with Joe" />
-          <q-item-side right inverted icon="voice_chat" color="amber" text-color="black" />
-        </q-item>
-        <q-item>
-          <q-item-side letter="J" color="amber" />
-          <q-item-main label="John Doe" />
-          <q-item-side right letter="J" color="amber" />
-        </q-item>
-        <q-item>
-          <q-item-side inverted letter="J" color="amber" />
-          <q-item-main label="John Doe" />
-          <q-item-side right inverted letter="J" color="amber" />
-        </q-item>
-        <q-item>
-          <q-item-side inverted letter="J" color="amber" text-color="black" />
-          <q-item-main label="John Doe" />
-          <q-item-side right inverted letter="J" color="amber" text-color="black" />
-        </q-item>
-
-        <q-item-separator />
-        <q-list-header>QItemTile</q-list-header>
-
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile letter>Q</q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile letter>Q</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile inverted letter>Q</q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile inverted letter>Q</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile stamp>Stamp</q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile stamp>Stamp</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile icon="map" />
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile icon="map" />
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile inverted icon="map" />
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile inverted icon="map" />
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile avatar>
-              <img src="~assets/boy-avatar.png" >
-            </q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-tile right avatar>
-            <img src="~assets/boy-avatar.png" >
-          </q-item-tile>
-        </q-item>
-
-        <q-item-separator />
-
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile letter color="amber">Q</q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile letter color="amber">Q</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile inverted letter color="amber">Q</q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile inverted letter color="amber">Q</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile inverted letter color="amber" text-color="black">Q</q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile inverted letter color="amber" text-color="black">Q</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile stamp color="amber">Stamp</q-item-tile>
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile stamp color="amber">Stamp</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile icon="map" color="amber" />
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile icon="map" color="amber" />
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile inverted icon="map" color="amber" />
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile inverted icon="map" color="amber" />
-          </q-item-side>
-        </q-item>
-        <q-item multiline>
-          <q-item-side>
-            <q-item-tile inverted icon="map" color="amber" text-color="black" />
-          </q-item-side>
-          <q-item-main>
-            <q-item-tile label>Brunch <span>5</span></q-item-tile>
-            <q-item-tile sublabel lines="2">John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe</q-item-tile>
-          </q-item-main>
-          <q-item-side right>
-            <q-item-tile inverted icon="map" color="amber" text-color="black" />
-          </q-item-side>
-        </q-item>
-      </q-list>
-
       <p class="caption">Basic List</p>
-      <q-list :dark="dark">
+      <q-list>
         <q-item>
           <q-item-main label="List Item" />
         </q-item>
@@ -257,51 +19,51 @@
       </q-list>
 
       <p class="caption">Dense List</p>
-      <q-list :dark="dark" dense>
-        <q-item :key="'ak' + n" v-for="n in 3">
+      <q-list dense>
+        <q-item :key="n" v-for="n in 3">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
-      <q-list :dark="dark">
-        <q-item :key="'al' + n" v-for="n in 3" dense>
+      <q-list>
+        <q-item :key="n" v-for="n in 3" dense>
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">Sparse List</p>
-      <q-list :dark="dark" sparse>
-        <q-item :key="'am' + n" v-for="n in 3">
+      <q-list sparse>
+        <q-item :key="n" v-for="n in 3">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
-      <q-list :dark="dark">
-        <q-item :key="'an' + n" v-for="n in 3" sparse>
+      <q-list>
+        <q-item :key="n" v-for="n in 3" sparse>
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">No Border</p>
-      <q-list :dark="dark" no-border>
-        <q-item :key="'ao' + n" v-for="n in 3">
+      <q-list no-border>
+        <q-item :key="n" v-for="n in 3">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">Striped</p>
-      <q-list :dark="dark" striped>
-        <q-item :key="'ap' + n" v-for="n in 6">
+      <q-list striped>
+        <q-item :key="n" v-for="n in 6">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
-      <q-list :dark="dark" striped-odd>
-        <q-item :key="'aq' + n" v-for="n in 3">
+      <q-list striped-odd>
+        <q-item :key="n" v-for="n in 3">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">Separator Between Items</p>
-      <q-list :dark="dark">
+      <q-list>
         <q-item>
           <q-item-main label="List Item" />
         </q-item>
@@ -316,59 +78,59 @@
       </q-list>
 
       <p class="caption">Separator within Items</p>
-      <q-list :dark="dark" separator>
-        <q-item :key="'ba' + n" v-for="n in 3">
+      <q-list separator>
+        <q-item :key="n" v-for="n in 3">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
-      <q-list :dark="dark">
-        <q-item :key="'bb' + n" v-for="n in 3" separator>
+      <q-list>
+        <q-item :key="n" v-for="n in 3" separator>
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">Inset Separator within Items</p>
-      <q-list :dark="dark" inset-separator>
-        <q-item :key="'bc' + n" v-for="n in 3">
+      <q-list inset-separator>
+        <q-item :key="n" v-for="n in 3">
           <q-item-main inset label="List Item" />
         </q-item>
       </q-list>
 
-      <q-list :dark="dark">
-        <q-item :key="'bd' + n" v-for="n in 3" inset-separator>
+      <q-list>
+        <q-item :key="n" v-for="n in 3" inset-separator>
           <q-item-main inset label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">Router Links</p>
-      <q-list :dark="dark">
-        <q-item to="/" exact v-for="n in 2" :key="'be' + n">
+      <q-list>
+        <q-item to="/" exact v-for="n in 2" :key="n">
           <q-item-main inset label="Go to Home" />
         </q-item>
       </q-list>
 
       <p class="caption">List Labels</p>
-      <q-list :dark="dark">
+      <q-list>
         <q-list-header>List Label</q-list-header>
-        <q-item :key="'bf' + n" v-for="n in 2">
+        <q-item :key="n" v-for="n in 2">
           <q-item-main label="List Item" />
         </q-item>
         <q-item-separator />
         <q-list-header>Another List Label</q-list-header>
-        <q-item :key="'bg' + n" v-for="n in 3">
+        <q-item :key="n" v-for="n in 3">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">Inset: Items, Separators and Labels</p>
-      <q-list :dark="dark">
+      <q-list>
         <q-item>
           <q-item-main inset label="List Item" />
         </q-item>
         <q-item-separator inset />
         <q-list-header inset>Inset List Label</q-list-header>
-        <q-item :key="'bh' + n" v-for="n in 2">
+        <q-item :key="n" v-for="n in 2">
           <q-item-main inset label="List Item" />
         </q-item>
         <q-item-separator inset />
@@ -389,8 +151,8 @@
           </span>
         </small>
       </p>
-      <q-list :dark="dark" highlight>
-        <q-item :key="'bi' + n" v-for="n in 2">
+      <q-list highlight>
+        <q-item :key="n" v-for="n in 2">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
@@ -407,14 +169,14 @@
           </span>
         </small>
       </p>
-      <q-list :dark="dark" link>
-        <q-item :key="'bj' + n" v-for="n in 2">
+      <q-list link>
+        <q-item :key="n" v-for="n in 2">
           <q-item-main label="List Item" />
         </q-item>
       </q-list>
 
       <p class="caption">Primary</p>
-      <q-list :dark="dark" inset-separator>
+      <q-list inset-separator>
         <q-item>
           <q-item-side icon="assignment_ind" />
           <q-item-main label="Icon as Primary" />
@@ -428,7 +190,7 @@
           <q-item-main label="One character as Primary" />
         </q-item>
       </q-list>
-      <q-list :dark="dark" inset-separator>
+      <q-list inset-separator>
         <q-item>
           <q-item-side icon="assignment_ind" />
           <q-item-main label="Icon as Primary" />
@@ -452,7 +214,7 @@
       </q-list>
 
       <p class="caption">Secondary</p>
-      <q-list :dark="dark">
+      <q-list>
         <q-item>
           <q-item-main label="Icon as Secondary" />
           <q-item-side right icon="info" />
@@ -470,7 +232,7 @@
       </q-list>
 
       <p class="caption">Example Items with Primary and Secondary</p>
-      <q-list :dark="dark" inset-separator>
+      <q-list inset-separator>
         <q-item>
           <q-item-side avatar="/statics/boy-avatar.png" />
           <q-item-main label="Jack" />
@@ -499,7 +261,7 @@
       </q-list>
 
       <p class="caption">Stamp and Truncated Content</p>
-      <q-list :dark="dark" highlight inset-separator style="max-width: 400px">
+      <q-list highlight inset-separator style="max-width: 400px">
         <q-item>
           <q-item-side avatar="/statics/boy-avatar.png" />
           <q-item-main label="Brunch this weekend? Brunch this weekend? Brunch this weekend?" label-lines="1" />
@@ -513,11 +275,7 @@
             sublabel="John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe John Doe"
             sublabel-lines="2"
           />
-          <q-item-side right>
-            <q-item-tile stamp class="text-center">
-              1 week<br>ago
-            </q-item-tile>
-          </q-item-side>
+          <q-item-side right stamp="1 week<br>ago" />
         </q-item>
         <q-item multiline>
           <q-item-side avatar="/statics/boy-avatar.png" />
@@ -532,7 +290,7 @@
         <q-item multiline>
           <q-item-side>
             <q-item-tile avatar>
-              <img src="~assets/boy-avatar.png" >
+              <img src="~assets/boy-avatar.png" />
             </q-item-tile>
           </q-item-side>
           <q-item-main>
@@ -562,20 +320,20 @@
       </q-list>
 
       <p class="caption">Item with different secondaries</p>
-      <q-list :dark="dark" inset-separator>
+      <q-list inset-separator>
         <q-item>
           <q-item-side avatar="/statics/boy-avatar.png" />
           <q-item-main label="Brunch this weekend?" />
           <q-item-side right icon="more_vert">
             <q-popover ref="popover">
-              <q-list :dark="dark" link>
-                <q-item @click.native="$refs.popover.hide()">
+              <q-list link>
+                <q-item @click="$refs.popover.close()">
                   <q-item-main label="Reply" />
                 </q-item>
-                <q-item @click.native="$refs.popover.hide()">
+                <q-item @click="$refs.popover.close()">
                   <q-item-main label="Forward" />
                 </q-item>
-                <q-item @click.native="$refs.popover.hide()">
+                <q-item @click="$refs.popover.close()">
                   <q-item-main label="Delete" />
                 </q-item>
               </q-list>
@@ -595,20 +353,20 @@
           <q-item-side right>
             <q-item-tile stamp>10 min ago</q-item-tile>
             <span class="text-amber">
-              <q-item-tile icon="star" v-for="n in 2" :key="'bk' + n" />
+              <q-item-tile icon="star" v-for="n in 2" :key="n" />
             </span>
           </q-item-side>
         </q-item>
       </q-list>
 
-      <q-list :dark="dark">
+      <q-list>
         <q-collapsible icon="inbox" indent label="Inbox" sublabel="Where your email is">
-          <q-item v-for="n in 3" :key="'bl' + n">
+          <q-item v-for="n in 3" :key="n">
             <q-item-side icon="mail" />
             <q-item-main :label="`Email ${n + 1}`" />
           </q-item>
           <q-collapsible icon="favorite" label="Favorites">
-            <q-item v-for="n in 3" :key="'bm' + n">
+            <q-item v-for="n in 3" :key="n">
               <q-item-side icon="mail" />
               <q-item-main :label="`Favorite ${n + 1}`" />
             </q-item>
@@ -619,20 +377,20 @@
           </q-item>
         </q-collapsible>
         <q-collapsible icon="send" label="Sent">
-          <q-item v-for="n in 3" :key="'bn' + n">
+          <q-item v-for="n in 3" :key="n">
             <q-item-side icon="mail" />
             <q-item-main :label="`Email ${n + 1}`" />
           </q-item>
         </q-collapsible>
         <q-collapsible icon="delete" label="Trash">
-          <q-item v-for="n in 3" :key="'bo' + n">
+          <q-item v-for="n in 3" :key="n">
             <q-item-side icon="mail" />
             <q-item-main :label="`Email ${n + 1}`" />
           </q-item>
         </q-collapsible>
       </q-list>
 
-      <q-list :dark="dark" highlight>
+      <q-list highlight>
         <q-list-header>Recent chats</q-list-header>
         <q-item>
           <q-item-side avatar="/statics/boy-avatar.png" />
@@ -641,21 +399,21 @@
             <q-item-tile icon="chat_bubble" color="green" />
           </q-item-side>
         </q-item>
-        <q-item v-for="n in 3" :key="'bp' + n">
+        <q-item v-for="n in 3" :key="n">
           <q-item-side avatar="/statics/boy-avatar.png" />
           <q-item-main label="John Doe" />
           <q-item-side right icon="chat_bubble" />
         </q-item>
         <q-item-separator />
         <q-list-header>Previous chats</q-list-header>
-        <q-item v-for="n in 3" :key="'bq' + n">
+        <q-item v-for="n in 3" :key="n">
           <q-item-side avatar="/statics/guy-avatar.png" />
           <q-item-main label="Jack Doe" />
         </q-item>
       </q-list>
 
-      <q-list :dark="dark">
-        <q-item v-for="n in 3" :key="'br' + n">
+      <q-list>
+        <q-item v-for="n in 3" :key="n">
           <q-item-side icon="star" color="yellow" />
           <q-item-main label="John Joe" />
           <q-item-side right>
@@ -665,109 +423,37 @@
           </q-item-side>
         </q-item>
         <q-item-separator inset />
-        <q-item v-for="n in 3" :key="'bs' + n">
+        <q-item v-for="n in 3" :key="n">
           <q-item-side letter="A" />
           <q-item-main label="John Joe" />
           <q-item-side right avatar="/statics/boy-avatar.png" />
         </q-item>
-        <q-list-header inset>Normal - default color</q-list-header>
-        <q-item v-for="n in 3" :key="'bt' + n" link>
-          <q-item-side letter="A" />
-          <q-item-main label="John Joe" />
-          <q-item-side right icon="alarm" />
-          <q-item-side right stamp="Stamp" />
-        </q-item>
-        <q-list-header inset>Normal - with color</q-list-header>
-        <q-item v-for="n in 3" :key="'bu' + n" link>
-          <q-item-side letter="A" :color="`red-${n + 2}`" />
-          <q-item-main label="John Joe" />
-          <q-item-side right icon="alarm" :color="`red-${n + 2}`" />
-          <q-item-side right stamp="Stamp" :color="`red-${n + 2}`" />
-        </q-item>
-        <q-list-header inset>Inverted - default color</q-list-header>
-        <q-item v-for="n in 3" :key="'bv' + n" link>
-          <q-item-side letter="A" inverted />
-          <q-item-main label="John Joe" />
-          <q-item-side right icon="alarm" inverted />
-        </q-item>
-        <q-list-header inset>Inverted - with color</q-list-header>
-        <q-item v-for="n in 3" :key="'bx' + n" link>
-          <q-item-side letter="A" inverted :color="`red-${n + 2}`" />
-          <q-item-main label="John Joe" />
-          <q-item-side right icon="alarm" inverted :color="`red-${n + 2}`" />
-        </q-item>
-        <q-list-header inset>Normal - Tile - default color</q-list-header>
-        <q-item v-for="n in 3" :key="'by' + n" link>
-          <q-item-side>
-            <q-item-tile letter>A</q-item-tile>
-          </q-item-side>
-          <q-item-main label="John Joe" />
-          <q-item-side right>
-            <q-item-tile icon="alarm" />
-          </q-item-side>
-          <q-item-side right>
-            <q-item-tile stamp>Stamp</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-list-header inset>Normal - Tile - with color</q-list-header>
-        <q-item v-for="n in 3" :key="'bw' + n" link>
-          <q-item-side>
-            <q-item-tile letter :color="`red-${n + 2}`">A</q-item-tile>
-          </q-item-side>
-          <q-item-main label="John Joe" />
-          <q-item-side right>
-            <q-item-tile icon="alarm" :color="`red-${n + 2}`" />
-          </q-item-side>
-          <q-item-side right>
-            <q-item-tile stamp :color="`red-${n + 2}`">Stamp</q-item-tile>
-          </q-item-side>
-        </q-item>
-        <q-list-header inset>Inverted - Tile - default color</q-list-header>
-        <q-item v-for="n in 3" :key="'bz' + n" link>
-          <q-item-side>
-            <q-item-tile letter inverted>A</q-item-tile>
-          </q-item-side>
-          <q-item-main label="John Joe" />
-          <q-item-side right>
-            <q-item-tile icon="alarm" inverted />
-          </q-item-side>
-        </q-item>
-        <q-list-header inset>Inverted - Tile - with color</q-list-header>
-        <q-item v-for="n in 3" :key="'ca' + n" link>
-          <q-item-side>
-            <q-item-tile letter inverted :color="`red-${n + 2}`">A</q-item-tile>
-          </q-item-side>
-          <q-item-main label="John Joe" />
-          <q-item-side right>
-            <q-item-tile icon="alarm" inverted :color="`red-${n + 2}`" />
-          </q-item-side>
-        </q-item>
       </q-list>
 
-      <q-list :dark="dark">
+      <q-list>
         <q-list-header inset>Folders</q-list-header>
-        <q-item v-for="n in 3" :key="'cb' + n">
+        <q-item v-for="n in 3" :key="n">
           <q-item-side icon="folder" inverted color="grey-6" />
           <q-item-main>
             <q-item-tile label>Photos</q-item-tile>
             <q-item-tile sublabel>February 22, 2016</q-item-tile>
           </q-item-main>
-          <q-item-side right icon="info" />
+          </q-item-side right icon="info" />
         </q-item>
         <q-item-separator inset />
         <q-list-header inset>Files</q-list-header>
-        <q-item v-for="n in 3" :key="'cc' + n">
+        <q-item v-for="n in 3" :key="n">
           <q-item-side icon="assignment" inverted color="grey-6" />
           <q-item-main>
             <q-item-tile label>Vacation</q-item-tile>
             <q-item-tile sublabel>February 22, 2016</q-item-tile>
           </q-item-main>
-          <q-item-side right icon="info" />
+          </q-item-side right icon="info" />
         </q-item>
       </q-list>
 
       <p class="caption">Settings</p>
-      <q-list :dark="dark" link>
+      <q-list link>
         <q-list-header>User controls</q-list-header>
         <q-item>
           <q-item-main>
@@ -785,7 +471,7 @@
         <q-list-header>General</q-list-header>
         <q-item tag="label">
           <q-item-side>
-            <q-checkbox :dark="dark" v-model="checked" />
+            <q-checkbox v-model="checked" />
           </q-item-side>
           <q-item-main>
             <q-item-tile label>Notifications</q-item-tile>
@@ -794,7 +480,7 @@
         </q-item>
         <q-item tag="label">
           <q-item-side>
-            <q-checkbox :dark="dark" v-model="checked" />
+            <q-checkbox v-model="checked" />
           </q-item-side>
           <q-item-main>
             <q-item-tile label>Sound</q-item-tile>
@@ -803,7 +489,7 @@
         </q-item>
         <q-item tag="label">
           <q-item-side>
-            <q-checkbox :dark="dark" v-model="checked" />
+            <q-checkbox v-model="checked" />
           </q-item-side>
           <q-item-main>
             <q-item-tile label>Auto-add widgets</q-item-tile>
@@ -813,17 +499,17 @@
       </q-list>
 
       <p class="caption">More form components examples</p>
-      <q-list :dark="dark" link>
+      <q-list link>
         <q-list-header>Radios</q-list-header>
         <q-item tag="label">
           <q-item-side>
-            <q-radio :dark="dark" v-model="option" val="opt1"/>
+            <q-radio v-model="option" val="opt1"></q-radio>
           </q-item-side>
           <q-item-main label="Option 1" />
         </q-item>
         <q-item tag="label">
           <q-item-side>
-            <q-radio :dark="dark" color="purple" v-model="option" val="opt2"/>
+            <q-radio color="purple" v-model="option" val="opt2"></q-radio>
           </q-item-side>
           <q-item-main>
             <q-item-tile label>Option 2</q-item-tile>
@@ -832,7 +518,7 @@
         </q-item>
         <q-item tag="label">
           <q-item-side>
-            <q-radio :dark="dark" color="red" v-model="option" val="opt3"/>
+            <q-radio color="red" v-model="option" val="opt3"></q-radio>
           </q-item-side>
           <q-item-main>
             <q-item-tile label>Option 3</q-item-tile>
@@ -841,12 +527,12 @@
         </q-item>
       </q-list>
 
-      <q-list :dark="dark" link>
+      <q-list link>
         <q-list-header>Toggles</q-list-header>
         <q-item tag="label">
           <q-item-main label="Events and reminders" />
           <q-item-side right>
-            <q-toggle :dark="dark" v-model="checked"/>
+            <q-toggle v-model="checked"></q-toggle>
           </q-item-side>
         </q-item>
         <q-item tag="label" multiline>
@@ -855,7 +541,7 @@
             <q-item-tile sublabel>Lorem ipsum</q-item-tile>
           </q-item-main>
           <q-item-side right>
-            <q-toggle :dark="dark" v-model="checked" color="purple"/>
+            <q-toggle v-model="checked" color="purple"></q-toggle>
           </q-item-side>
         </q-item>
         <q-item tag="label" multiline>
@@ -864,24 +550,24 @@
             <q-item-tile sublabel lines="3">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</q-item-tile>
           </q-item-main>
           <q-item-side right>
-            <q-toggle :dark="dark" v-model="checked" color="red"/>
+            <q-toggle v-model="checked" color="red"></q-toggle>
           </q-item-side>
         </q-item>
       </q-list>
 
       <p class="caption">More form components examples</p>
-      <q-list :dark="dark">
+      <q-list>
         <q-list-header>Selects</q-list-header>
         <q-item>
           <q-item-side icon="supervisor_account" />
           <q-item-main>
-            <q-select :dark="dark" class="full-width" v-model="select" :options="selectOptions" />
+            <q-select class="full-width" v-model="select" :options="selectOptions" />
           </q-item-main>
         </q-item>
         <q-item>
           <q-item-side icon="supervisor_account" />
           <q-item-main>
-            <q-select :dark="dark" class="full-width" multiple checkbox v-model="multipleSelect" :options="selectOptions" />
+            <q-select class="full-width" multiple checkbox v-model="multipleSelect" :options="selectOptions" />
           </q-item-main>
         </q-item>
 
@@ -909,7 +595,7 @@
         </q-item>
       </q-list>
 
-      <q-list :dark="dark">
+      <q-list>
         <q-list-header>Movies</q-list-header>
         <q-item>
           <q-item-side image="/statics/mountains.jpg" />
@@ -936,7 +622,7 @@
         </q-item>
       </q-list>
 
-      <q-list :dark="dark">
+      <q-list>
         <q-list-header>People</q-list-header>
         <q-item>
           <q-item-side avatar="/statics/boy-avatar.png" />
@@ -965,8 +651,8 @@
         </q-item>
       </q-list>
 
-      <q-list :dark="dark">
-        <q-item v-for="n in 3" :key="'cd' + n">
+      <q-list>
+        <q-item v-for="n in 3" :key="n">
           <q-item-side icon="phone" color="primary" v-if="n === 1" />
           <q-item-main :inset="n > 1">
             <q-item-tile label>(650) 555 - 1234</q-item-tile>
@@ -975,7 +661,7 @@
           <q-item-side right icon="chat_bubble" />
         </q-item>
         <q-item-separator inset />
-        <q-item v-for="n in 3" :key="'ce' + n">
+        <q-item v-for="n in 3" :key="n">
           <q-item-side icon="mail" color="primary" v-if="n === 1" />
           <q-item-main :inset="n > 1">
             <q-item-tile label>john@doe.com</q-item-tile>
@@ -984,7 +670,7 @@
         </q-item>
       </q-list>
 
-      <q-list :dark="dark" link>
+      <q-list link>
         <q-item>
           <q-item-side icon="inbox" />
           <q-item-main label="Inbox" />
@@ -1019,7 +705,6 @@
 export default {
   data () {
     return {
-      dark: false,
       checked: false,
       option: 'opt1',
       select: 'fb',

@@ -1,36 +1,29 @@
-import ItemMixin from '../../mixins/item'
-import { routerLinkProps } from '../../utils/router-link'
+import { ItemMixin, itemClasses } from './list-utils'
+import { RouterLinkMixin } from '../../utils/router-link'
 
 export default {
-  name: 'QItem',
-  mixins: [
-    ItemMixin,
-    { props: routerLinkProps }
-  ],
+  name: 'q-item',
+  functional: true,
+  mixins: [ItemMixin, {props: RouterLinkMixin.props}],
   props: {
     active: Boolean,
     link: Boolean
   },
-  computed: {
-    classes () {
-      const cls = this.itemClasses
-      return this.to !== void 0
-        ? ['q-link', cls]
-        : [{active: this.active}, cls]
+  render (h, ctx) {
+    const
+      data = ctx.data,
+      prop = ctx.props,
+      cls = itemClasses(prop)
+
+    if (prop.to !== void 0 || prop.link) {
+      data.props = prop
     }
-  },
-  render (h) {
-    if (this.to !== void 0) {
-      return h('router-link', {
-        props: Object.assign({}, this.$props, { tag: 'a' }),
-        'class': this.classes
-      }, this.$slots.default)
+    else {
+      cls.active = prop.active
     }
 
-    return h(
-      this.tag,
-      { 'class': this.classes },
-      this.$slots.default
-    )
+    data.class = data.class ? [data.class, cls] : cls
+
+    return h(prop.to ? 'router-link' : prop.tag, data, ctx.children)
   }
 }

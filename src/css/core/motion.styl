@@ -5,37 +5,37 @@
     background transparent
 
 .highlight-and-fade
-  animation q-highlight 2s /* rtl:ignore */
+  animation q-highlight 2s
 
 @keyframes q-rotate
   0%
-    transform rotate(0) /* rtl:ignore */
+    transform rotate(0)
   25%
-    transform rotate(90deg) /* rtl:ignore */
+    transform rotate(90deg)
   50%
-    transform rotate(180deg) /* rtl:ignore */
+    transform rotate(180deg)
   75%
-    transform rotate(270deg) /* rtl:ignore */
+    transform rotate(270deg)
   100%
-    transform rotate(360deg) /* rtl:ignore */
+    transform rotate(360deg)
 
 .transition-generic
   transition all .3s
 
 .animate-spin, .animate-spin-reverse
-  animation q-spin 2s infinite linear /* rtl:ignore */
+  animation q-spin 2s infinite linear
 .animate-spin-reverse
   animation-direction reverse
 .animate-blink
-  animation q-blink 1s steps(5, start) infinite /* rtl:ignore */
+  animation q-blink 1s steps(5, start) infinite
 .animate-pop
-  animation q-pop .2s /* rtl:ignore */
+  animation q-pop .2s
 .animate-scale
-  animation q-scale .2s /* rtl:ignore */
+  animation q-scale .2s
 .animate-fade
-  animation q-fade .2s /* rtl:ignore */
+  animation q-fade .2s
 .animate-bounce
-  animation q-bounce 2s infinite /* rtl:ignore */
+  animation q-bounce 2s infinite
 
 @keyframes q-blink
   to
@@ -43,9 +43,9 @@
 
 @keyframes q-spin
   0%
-    transform rotate(0deg) /* rtl:ignore */
+    transform rotate(0deg)
   100%
-    transform rotate(359deg) /* rtl:ignore */
+    transform rotate(359deg)
 
 @keyframes q-pop
   0%
@@ -79,30 +79,6 @@
   60%
     transform translateY(-15px)
 
-.animate-popup-up, .animate-popup-down
-  animation-timing-function cubic-bezier(0.23, 1, 0.32, 1)
-.animate-popup-down
-  animation q-popup-down .42s /* rtl:ignore */
-  transform-origin left top 0px /* rtl:ignore */
-.animate-popup-up
-  animation q-popup-up .42s /* rtl:ignore */
-  transform-origin left bottom 0px /* rtl:ignore */
-
-@keyframes q-popup-down
-  0%
-    opacity 0
-    transform translateY(-20px) scaleY(.3)
-    pointer-events none
-  100%
-    opacity 1
-
-@keyframes q-popup-up
-  0%
-    opacity 0
-    transform translateY(20px) scaleY(.3)
-    pointer-events none
-  100%
-    opacity 1
 
 .animated
   animation-duration 1s

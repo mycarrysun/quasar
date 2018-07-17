@@ -1,4 +1,4 @@
-import Platform from '../plugins/platform'
+import Platform from '../features/platform'
 
 export default {
   name: 'go-back',
@@ -15,15 +15,9 @@ export default {
         vnode.context.$router.replace(ctx.value)
       }
     }
-    ctx.goBackKey = ev => {
-      if (ev.keyCode === 13) {
-        ctx.goBack(ev)
-      }
-    }
 
     el.__qgoback = ctx
     el.addEventListener('click', ctx.goBack)
-    el.addEventListener('keyup', ctx.goBackKey)
   },
   update (el, binding) {
     if (binding.oldValue !== binding.value) {
@@ -31,10 +25,7 @@ export default {
     }
   },
   unbind (el) {
-    const ctx = el.__qgoback
-    if (!ctx) { return }
-    el.removeEventListener('click', ctx.goBack)
-    el.removeEventListener('keyup', ctx.goBackKey)
+    el.removeEventListener('click', el.__qgoback.goBack)
     delete el.__qgoback
   }
 }

@@ -1,4 +1,4 @@
-import QInfiniteScroll from './QInfiniteScroll'
+import QInfiniteScroll from './QInfiniteScroll.vue'
 
 export {
   QInfiniteScroll

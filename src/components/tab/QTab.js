@@ -1,7 +1,7 @@
 import TabMixin from './tab-mixin'
 
 export default {
-  name: 'QTab',
+  name: 'q-tab',
   mixins: [TabMixin],
   props: {
     default: Boolean
@@ -24,12 +24,14 @@ export default {
       staticClass: 'q-tab column flex-center relative-position',
       'class': this.classes,
       on: {
-        click: this.select,
-        keyup: e => e.keyCode === 13 && this.select(e)
+        click: this.select
       },
-      directives: process.env.THEME === 'mat'
-        ? [{ name: 'ripple' }]
-        : null
+      directives: [{
+        name: 'ripple',
+        modifiers: {
+          mat: true
+        }
+      }]
     }, this.__getTabContent(h))
   }
 }

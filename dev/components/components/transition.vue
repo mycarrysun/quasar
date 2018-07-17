@@ -15,13 +15,14 @@
         Single
       </q-card-title>
       <q-card-main>
-        <transition
+        <q-transition
           appear
-          :enter-active-class="enterClass"
-          :leave-active-class="leaveClass"
+          :enter="enter"
+          :leave="leave"
+          :disable="disable"
         >
-          <div v-if="show" v-html="loremipsum"/>
-        </transition>
+          <div v-if="show" v-html="loremipsum"></div>
+        </q-transition>
       </q-card-main>
     </q-card>
 
@@ -30,10 +31,12 @@
         Group
       </q-card-title>
       <q-card-main>
-        <transition-group
+        <q-transition
+          group
           appear
-          :enter-active-class="enterClass"
-          :leave-active-class="leaveClass"
+          :enter="enter"
+          :leave="leave"
+          :disable="disable"
           class="group"
         >
           <div
@@ -41,8 +44,8 @@
             v-for="n in 3"
             :key="n"
             v-html="loremipsum"
-          />
-        </transition-group>
+          ></div>
+        </q-transition>
       </q-card-main>
     </q-card>
   </div>
@@ -72,15 +75,8 @@ export default {
       enter: 'bounceInLeft',
       leave: 'bounceOutRight',
       show: true,
+      disable: false,
       loremipsum: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
-    }
-  },
-  computed: {
-    enterClass () {
-      return `animated ${this.enter}`
-    },
-    leaveClass () {
-      return `animated ${this.leave}`
     }
   }
 }

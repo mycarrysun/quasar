@@ -9,23 +9,26 @@ function push (child, h, name, slot, replace, conf) {
     child.push(h(name, defaultProps, slot))
     return
   }
-
-  let v = false
-  for (let p in conf) {
-    if (conf.hasOwnProperty(p)) {
-      v = conf[p]
-      if (v !== void 0 && v !== true) {
-        child.push(h(name, { props: conf }))
-        break
+  let props, v = false
+  if (!slot) {
+    for (let p in conf) {
+      if (conf.hasOwnProperty(p)) {
+        v = conf[p]
+        if (v !== void 0 && v !== true) {
+          props = true
+          break
+        }
       }
     }
   }
-
-  slot && child.push(h(name, defaultProps, slot))
+  if (props || slot) {
+    child.push(h(name, props ? {props: conf} : defaultProps, slot))
+  }
 }
 
 export default {
-  name: 'QItemWrapper',
+  name: 'q-item-wrapper',
+  functional: true,
   props: {
     cfg: {
       type: Object,
@@ -33,23 +36,22 @@ export default {
     },
     slotReplace: Boolean
   },
-  render (h) {
+  render (h, ctx) {
     const
-      cfg = this.cfg,
-      replace = this.slotReplace,
+      cfg = ctx.props.cfg,
+      replace = ctx.props.slotReplace,
+      slot = ctx.slots(),
       child = []
 
-    push(child, h, QItemSide, this.$slots.left, replace, {
+    push(child, h, QItemSide, slot.left, replace, {
       icon: cfg.icon,
       color: cfg.leftColor,
       avatar: cfg.avatar,
       letter: cfg.letter,
-      image: cfg.image,
-      inverted: cfg.leftInverted,
-      textColor: cfg.leftTextColor
+      image: cfg.image
     })
 
-    push(child, h, QItemMain, this.$slots.main, replace, {
+    push(child, h, QItemMain, slot.main, replace, {
       label: cfg.label,
       sublabel: cfg.sublabel,
       labelLines: cfg.labelLines,
@@ -57,24 +59,21 @@ export default {
       inset: cfg.inset
     })
 
-    push(child, h, QItemSide, this.$slots.right, replace, {
+    push(child, h, QItemSide, slot.right, replace, {
       right: true,
       icon: cfg.rightIcon,
       color: cfg.rightColor,
       avatar: cfg.rightAvatar,
       letter: cfg.rightLetter,
       image: cfg.rightImage,
-      stamp: cfg.stamp,
-      inverted: cfg.rightInverted,
-      textColor: cfg.rightTextColor
+      stamp: cfg.stamp
     })
 
-    child.push(this.$slots.default)
+    if (slot.default) {
+      child.push(slot.default)
+    }
 
-    return h(QItem, {
-      attrs: this.$attrs,
-      on: this.$listeners,
-      props: cfg
-    }, child)
+    ctx.data.props = cfg
+    return h(QItem, ctx.data, child)
   }
 }

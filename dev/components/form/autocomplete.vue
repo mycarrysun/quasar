@@ -6,56 +6,17 @@
         On desktop, Escape key closes the suggestions popover and you can navigate with keyboard arrow keys. Selection is made with either mouse/finger tap or by Enter key.
       </p>
 
-      <q-search @change="onChange" @input="onInput" v-model="terms" placeholder="Start typing a country name">
+
+      <q-search @change="onChange" v-model="terms" placeholder="Start typing a country name">
         <q-autocomplete @search="search" @selected="selected" />
       </q-search>
-
-      <q-search @change="onChange" @input="onInput" v-model="terms" placeholder="Country name - Trigger on focus">
-        <q-autocomplete @search="search" @selected="selected" :min-characters="0" />
-      </q-search>
-
-      <q-search @change="onChange" @input="onInput" v-model="terms" hide-underline placeholder="Start typing a country name (hide underline)">
-        <q-autocomplete @search="search" @selected="selected" />
-      </q-search>
-
-      <q-search @change="val => { terms = val; onChange(val) }" @input="onInput" :value="terms" placeholder="Start typing a country name (onChange)">
-        <q-autocomplete @search="search" @selected="selected" />
-      </q-search>
-
-      <p class="caption">Number selected: {{ JSON.stringify(termsN) }}</p>
-      <q-search type="number" v-model="termsN" placeholder="Start typing a number">
-        <q-autocomplete :static-data="{field: 'value', list: numbers}" @selected="selected" />
-      </q-search>
-
-      <q-search type="number" v-model="termsN" placeholder="Start typing a number - long list">
-        <q-autocomplete :static-data="{field: 'value', list: lots}" @selected="selected" :max-results="100" max-height="200px" />
-      </q-search>
-
-      <q-input @change="onChange" @input="onInput" v-model="terms" placeholder="Start typing a country name">
-        <q-autocomplete @search="search" @selected="selected" />
-      </q-input>
-
-      <q-input type="textarea" @change="onChange" @input="onInput" v-model="terms" placeholder="Start typing a country name" stack-label="Autocomplete in textarea">
-        <q-autocomplete @search="search" @selected="selected" />
-      </q-input>
-
-      <q-input @change="val => { terms = val; onChange(val) }" @input="onInput" :value="terms" placeholder="Start typing a country name (onChange)">
-        <q-autocomplete @search="search" @selected="selected" />
-      </q-input>
 
       <q-search inverted v-model="terms" placeholder="Start typing a country name">
-        <q-autocomplete @search="search" @selected="selected" />
+        <q-autocomplete @search="search" @selected="selected"  />
       </q-search>
 
       <p class="caption">Maximum of 2 results at a time</p>
       <q-search inverted color="amber" v-model="terms">
-        <q-autocomplete
-          @search="search"
-          :max-results="2"
-          @selected="selected"
-        />
-      </q-search>
-      <q-search inverted color="white" :dark="false" v-model="terms">
         <q-autocomplete
           @search="search"
           :max-results="2"
@@ -102,7 +63,7 @@
 </template>
 
 <script>
-import { uid, filter } from 'quasar'
+import { uid, filter, Toast } from 'quasar'
 import countries from 'data/autocomplete.json'
 
 const icons = ['alarm', 'email', 'search', 'build', 'card_giftcard', 'perm_identity', 'receipt', 'schedule', 'speaker_phone', 'archive', 'weekend', 'battery_charging_full']
@@ -136,10 +97,7 @@ export default {
   data () {
     return {
       terms: '',
-      termsN: null,
-      countries: parseCountries(),
-      numbers: [1, 2, 3, 4, 5, 1111, 2222, 3333, 4444, 5555].map(v => ({ label: String(v), value: v })),
-      lots: Array(100).fill(0).map((v, i) => ({ label: String(i), value: i }))
+      countries: parseCountries()
     }
   },
   methods: {
@@ -149,13 +107,10 @@ export default {
       }, 1000)
     },
     selected (item) {
-      this.$q.notify(`Selected suggestion ${JSON.stringify(item.label)}`)
+      Toast.create(`Selected suggestion "${item.label}"`)
     },
     onChange (val) {
-      console.log('@change', JSON.stringify(val))
-    },
-    onInput (val) {
-      console.log('@input', JSON.stringify(val))
+      console.log('@change', val)
     }
   }
 }

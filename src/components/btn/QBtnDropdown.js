@@ -1,25 +1,18 @@
 import BtnMixin from './btn-mixin'
-import QBtn from './QBtn'
+import QBtn from './QBtn.vue'
 import QBtnGroup from './QBtnGroup'
 import { QPopover } from '../popover'
 
 export default {
-  name: 'QBtnDropdown',
+  name: 'q-btn-dropdown',
   mixins: [BtnMixin],
   props: {
-    value: Boolean,
-    split: Boolean,
-    contentClass: [Array, String, Object],
-    contentStyle: [Array, String, Object]
+    label: String,
+    split: Boolean
   },
   data () {
     return {
-      showing: this.value
-    }
-  },
-  watch: {
-    value (val) {
-      this.$refs.popover && this.$refs.popover[val ? 'show' : 'hide']()
+      opened: false
     }
   },
   render (h) {
@@ -29,60 +22,78 @@ export default {
         {
           ref: 'popover',
           props: {
-            disable: this.disable,
             fit: true,
             anchorClick: !this.split,
             anchor: 'bottom right',
             self: 'top right'
           },
-          'class': this.contentClass,
-          style: this.contentStyle,
           on: {
-            show: e => {
-              this.showing = true
-              this.$emit('show', e)
-              this.$emit('input', true)
+            open: e => {
+              this.opened = true
+              this.$emit('open', e)
             },
-            hide: e => {
-              this.showing = false
-              this.$emit('hide', e)
-              this.$emit('input', false)
+            close: e => {
+              this.opened = false
+              this.$emit('close', e)
             }
           }
         },
         this.$slots.default
       ),
       Icon = h(
-        'QIcon',
+        'q-icon',
         {
           props: {
-            name: this.$q.icon.input.dropdown
+            name: 'arrow_drop_down'
           },
           staticClass: 'transition-generic',
           'class': {
-            'rotate-180': this.showing,
+            'rotate-180': this.opened,
             'on-right': !this.split,
             'q-btn-dropdown-arrow': !this.split
           }
         }
       ),
-      Btn = h(QBtn, {
-        props: Object.assign({}, this.$props, {
-          iconRight: this.split ? this.iconRight : null
-        }),
-        'class': this.split ? 'q-btn-dropdown-current' : 'q-btn-dropdown q-btn-dropdown-simple',
-        on: {
-          click: e => {
-            this.split && this.hide()
-            if (!this.disable) {
-              this.$emit('click', e)
+      child = [Popover]
+
+    const getBtn = () => {
+      return h(
+        QBtn,
+        {
+          props: {
+            disable: this.disable,
+            noCaps: this.noCaps,
+            noWrap: this.noWrap,
+            icon: this.icon,
+            label: this.label,
+            iconRight: this.split ? this.iconRight : null,
+            round: this.round,
+            outline: this.outline,
+            flat: this.flat,
+            rounded: this.rounded,
+            push: this.push,
+            small: this.small,
+            big: this.big,
+            color: this.color,
+            glossy: this.glossy,
+            compact: this.compact
+          },
+          staticClass: `${this.split ? 'q-btn-dropdown-current' : 'q-btn-dropdown q-btn-dropdown-simple'}`,
+          on: {
+            click: e => {
+              if (!this.disable) {
+                this.$emit('click', e)
+              }
             }
           }
-        }
-      }, this.split ? null : [ Icon, Popover ])
+        },
+        this.split ? null : child
+      )
+    }
 
     if (!this.split) {
-      return Btn
+      child.push(Icon)
+      return getBtn()
     }
 
     return h(
@@ -94,52 +105,44 @@ export default {
           rounded: this.rounded,
           push: this.push
         },
-        staticClass: 'q-btn-dropdown q-btn-dropdown-split no-wrap q-btn-item'
+        staticClass: 'q-btn-dropdown q-btn-dropdown-split no-wrap'
       },
       [
-        Btn,
+        getBtn(),
         h(
           QBtn,
           {
             props: {
-              disable: this.disable,
-              outline: this.outline,
+              round: this.round,
               flat: this.flat,
               rounded: this.rounded,
               push: this.push,
-              size: this.size,
+              small: this.small,
+              big: this.big,
               color: this.color,
-              textColor: this.textColor,
-              dense: this.dense,
-              glossy: this.glossy,
-              noRipple: this.noRipple,
-              waitForRipple: this.waitForRipple
+              glossy: this.glossy
             },
             staticClass: 'q-btn-dropdown-arrow',
-            on: { click: () => { this.toggle() } }
+            on: {
+              click: () => {
+                if (!this.disable) {
+                  this.$refs.popover.open()
+                }
+              }
+            }
           },
-          [ Icon ]
+          [Icon]
         ),
-        [ Popover ]
+        child
       ]
     )
   },
   methods: {
-    toggle () {
-      return this.$refs.popover ? this.$refs.popover.toggle() : Promise.resolve()
+    open () {
+      this.$refs.popover.open()
     },
-    show () {
-      return this.$refs.popover ? this.$refs.popover.show() : Promise.resolve()
-    },
-    hide () {
-      return this.$refs.popover ? this.$refs.popover.hide() : Promise.resolve()
+    close () {
+      this.$refs.popover.close()
     }
-  },
-  mounted () {
-    this.$nextTick(() => {
-      if (this.value) {
-        this.$refs.popover && this.$refs.popover.show()
-      }
-    })
   }
 }

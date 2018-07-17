@@ -1,5 +1,6 @@
 export default {
-  name: 'QList',
+  name: 'q-list',
+  functional: true,
   props: {
     noBorder: Boolean,
     dark: Boolean,
@@ -13,27 +14,30 @@ export default {
     highlight: Boolean,
     link: Boolean
   },
-  computed: {
-    classes () {
-      return {
-        'no-border': this.noBorder,
-        'q-list-dark': this.dark,
-        'q-list-dense': this.dense,
-        'q-list-sparse': this.sparse,
-        'q-list-striped': this.striped,
-        'q-list-striped-odd': this.stripedOdd,
-        'q-list-separator': this.separator,
-        'q-list-inset-separator': this.insetSeparator,
-        'q-list-multiline': this.multiline,
-        'q-list-highlight': this.highlight,
-        'q-list-link': this.link
-      }
+  render (h, ctx) {
+    const
+      data = ctx.data,
+      prop = ctx.props
+
+    data.class = {
+      'q-list': true,
+      'no-border': prop.noBorder,
+      'q-list-dark': prop.dark,
+      'q-list-dense': prop.dense,
+      'q-list-sparse': prop.sparse,
+      'q-list-striped': prop.striped,
+      'q-list-striped-odd': prop.stripedOdd,
+      'q-list-separator': prop.separator,
+      'q-list-inset-separator': prop.insetSeparator,
+      'q-list-multiline': prop.multiline,
+      'q-list-highlight': prop.highlight,
+      'q-list-link': prop.link
     }
-  },
-  render (h) {
-    return h('div', {
-      staticClass: 'q-list',
-      'class': this.classes
-    }, this.$slots.default)
+
+    return h(
+      'div',
+      data,
+      ctx.children
+    )
   }
 }

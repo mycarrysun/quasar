@@ -11,12 +11,13 @@
 
     <q-btn
       color="primary"
-      fab
-      icon="keyboard_arrow_up"
+      round
       v-back-to-top.animate="{offset: 500, duration: 200}"
       class="fixed-bottom-right animate-pop"
       style="margin: 0 15px 15px 0"
-    />
+    >
+      <q-icon name="keyboard_arrow_up" />
+    </q-btn>
 
     <a
       v-back-to-top.animate="1000"
@@ -25,18 +26,17 @@
       Back to top
     </a>
 
-    <p class="caption" v-for="n in 50" :key="n">Keep scrolling...</p>
+    <p class="caption" v-for="n in 50">Keep scrolling...</p>
   </div>
 </template>
 
-<style lang="stylus">
+<style lang="styl">
 .play-backtotop
   color white
   position fixed
   left 0
   top 30%
   padding 15px
-  cursor pointer
   background-color rgba(0, 0, 0, .8)
   border-radius 0 15px 15px 0
 </style>

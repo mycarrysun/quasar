@@ -1,7 +1,7 @@
+
 export function debounce (fn, wait = 250, immediate) {
   let timeout
-
-  function debounced (...args) {
+  return function (...args) {
     const later = () => {
       timeout = null
       if (!immediate) {
@@ -15,31 +15,18 @@ export function debounce (fn, wait = 250, immediate) {
     }
     timeout = setTimeout(later, wait)
   }
-
-  debounced.cancel = () => {
-    clearTimeout(timeout)
-  }
-
-  return debounced
 }
 
 export function frameDebounce (fn) {
-  let wait = false, frame
+  let wait = false
 
-  function debounced (...args) {
+  return function (...args) {
     if (wait) { return }
 
     wait = true
-    frame = requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
       fn.apply(this, args)
       wait = false
     })
   }
-
-  debounced.cancel = () => {
-    window.cancelAnimationFrame(frame)
-    wait = false
-  }
-
-  return debounced
 }

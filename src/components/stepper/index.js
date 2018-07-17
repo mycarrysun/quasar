@@ -1,5 +1,5 @@
-import QStep from './QStep'
-import QStepper from './QStepper'
+import QStep from './QStep.vue'
+import QStepper from './QStepper.vue'
 import QStepperNavigation from './QStepperNavigation'
 
 export {

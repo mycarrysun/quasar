@@ -3,22 +3,22 @@
     <div class="layout-padding">
       <h5>"Slide" Transition</h5>
 
-      <div class="caption">
+      <p class="caption">
         <span class="desktop-only">Click</span>
         <span class="mobile-only">Tap</span>
         on the Toggle below to see the transition in action.
-      </div>
-      <div>
+      </p>
+      <p>
         <q-toggle v-model="visible" label="Visible image" />
-      </div>
+      </p>
 
-      <q-slide-transition @show="log('show')" @hide="log('hide')">
-        <div v-show="visible" style="margin: 0">
+      <q-slide-transition>
+        <p v-show="visible" style="margin: 0">
           <img
             class="responsive"
             src="~assets/quasar.jpg"
           >
-        </div>
+        </p>
       </q-slide-transition>
     </div>
   </div>
@@ -29,11 +29,6 @@ export default {
   data () {
     return {
       visible: true
-    }
-  },
-  methods: {
-    log (msg) {
-      console.log(msg)
     }
   }
 }

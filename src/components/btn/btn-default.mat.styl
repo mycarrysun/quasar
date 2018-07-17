@@ -1,49 +1,33 @@
+button-round-factor($size)
+  if $size == 'small'
+    .54
+  else
+    .47
+
 .q-btn
+  display inline-flex
+  align-items center
+  justify-content center
   outline 0
   border 0
   vertical-align middle
   cursor pointer
+  -webkit-appearance button
   padding $button-padding
-  font-size $button-font-size
+  font-weight $button-font-weight
   text-decoration none
   color inherit
   background transparent
-  transition $button-transition
-  min-height 2.572em
   box-shadow $button-shadow
-  font-weight $button-font-weight
+  transition $button-transition
   text-transform uppercase
-  button&
-    -webkit-appearance button
-  a&
-    display inline-flex
-  .q-icon, .q-spinner
-    font-size 1.4em
-  // workaround for alignment/sizing change when showing loader
-  .q-btn-inner:before
-    content ''
 
   &.disabled
     opacity .7 !important
-
-  &:not(.disabled):not(.q-btn-flat):not(.q-btn-outline):not(.q-btn-push)
-    &:before
-      // This places the button active raise shadow behind adjacent elements
-      // Active raise shadow will still be visible under adjacent transparent elements, this is ok and coherent with a desired transparency effect.
-      // Visible active raise shadow can be removed by specifying a background color to the button
-      // Visible active raise shadow can be removed by specifying a flat or outline button type
-      content ''
-      position absolute
-      top 0
-      right 0
-      bottom 0
-      left 0
-      border-radius inherit
-      z-index -1
-      transition $button-transition
-    &:active:before
-    &.active:before
-      box-shadow $button-shadow-active
+  &:not([disabled]):active
+    box-shadow $shadow-8
+  &.full-width
+    border-radius 0 !important
 
 .q-btn-progress
   transition all .3s
@@ -58,6 +42,9 @@
 .q-btn-rectangle
   border-radius $button-border-radius
 
+.q-btn-flat, .q-btn-outline
+  box-shadow none !important
+
 .q-btn-outline
   border 1px solid currentColor
   background transparent !important
@@ -66,13 +53,8 @@
   border-radius $button-push-border-radius
   border-bottom 3px solid rgba(0, 0, 0, .15)
   &:active:not(.disabled)
-  &.active:not(.disabled)
+    border-bottom 0
     box-shadow none
-    transform translateY(3px)
-    border-bottom-color transparent
-  .q-focus-helper, .q-ripple-container
-    height auto
-    bottom -3px
 
 .q-btn-rounded
   border-radius $button-rounded-border-radius
@@ -80,31 +62,31 @@
 .q-btn-round
   border-radius 50%
   padding 0
-  min-height 0
-  height 3em
-  width 3em
+  box-shadow $button-shadow
+  &:active
+    box-shadow $shadow-8
 
-.q-btn-flat, .q-btn-outline
-  box-shadow none
+for $name, $size in $button-sizes
+  .q-btn-{$name}
+    min-height $size
+    font-size round($size * .38)
+    .q-icon
+      font-size round($size * .68)
+    .q-spinner
+      height round($size * .68)
+      width round($size * .68)
+for $name, $size in $button-round-sizes
+  .q-btn-round.q-btn-{$name}
+    height $size
+    width $size
+    .q-icon, .q-spinner
+      height round(button-round-factor($name) * $size)
+      width round(button-round-factor($name) * $size)
+      font-size round(button-round-factor($name) * $size)
 
-.q-btn-dense
-  padding $button-dense-padding
-  min-height 2em
-  &.q-btn-round
-    padding 0
-    height 2.4em
-    width 2.4em
+.q-btn-compact
+  padding 2px 6px
   .on-left
     margin-right 6px
   .on-right
     margin-left 6px
-
-.q-btn-fab, .q-btn-fab-mini
-  .q-icon
-    font-size 24px
-.q-btn-fab
-  height 56px
-  width 56px
-.q-btn-fab-mini
-  height 40px
-  width 40px

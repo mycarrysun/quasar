@@ -7,52 +7,47 @@
     :stack-label="stackLabel"
     :float-label="floatLabel"
     :error="error"
-    :warning="warning"
     :disable="disable"
     :inverted="inverted"
-    :inverted-light="invertedLight"
     :dark="dark"
-    :hide-underline="hideUnderline"
     :before="before"
     :after="after"
     :color="color"
-    :no-parent-field="noParentField"
 
     :focused="focused"
-    :length="autofilled + length"
+    :length="length"
     :top-addons="isTextarea"
 
     @click="__onClick"
-    @focus="__onFocus"
   >
-    <slot name="before"/>
+    <slot name="before"></slot>
 
     <template v-if="isTextarea">
       <div class="col row relative-position">
-        <q-resize-observable @resize="__updateArea()"/>
-        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <q-resize-observable @resize="__updateArea()"></q-resize-observable>
         <textarea
           class="col q-input-target q-input-shadow absolute-top"
           ref="shadow"
-          :value="model"
-          v-bind="$attrs"
+          :value="value"
+          :rows="minRows"
         ></textarea>
 
-        <!-- eslint-disable-next-line vue/html-self-closing -->
         <textarea
           ref="input"
           class="col q-input-target q-input-area"
 
+          :name="name"
           :placeholder="inputPlaceholder"
           :disabled="disable"
           :readonly="readonly"
-          v-bind="$attrs"
+          :maxlength="maxLength"
+          :rows="minRows"
 
-          :value="model"
+          :value="value"
           @input="__set"
 
           @focus="__onFocus"
-          @blur="__onInputBlur"
+          @blur="__onBlur"
           @keydown="__onKeydown"
           @keyup="__onKeyup"
         ></textarea>
@@ -62,72 +57,61 @@
     <input
       v-else
       ref="input"
-      class="col q-input-target q-no-input-spinner"
-      :class="inputClasses"
+      class="col q-input-target"
+      :class="[`text-${align}`]"
 
+      :name="name"
       :placeholder="inputPlaceholder"
+      :pattern="pattern"
       :disabled="disable"
       :readonly="readonly"
-      :step="computedStep"
-      v-bind="$attrs"
+      :maxlength="maxLength"
+
+      :min="min"
+      :max="max"
+      :step="inputStep"
 
       :type="inputType"
-      :value="model"
+      :value="value"
       @input="__set"
 
       @focus="__onFocus"
-      @blur="__onInputBlur"
+      @blur="__onBlur"
       @keydown="__onKeydown"
       @keyup="__onKeyup"
-
-      @animationstart="__onAnimationStart"
-    >
-
-    <q-icon
-      v-if="!disable && isPassword && !noPassToggle && length"
-      slot="after"
-      :name="$q.icon.input[showPass ? 'showPass' : 'hidePass']"
-      class="q-if-control"
-      @mousedown.native="__clearTimer"
-      @touchstart.native="__clearTimer"
-      @click.native="togglePass"
     />
 
     <q-icon
-      v-if="editable && keyboardToggle"
+      v-if="isPassword && !noPassToggle && length"
       slot="after"
-      :name="$q.icon.input[showNumber ? 'showNumber' : 'hideNumber']"
+      :name="showPass ? 'visibility' : 'visibility_off'"
       class="q-if-control"
-      @mousedown.native="__clearTimer"
-      @touchstart.native="__clearTimer"
-      @click.native="toggleNumber"
-    />
+      @click="togglePass"
+    ></q-icon>
 
     <q-icon
-      v-if="editable && clearable && length"
+      v-if="clearable && length"
       slot="after"
-      :name="$q.icon.input[`clear${isInverted ? 'Inverted' : ''}`]"
+      name="cancel"
       class="q-if-control"
-      @mousedown.native="__clearTimer"
-      @touchstart.native="__clearTimer"
-      @click.native="clear"
-    />
+      @click="clear"
+    ></q-icon>
 
     <q-spinner
       v-if="isLoading"
       slot="after"
       size="24px"
       class="q-if-control"
-    />
+    ></q-spinner>
 
-    <slot name="after" />
-    <slot />
+    <slot name="after"></slot>
+    <slot></slot>
   </q-input-frame>
 </template>
 
 <script>
-import FrameMixin from '../../mixins/input-frame'
-import InputMixin from '../../mixins/input'
+import FrameMixin from '../input-frame/input-frame-mixin'
+import InputMixin from '../input/input-mixin'
 import inputTypes from './input-types'
 import { frameDebounce } from '../../utils/debounce'
 import { between } from '../../utils/format'
@@ -136,7 +120,7 @@ import { QResizeObservable } from '../observables'
 import { QSpinner } from '../spinner'
 
 export default {
-  name: 'QInput',
+  name: 'q-input',
   mixins: [FrameMixin, InputMixin],
   components: {
     QInputFrame,
@@ -150,54 +134,42 @@ export default {
       default: 'text',
       validator: t => inputTypes.includes(t)
     },
-    align: {
-      type: String,
-      validator: v => ['left', 'center', 'right'].includes(v)
-    },
+    minRows: Number,
     clearable: Boolean,
     noPassToggle: Boolean,
-    numericKeyboardToggle: Boolean,
     readonly: Boolean,
 
-    decimals: Number,
-    step: Number,
-    upperCase: Boolean,
-    lowerCase: Boolean
+    min: Number,
+    max: Number,
+    step: {
+      type: Number,
+      default: 1
+    },
+    maxDecimals: Number
   },
   data () {
     return {
+      focused: false,
       showPass: false,
-      showNumber: true,
-      model: this.value,
-      watcher: null,
-      autofilled: false,
       shadow: {
-        val: this.model,
+        val: this.value,
         set: this.__set,
         loading: false,
-        watched: 0,
-        isDark: () => this.dark,
-        hasFocus: () => document.activeElement === this.$refs.input,
+        hasFocus: () => {
+          return document.activeElement === this.$refs.input
+        },
         register: () => {
-          this.shadow.watched += 1
-          this.__watcherRegister()
+          this.watcher = this.$watch('value', val => {
+            this.shadow.val = val
+          })
         },
         unregister: () => {
-          this.shadow.watched = Math.max(0, this.shadow.watched - 1)
-          this.__watcherUnregister()
+          this.watcher()
         },
-        getEl: () => this.$refs.input
+        getEl: () => {
+          return this.$refs.input
+        }
       }
-    }
-  },
-  watch: {
-    value (v) {
-      this.model = v
-      this.isNumberError = false
-      this.isNegZero = false
-    },
-    isTextarea (v) {
-      this[v ? '__watcherRegister' : '__watcherUnregister']()
     }
   },
   provide () {
@@ -216,138 +188,66 @@ export default {
       return this.type === 'textarea'
     },
     isLoading () {
-      return this.loading || (this.shadow.watched && this.shadow.loading)
+      return this.loading || this.shadow.loading
     },
-    keyboardToggle () {
-      return this.$q.platform.is.mobile &&
-        this.isNumber &&
-        this.numericKeyboardToggle &&
-        length
+    pattern () {
+      if (this.isNumber) {
+        return '[0-9]*'
+      }
+    },
+    inputStep () {
+      if (this.isNumber) {
+        return this.step
+      }
     },
     inputType () {
-      if (this.isPassword) {
-        return this.showPass && this.editable ? 'text' : 'password'
-      }
-      return this.isNumber
-        ? (this.showNumber || !this.editable ? 'number' : 'text')
+      return this.isPassword
+        ? (this.showPass ? 'text' : 'password')
         : this.type
     },
-    inputClasses () {
-      const classes = []
-      this.align && classes.push(`text-${this.align}`)
-      this.autofilled && classes.push('q-input-autofill')
-      return classes
-    },
     length () {
-      return this.model !== null && this.model !== undefined
-        ? ('' + this.model).length
+      return this.value || (this.isNumber && this.value !== null)
+        ? ('' + this.value).length
         : 0
     },
-    computedStep () {
-      return this.step || (this.decimals ? 10 ** -this.decimals : 'any')
+    editable () {
+      return !this.disable && !this.readonly
     }
   },
   methods: {
     togglePass () {
       this.showPass = !this.showPass
-      clearTimeout(this.timer)
-      this.focus()
     },
-    toggleNumber () {
-      this.showNumber = !this.showNumber
-      clearTimeout(this.timer)
-      this.focus()
-    },
-
-    __clearTimer () {
-      this.$nextTick(() => clearTimeout(this.timer))
-    },
-
-    __onAnimationStart (e) {
-      if (e.animationName.indexOf('webkit-autofill-') === 0) {
-        const value = e.animationName === 'webkit-autofill-on'
-        if (value !== this.autofilled) {
-          e.value = this.autofilled = value
-          e.el = this
-          return this.$emit('autofill', e)
-        }
+    clear () {
+      if (this.editable) {
+        this.$emit('input', '')
+        this.$emit('change', '')
       }
     },
 
-    __setModel (val) {
-      clearTimeout(this.timer)
-      this.focus()
-      this.__set(val || (this.isNumber ? null : ''), true)
-    },
-    __set (e, forceUpdate) {
-      let val = e && e.target ? e.target.value : e
-
-      if (this.isNumber) {
-        this.isNegZero = (1 / val) === -Infinity
-        const forcedValue = this.isNegZero ? -0 : val
-        val = parseFloat(val)
-        if (isNaN(val) || this.isNegZero) {
-          this.isNumberError = true
-          if (forceUpdate) {
-            this.$emit('input', forcedValue)
-            this.$nextTick(() => {
-              if (JSON.stringify(forcedValue) !== JSON.stringify(this.value)) {
-                this.$emit('change', forcedValue)
-              }
-            })
+    __set (e) {
+      let val = e.target ? e.target.value : e
+      if (val !== this.value) {
+        if (this.isNumber) {
+          if (val === '') {
+            val = null
           }
-          return
-        }
-        this.isNumberError = false
-        if (Number.isInteger(this.decimals)) {
-          val = parseFloat(val.toFixed(this.decimals))
-        }
-      }
-      else if (this.lowerCase) {
-        val = val.toLowerCase()
-      }
-      else if (this.upperCase) {
-        val = val.toUpperCase()
-      }
-
-      this.model = val
-      this.$emit('input', val)
-      if (forceUpdate) {
-        this.$nextTick(() => {
-          if (JSON.stringify(val) !== JSON.stringify(this.value)) {
-            this.$emit('change', val)
+          else {
+            val = Number.isInteger(this.maxDecimals)
+              ? parseFloat(val).toFixed(this.maxDecimals)
+              : parseFloat(val)
           }
-        })
+        }
+        this.$emit('input', val)
+        this.$emit('change', val)
       }
     },
     __updateArea () {
       const shadow = this.$refs.shadow
       if (shadow) {
         let h = shadow.scrollHeight
-        const minHeight = between(h, 19, this.maxHeight || h)
-        this.$refs.input.style.minHeight = `${minHeight + 19}px`
-      }
-    },
-    __watcher (value) {
-      if (this.isTextarea) {
-        this.__updateArea(value)
-      }
-      if (this.shadow.watched) {
-        this.shadow.val = value
-      }
-    },
-    __watcherRegister () {
-      if (!this.watcher) {
-        this.watcher = this.$watch('model', this.__watcher)
-      }
-    },
-    __watcherUnregister (forceUnregister) {
-      if (
-        this.watcher &&
-        (forceUnregister || (!this.isTextarea && !this.shadow.watched))
-      ) {
-        this.watcher()
-        this.watcher = null
+        const max = this.maxHeight || h
+        this.$refs.input.style.minHeight = `${between(h, 19, max)}px`
       }
     }
   },
@@ -355,11 +255,13 @@ export default {
     this.__updateArea = frameDebounce(this.__updateArea)
     if (this.isTextarea) {
       this.__updateArea()
-      this.__watcherRegister()
+      this.watcher = this.$watch('value', this.__updateArea)
     }
   },
   beforeDestroy () {
-    this.__watcherUnregister(true)
+    if (this.watcher !== void 0) {
+      this.watcher()
+    }
   }
 }
 </script>

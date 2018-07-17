@@ -1,63 +1,52 @@
-const prefix = process.env.THEME === 'mat' ? 'md' : 'ios'
-
 export default {
-  name: 'QIcon',
+  name: 'q-icon',
+  functional: true,
   props: {
     name: String,
+    mat: String,
+    ios: String,
     color: String,
     size: String
   },
-  computed: {
-    classes () {
-      let cls
-      const icon = this.name
+  render (h, ctx) {
+    let name, text
+    const
+      prop = ctx.props,
+      data = ctx.data,
+      theme = ctx.parent.$q.theme,
+      cls = ctx.data.staticClass,
+      icon = prop.mat && theme === 'mat'
+        ? prop.mat
+        : (prop.ios && theme === 'ios' ? prop.ios : ctx.props.name)
 
-      if (!icon) {
-        return ''
-      }
-      else if (/^fa[s|r|l|b]{0,1} /.test(icon) || icon.startsWith('icon-')) {
-        cls = icon
-      }
-      else if (icon.startsWith('bt-')) {
-        cls = `bt ${icon}`
-      }
-      else if (/^ion-(md|ios|logo)/.test(icon)) {
-        cls = `ionicons ${icon}`
-      }
-      else if (icon.startsWith('ion-')) {
-        cls = `ionicons ion-${prefix}${icon.substr(3)}`
-      }
-      else if (icon.startsWith('mdi-')) {
-        cls = `mdi ${icon}`
-      }
-      else {
-        cls = 'material-icons'
-      }
-
-      return this.color
-        ? `${cls} text-${this.color}`
-        : cls
-    },
-    content () {
-      return this.classes.startsWith('material-icons')
-        ? this.name.replace(/ /g, '_')
-        : ' '
-    },
-    style () {
-      if (this.size) {
-        return { fontSize: this.size }
-      }
+    if (!icon) {
+      name = ''
     }
-  },
-  render (h) {
-    return h('i', {
-      staticClass: 'q-icon',
-      'class': this.classes,
-      style: this.style,
-      attrs: { 'aria-hidden': true }
-    }, [
-      this.content,
-      this.$slots.default
-    ])
+    else if (icon.startsWith('fa-')) {
+      name = `fa ${icon}`
+    }
+    else if (icon.startsWith('ion-') || icon.startsWith('icon-')) {
+      name = `${icon}`
+    }
+    else {
+      name = 'material-icons'
+      text = icon.replace(/ /g, '_')
+    }
+
+    data.staticClass = `${cls ? cls + ' ' : ''}q-icon${name.length ? ` ${name}` : ''}${prop.color ? ` text-${prop.color}` : ''}`
+
+    if (!data.hasOwnProperty('attrs')) {
+      data.attrs = {}
+    }
+    data.attrs['aria-hidden'] = 'true'
+
+    if (prop.size) {
+      const style = `font-size: ${prop.size};`
+      data.style = data.style
+        ? [data.style, style]
+        : style
+    }
+
+    return h('i', data, text ? [text, ctx.children] : [' ', ctx.children])
   }
 }

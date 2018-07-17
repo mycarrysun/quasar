@@ -1,36 +1,36 @@
-.q-actionsheet
+.q-action-sheet-gallery
+  > div
+    padding $action-sheet-avatar-padding
+    border-radius $generic-border-radius
+    transition all .3s
+    &:hover, &:focus
+      background $action-sheet-hover-background
+      outline 0
+  i, img
+    font-size 2rem
+    margin-bottom 5px
+  .avatar
+    width 50px
+    height 50px
+
+.q-action-sheet
   border-radius $action-sheet-border-radius
   background $action-sheet-background
-  max-width 95%
+  max-width $action-sheet-max-width
   margin-left auto
   margin-right auto
-  margin-bottom 10px
+  margin-bottom $action-sheet-margin-bottom
   overflow hidden
 
-.q-actionsheet-title
-  min-height 48px
-  padding 0 16px
-  color $faded
-  color var(--q-color-faded)
-  text-align center
+  .modal-header
+    border-bottom 2px solid $grey-4
+    padding-bottom 15px !important
 
-.q-actionsheet-grid
-  padding 8px 16px
-  .q-item-separator-component
-    margin 18px 0
-
-.q-actionsheet-grid-item
-  padding 8px 16px
-  transition background .3s
-  &:hover, &:focus
-    background $action-sheet-hover-background
-    outline 0
-  i, img
-    font-size 48px
-    margin-bottom 4px
-  .avatar
-    width 48px
-    height 48px
-  span
-    color $faded
-    color var(--q-color-faded)
+  .link
+    font-size $action-sheet-font-size
+    &:first-child
+      margin-top 0
+    &:last-child
+      margin-bottom 0
+    &:not(:last-child)
+      border-bottom 1px solid $grey-4

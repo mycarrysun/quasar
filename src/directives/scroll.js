@@ -1,18 +1,17 @@
 import { getScrollPosition, getScrollTarget } from '../utils/scroll'
-import { listenOpts } from '../utils/event'
 
 function updateBinding (el, binding) {
   const ctx = el.__qscroll
 
   if (typeof binding.value !== 'function') {
-    ctx.scrollTarget.removeEventListener('scroll', ctx.scroll, listenOpts.passive)
+    ctx.scrollTarget.removeEventListener('scroll', ctx.scroll)
     console.error('v-scroll requires a function as parameter', el)
     return
   }
 
   ctx.handler = binding.value
   if (typeof binding.oldValue !== 'function') {
-    ctx.scrollTarget.addEventListener('scroll', ctx.scroll, listenOpts.passive)
+    ctx.scrollTarget.addEventListener('scroll', ctx.scroll)
   }
 }
 
@@ -38,8 +37,7 @@ export default {
   },
   unbind (el) {
     let ctx = el.__qscroll
-    if (!ctx) { return }
-    ctx.scrollTarget.removeEventListener('scroll', ctx.scroll, listenOpts.passive)
+    ctx.scrollTarget.removeEventListener('scroll', ctx.scroll)
     delete el.__qscroll
   }
 }

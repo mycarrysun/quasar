@@ -1,5 +1,6 @@
 export default {
-  name: 'QCardMedia',
+  name: 'q-card-media',
+  functional: true,
   props: {
     overlayPosition: {
       type: String,
@@ -7,19 +8,25 @@ export default {
       validator: v => ['top', 'bottom', 'full'].includes(v)
     }
   },
-  render (h) {
-    return h('div', {
-      staticClass: 'q-card-media relative-position'
-    }, [
-      this.$slots.default,
-      this.$slots.overlay
-        ? h('div', {
-          staticClass: 'q-card-media-overlay',
-          'class': `absolute-${this.overlayPosition}`
-        }, [
-          this.$slots.overlay
-        ])
-        : null
-    ])
+  render (h, ctx) {
+    const
+      data = ctx.data,
+      cls = data.staticClass,
+      slots = ctx.slots()
+    let child = [slots.default]
+
+    data.staticClass = `q-card-media relative-position${cls ? ` ${cls}` : ''}`
+
+    if (slots.overlay) {
+      child.push(h(
+        'div',
+        {
+          staticClass: `q-card-media-overlay absolute-${ctx.props.overlayPosition}`
+        },
+        slots.overlay
+      ))
+    }
+
+    return h('div', data, child)
   }
 }

@@ -1,23 +1,7 @@
 import Ripple from '../../directives/ripple'
 import { QIcon } from '../icon'
-import AlignMixin from '../../mixins/align'
-
-const sizes = {
-  xs: 8,
-  sm: 10,
-  md: 14,
-  lg: 20,
-  xl: 24,
-  form: 12.446,
-  'form-label': 17.11,
-  'form-hide-underline': 9.335,
-  'form-label-hide-underline': 14,
-  'form-inverted': 15.555,
-  'form-label-inverted': 20.22
-}
 
 export default {
-  mixins: [AlignMixin],
   components: {
     QIcon
   },
@@ -25,10 +9,8 @@ export default {
     Ripple
   },
   props: {
-    type: String,
-    loading: Boolean,
     disable: Boolean,
-    label: [Number, String],
+    label: String,
     noCaps: Boolean,
     noWrap: Boolean,
     icon: String,
@@ -38,65 +20,32 @@ export default {
     flat: Boolean,
     rounded: Boolean,
     push: Boolean,
-    size: String,
-    fab: Boolean,
-    fabMini: Boolean,
+    small: Boolean,
+    big: Boolean,
     color: String,
-    textColor: String,
     glossy: Boolean,
-    dense: Boolean,
-    noRipple: Boolean,
-    tabindex: Number,
-    to: [Object, String],
-    replace: Boolean
+    compact: Boolean
   },
   computed: {
-    style () {
-      if (this.size && !this.fab && !this.fabMini) {
-        return {
-          fontSize: this.size in sizes ? `${sizes[this.size]}px` : this.size
-        }
-      }
-    },
-    isRectangle () {
-      return !this.isRound
-    },
-    isRound () {
-      return this.round || this.fab || this.fabMini
+    size () {
+      return `q-btn-${this.small ? 'small' : (this.big ? 'big' : 'standard')}`
     },
     shape () {
-      return `q-btn-${this.isRound ? 'round' : 'rectangle'}`
+      return `q-btn-${this.round ? 'round' : 'rectangle'}`
     },
     isDisabled () {
       return this.disable || this.loading
     },
-    hasRipple () {
-      return process.env.THEME === 'mat' && !this.noRipple && !this.isDisabled
-    },
-    computedTabIndex () {
-      return this.isDisabled ? -1 : this.tabindex || 0
-    },
-    isLink () {
-      return this.type === 'a' || this.to !== void 0
-    },
-    attrs () {
-      const att = { tabindex: this.computedTabIndex }
-      if (this.type !== 'a') {
-        att.type = this.type
-      }
-      if (this.to !== void 0) {
-        att.href = this.$router.resolve(this.to).href
-      }
-      return att
-    },
     classes () {
-      const cls = [ this.shape ]
+      const
+        cls = [this.shape, this.size],
+        color = this.toggled ? this.toggleColor : this.color
 
-      if (this.fab) {
-        cls.push('q-btn-fab')
+      if (this.toggled) {
+        cls.push('q-btn-toggle-active')
       }
-      else if (this.fabMini) {
-        cls.push('q-btn-fab-mini')
+      if (this.compact) {
+        cls.push('q-btn-compact')
       }
 
       if (this.flat) {
@@ -109,41 +58,22 @@ export default {
         cls.push('q-btn-push')
       }
 
-      if (this.isDisabled) {
-        cls.push('disabled')
-      }
-      else {
-        cls.push('q-focusable q-hoverable')
-        this.active && cls.push('active')
-      }
+      this.isDisabled && cls.push('disabled')
+      this.noCaps && cls.push('q-btn-no-uppercase')
+      this.rounded && cls.push('q-btn-rounded')
+      this.glossy && cls.push('glossy')
 
-      if (this.color) {
+      if (color) {
         if (this.flat || this.outline) {
-          cls.push(`text-${this.textColor || this.color}`)
+          cls.push(`text-${color}`)
         }
         else {
-          cls.push(`bg-${this.color}`)
-          cls.push(`text-${this.textColor || 'white'}`)
+          cls.push(`bg-${color}`)
+          cls.push(`text-white`)
         }
       }
-      else if (this.textColor) {
-        cls.push(`text-${this.textColor}`)
-      }
-
-      cls.push({
-        'q-btn-no-uppercase': this.noCaps,
-        'q-btn-rounded': this.rounded,
-        'q-btn-dense': this.dense,
-        'glossy': this.glossy
-      })
 
       return cls
-    },
-    innerClasses () {
-      const classes = [ this.alignClass ]
-      this.noWrap && classes.push('no-wrap', 'text-no-wrap')
-      this.repeating && classes.push('non-selectable')
-      return classes
     }
   }
 }

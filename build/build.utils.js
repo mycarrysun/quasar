@@ -9,12 +9,12 @@ function getSize (code) {
 
 module.exports.writeFile = function (dest, code, zip) {
   const banner = dest.indexOf('.js') > -1
-    ? '[js] '
+    ? '[js]'
     : '[css]'
 
   return new Promise((resolve, reject) => {
     function report (extra) {
-      console.log(`${banner} ${path.relative(process.cwd(), dest).padEnd(41)} ${getSize(code).padStart(8)}${extra || ''}`)
+      console.log(`${banner} ${path.relative(process.cwd(), dest).bold} ${getSize(code).gray}${extra || ''}`)
       resolve(code)
     }
 
@@ -23,7 +23,7 @@ module.exports.writeFile = function (dest, code, zip) {
       if (zip) {
         zlib.gzip(code, (err, zipped) => {
           if (err) return reject(err)
-          report(` (gzipped: ${getSize(zipped).padStart(8)})`)
+          report(` (gzipped: ${getSize(zipped)})`)
         })
       }
       else {
@@ -38,16 +38,5 @@ module.exports.readFile = function (file) {
 }
 
 module.exports.logError = function (err) {
-  console.error('[Error]', err)
-}
-
-module.exports.rollupQuasarUMD = function (config = {}) {
-  return {
-    name: 'quasar-umd',
-    transform (code, id) {
-      return {
-        code: `Quasar.${config.type}.set(${code.replace('export default ', '')})`
-      }
-    }
-  }
+  console.error('[Error]'.red, err)
 }

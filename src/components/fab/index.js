@@ -1,5 +1,5 @@
-import QFab from './QFab'
-import QFabAction from './QFabAction'
+import QFab from './QFab.vue'
+import QFabAction from './QFabAction.vue'
 
 export {
   QFab,

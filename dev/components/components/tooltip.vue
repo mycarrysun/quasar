@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="layout-padding">
-      <div class="caption">
+      <p class="caption">
         <span class="desktop-only">
           Move mouse over the elements below. On a mobile device,
           you need to tap the elements.
@@ -10,7 +10,7 @@
           Tap on elements below. On desktop you can move the mouse
           over the elements.
         </span>
-      </div>
+      </p>
 
       <div style="margin-top: 40px;width: 200px; height: 70px;background-color: #26A69A;">
         &nbsp;
@@ -20,22 +20,26 @@
       <q-toggle v-model="toggle" class="z-max fixed-top" />
       <p class="caption">With offset</p>
       <div class="group">
-        <q-btn color="indigo" label="Hover">
+        <q-btn color="indigo">
+          Hover
           <q-tooltip v-model="toggle" anchor="top middle" self="bottom middle" :offset="[10, 10]">
             <strong>Tooltip</strong> on <em>top</em> (<q-icon name="keyboard_arrow_up" />)
           </q-tooltip>
         </q-btn>
-        <q-btn color="red" label="Over">
+        <q-btn color="red">
+          Over
           <q-tooltip anchor="center right" self="center left" :offset="[10, 10]">
             <strong>Tooltip</strong> on <em>right</em> (<q-icon name="keyboard_arrow_right" />)
           </q-tooltip>
         </q-btn>
-        <q-btn color="purple" label="These">
+        <q-btn color="purple">
+          These
           <q-tooltip anchor="center left" self="center right" :offset="[10, 10]">
             <strong>Tooltip</strong> on <em>left</em> (<q-icon name="keyboard_arrow_left" />)
           </q-tooltip>
         </q-btn>
-        <q-btn color="amber" label="Buttons">
+        <q-btn color="amber">
+          Buttons
           <q-tooltip anchor="bottom middle" self="top middle" :offset="[10, 10]">
             <strong>Tooltip</strong> on <em>bottom</em> (<q-icon name="keyboard_arrow_down" />)
           </q-tooltip>
@@ -44,7 +48,9 @@
 
       <q-card style="margin-top: 75px">
         <q-card-title class="bg-primary text-center">
-          <q-btn push color="orange" label="Mouse Hover">
+          <q-btn push color="orange">
+            Mouse Hover
+
             <q-tooltip :anchor="anchor" :self="self">
               <div>Quasar is <strong>great</strong>!</div>
               <div class="text-center">Try it.</div>
@@ -53,10 +59,10 @@
         </q-card-title>
 
         <p class="caption text-center">Configure the Tooltip for button above.</p>
-        <div class="text-center">
-          <q-chip tag color="primary">anchor="{{ anchor }}"</q-chip>
-          <q-chip tag color="primary">self="{{ self }}"</q-chip>
-        </div>
+        <p class="text-center">
+          <q-chip tag color="primary">anchor="{{anchor}}"</q-chip>
+          <q-chip tag color="primary">self="{{self}}"</q-chip>
+        </p>
         <q-card-main class="row">
           <div class="column items-center col-6">
             <p class="caption">Anchor Origin</p>

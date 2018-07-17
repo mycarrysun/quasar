@@ -1,5 +1,5 @@
-const
-  fs = require('fs'),
+
+var
   path = require('path'),
   shell = require('shelljs'),
   type = process.argv[2]
@@ -7,28 +7,21 @@ const
 /*
   Build:
   * all: npm run build
-  * js:  npm run build js
+  * js & css without standalone: npm run build simple
+  * js: npm run build js
+  * js w/out standalone: npm run build js simple
   * css: npm run build css
+  * css w/out standalone: npm run build css simple
  */
 
-function createFolder (folder) {
-  const dir = path.join(__dirname, '..', folder)
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir)
-  }
-}
+require('colors')
 
-console.log()
-
-if (!type) {
+if (!type || type === 'simple') {
   require('./script.clean.js')
   shell.mkdir('-p', path.join(__dirname, '../dist/'))
 }
 
-console.log(` 📦 Building Quasar v${require('../package.json').version}...\n`)
-
-createFolder('dist')
-createFolder('dist/umd')
+console.log(' Building...\n')
 
 if (!type || type === 'js') {
   require('./script.build.javascript')

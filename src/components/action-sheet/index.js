@@ -1,5 +1,4 @@
-import QActionSheet from './QActionSheet'
+import Modal from '../../utils/modal'
+import ActionSheets from './ActionSheet.vue'
 
-export {
-  QActionSheet
-}
+export default Modal(ActionSheets)

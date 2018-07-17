@@ -2,19 +2,16 @@
   border $editor-border
   &.disabled
     border-style dashed
-  &.fullscreen
-    border 0 !important
 
 .q-editor-content
   outline 0
   padding $editor-content-padding
   min-height $editor-content-min-height
-  background white
 
   hr
     border 0
     outline 0
-    margin 1px
+    margin 24px 8px
     height 1px
     background $editor-hr-color
 
@@ -23,8 +20,6 @@
 
 .q-editor-toolbar
   border-bottom $editor-border
-  background $grey-4
-  min-height 37px
   .q-btn-group
     box-shadow none
   .q-btn-group + .q-btn-group
@@ -41,6 +36,3 @@
       height 100%
       width 1px
       background $editor-border-color
-
-.q-editor-input input
-  color inherit

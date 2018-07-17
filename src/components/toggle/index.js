@@ -1,4 +1,4 @@
-import QToggle from './QToggle'
+import QToggle from './QToggle.vue'
 
 export {
   QToggle

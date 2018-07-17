@@ -3,7 +3,7 @@ export default {
     color: String,
     size: {
       type: [Number, String],
-      default: '1em'
+      default: '1rem'
     }
   },
   computed: {

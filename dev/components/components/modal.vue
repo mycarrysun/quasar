@@ -12,7 +12,7 @@
           link
           v-for="modal in types"
           :key="modal.label"
-          @click.native="$refs[modal.ref].show()"
+          @click="$refs[modal.ref].open()"
           v-ripple.mat
         >
           <q-item-side icon="open_in_new" />
@@ -27,7 +27,7 @@
           link
           v-for="position in ['top', 'bottom', 'left', 'right']"
           :key="position"
-          @click.native="openSpecialPosition(position)"
+          @click="openSpecialPosition(position)"
           v-ripple.mat
         >
           <q-item-side icon="open_in_new" />
@@ -40,39 +40,27 @@
     <q-toggle v-model="toggle" class="z-max fixed-top" />
     <q-modal v-model="toggle" ref="basicModal" :content-css="{padding: '50px', minWidth: '50vw'}">
       <h4>Basic Modal</h4>
-      <q-input type="textarea" v-model="textarea" :max-height="50" />
-      <p v-for="n in 25" :key="n">{{ n }} Scroll down to close</p>
-      <q-btn color="primary" @click="$refs.basicModal.hide()">Close</q-btn>
+      <p v-for="n in 25">Scroll down to close</p>
+      <q-btn color="primary" @click="$refs.basicModal.close()">Close</q-btn>
     </q-modal>
 
     <q-modal
       ref="eventsModal"
-      @show="notify('open')"
+      @open="notify('open')"
       @escape-key="notify('escape-key')"
-      @hide="notify('close')"
+      @close="notify('close')"
       :content-css="{padding: '50px', minWidth: '50vw'}"
     >
       <h4>Modal with Events</h4>
-      <p v-for="n in 25" :key="n">{{ n }} Scroll down to close</p>
-      <q-btn color="primary" @click="$refs.eventsModal.hide()">Close</q-btn>
+      <p v-for="n in 25">Scroll down to close</p>
+      <q-btn color="primary" @click="$refs.eventsModal.close()">Close</q-btn>
     </q-modal>
 
-    <div class="fixed-bottom-right z-max bg-yellow">
-      <q-checkbox toggle-indeterminate v-model="autoSize" label="Auto size" />
-      <br>
-      <q-checkbox v-model="hasLayout" label="With Layout" />
-      <br>
-      Ref <q-btn @click="show" label="Show" /><q-btn @click="hide" label="Hide" />
-      <br>
-      Model <q-btn @click="someModel = true" label="Show" /><q-btn @click="someModel = false" label="Hide" />
-      <br>
-      {{ someModel }}
-    </div>
-    <q-modal ref="layoutModal" v-model="someModel" :content-css="autoSizeStyle" @show="onShow" @hide="onHide">
-      <q-modal-layout v-if="hasLayout">
+    <q-modal ref="layoutModal" :content-css="{minWidth: '80vw', minHeight: '80vh'}">
+      <q-modal-layout>
         <q-toolbar slot="header">
           <q-icon style="font-size: 500%" class="cursor-pointer" name="map" @click="closeMe" />
-          <q-btn flat round dense @click="$refs.layoutModal.hide()">
+          <q-btn flat @click="$refs.layoutModal.close()">
             <q-icon name="keyboard_arrow_left" />
           </q-btn>
           <q-toolbar-title>
@@ -81,7 +69,7 @@
         </q-toolbar>
 
         <q-toolbar slot="header">
-          <q-search class="col" inverted v-model="search" color="none"/>
+          <q-search inverted v-model="search" color="none"></q-search>
         </q-toolbar>
 
         <q-toolbar slot="footer">
@@ -91,53 +79,40 @@
         </q-toolbar>
 
         <div class="layout-padding">
-          <h3>Modal</h3>
+          <h1>Modal</h1>
 
-          <q-btn color="primary" @click="$refs.layoutModal.hide()">Close</q-btn>
-          <p class="caption" v-for="n in autoSizeRows" :key="n">
-            <span v-for="m in autoSizeCols" :key="m">{{ n }} {{ m }} This is a Modal presenting a Layout.</span>
-          </p>
+          <q-btn color="primary" @click="$refs.layoutModal.close()">Close</q-btn>
+          <p class="caption" v-for="n in 15">This is a Modal presenting a Layout.</p>
         </div>
       </q-modal-layout>
-      <template v-else>
-        <h4>Modal</h4>
-        <p v-for="n in 25" :key="n">Scroll down to close</p>
-        <q-btn color="primary" @click="$refs.layoutModal.hide()">Close</q-btn>
-      </template>
     </q-modal>
 
     <q-modal ref="minimizedModal" minimized :content-css="{padding: '50px'}">
       <h4>Minimized Modal</h4>
       <p>This one has backdrop on small screens too.</p>
-      <q-btn color="red" @click="$refs.minimizedModal.hide()">Close Me</q-btn>
-      <q-input type="textarea" v-model="textarea" :max-height="50" />
+      <q-btn color="red" @click="$refs.minimizedModal.close()">Close Me</q-btn>
     </q-modal>
 
     <q-modal ref="maximizedModal" maximized :content-css="{padding: '50px'}">
       <h4>Maximized Modal</h4><p>This one is maximized on bigger screens too.</p>
-      <q-btn color="tertiary" @click="$refs.maximizedModal.hide()">Close Me</q-btn>
-      <p v-for="n in 25" :key="n">{{ n }} Intended scroll</p>
+      <q-btn color="tertiary" @click="$refs.maximizedModal.close()">Close Me</q-btn>
     </q-modal>
 
     <q-modal ref="positionModal" :position="position" :content-css="{padding: '20px'}">
-      <h4>Modal</h4><p>This one gets displayed from {{ position }}.</p>
-      <q-btn color="orange" @click="$refs.positionModal.hide()">Close Me</q-btn>
+      <h4>Modal</h4><p>This one gets displayed from {{position}}.</p>
+      <q-btn color="orange" @click="$refs.positionModal.close()">Close Me</q-btn>
     </q-modal>
-
-    <div style="height: 800px">&nbsp;</div>
   </div>
 </template>
 
 <script>
+import { Toast } from 'quasar'
+
 export default {
   data () {
     return {
       search: '',
-      textarea: 'Textarea',
       toggle: false,
-      autoSize: false,
-      hasLayout: true,
-      someModel: false,
       types: [
         {
           label: 'Basic',
@@ -163,53 +138,20 @@ export default {
       position: 'bottom'
     }
   },
-  computed: {
-    autoSizeCols () {
-      return this.autoSize === false ? 1 : (this.autoSize === true ? 2 : 4)
-    },
-    autoSizeRows () {
-      return this.autoSize === false ? 15 : (this.autoSize === true ? 30 : 1)
-    },
-    autoSizeStyle () {
-      return this.autoSize === false ? {minWidth: '80vw', minHeight: '80vh'} : (this.autoSize === true ? {} : {maxWidth: '80vw'})
-    }
-  },
   methods: {
     notify (eventName) {
-      this.$q.notify(`Event "${eventName}" was triggered.`)
+      Toast.create(`Event "${eventName}" was triggered.`)
     },
     openSpecialPosition (position) {
       this.position = position
       this.$nextTick(() => {
-        this.$refs.positionModal.show()
+        this.$refs.positionModal.open()
       })
     },
     closeMe () {
       console.log('click')
-      this.$refs.layoutModal.hide()
-      this.$refs.layoutModal.hide()
-    },
-    onShow () {
-      console.log('onShow')
-    },
-    onHide () {
-      console.log('onHide')
-    },
-    show () {
-      console.log('show')
-      this.$refs.layoutModal.show().then(() => {
-        console.log('---show finished')
-      }, () => {
-        console.log('---show cancelled')
-      })
-    },
-    hide () {
-      console.log('hide')
-      this.$refs.layoutModal.hide().then(() => {
-        console.log('---hide finished')
-      }, () => {
-        console.log('---hide cancelled')
-      })
+      this.$refs.layoutModal.close()
+      this.$refs.layoutModal.close()
     }
   }
 }

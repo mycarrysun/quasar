@@ -1,12 +1,5 @@
 export default {
-  name: 'QTabPane',
-  inject: {
-    data: {
-      default () {
-        console.error('QTabPane needs to be child of QTabs')
-      }
-    }
-  },
+  name: 'q-tab-pane',
   props: {
     name: {
       type: String,
@@ -14,6 +7,7 @@ export default {
     },
     keepAlive: Boolean
   },
+  inject: ['data'],
   data () {
     return {
       shown: false
@@ -25,15 +19,7 @@ export default {
     }
   },
   render (h) {
-    const node = h(
-      'div',
-      {
-        staticClass: 'q-tab-pane',
-        'class': { hidden: !this.active }
-      },
-      this.$slots.default
-    )
-
+    const node = h('div', {staticClass: 'q-tab-pane', 'class': {hidden: !this.active}}, [this.$slots.default])
     if (this.keepAlive) {
       if (!this.shown && !this.active) {
         return

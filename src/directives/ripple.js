@@ -1,57 +1,51 @@
 import { cssTransform, css } from '../utils/dom'
 import { position } from '../utils/event'
+import { current as theme } from '../features/theme'
 
-function showRipple (evt, el, { stop, center }) {
-  if (stop) {
+function showRipple (evt, el, stopPropagation) {
+  if (stopPropagation) {
     evt.stopPropagation()
   }
 
-  const
+  let
     container = document.createElement('span'),
-    animNode = document.createElement('span'),
-    size = el.clientWidth > el.clientHeight ? el.clientWidth : el.clientHeight,
-    unit = `${center ? size : size * 2}px`,
-    offset = el.getBoundingClientRect()
+    animNode = document.createElement('span')
 
   container.appendChild(animNode)
   container.className = 'q-ripple-container'
+
+  let size = el.clientWidth > el.clientHeight ? el.clientWidth : el.clientHeight
+  size = `${size * 2}px`
   animNode.className = 'q-ripple-animation'
-  animNode.style.width = unit
-  animNode.style.height = unit
+  css(animNode, { width: size, height: size })
 
   el.appendChild(container)
 
-  let x, y
+  const
+    offset = el.getBoundingClientRect(),
+    pos = position(evt),
+    x = pos.left - offset.left,
+    y = pos.top - offset.top
 
-  if (center) {
-    x = y = 0
-  }
-  else {
-    const pos = position(evt)
-    x = pos.left - offset.left - size
-    y = pos.top - offset.top - size
-  }
-
-  animNode.classList.add('q-ripple-animation-enter')
-  animNode.classList.add('q-ripple-animation-visible')
-  css(animNode, cssTransform(`translate(${x}px, ${y}px) scale3d(0, 0, 0)`))
+  animNode.classList.add('q-ripple-animation-enter', 'q-ripple-animation-visible')
+  css(animNode, cssTransform(`translate(-50%, -50%) translate(${x}px, ${y}px) scale(.001)`))
 
   setTimeout(() => {
     animNode.classList.remove('q-ripple-animation-enter')
-    css(animNode, cssTransform(`translate(${x}px, ${y}px) scale3d(1, 1, 1)`))
+    css(animNode, cssTransform(`translate(-50%, -50%) translate(${x}px, ${y}px)`))
     setTimeout(() => {
       animNode.classList.remove('q-ripple-animation-visible')
       setTimeout(() => {
-        container.parentNode && el.removeChild(container)
+        animNode.parentNode.remove()
       }, 300)
-    }, 300)
-  }, 10)
+    }, 400)
+  }, 25)
 }
 
-function shouldAbort ({ mat, ios }) {
+function shouldAbort ({mat, ios}) {
   return (
-    (mat && process.env.THEME !== 'mat') ||
-    (ios && process.env.THEME !== 'ios')
+    (mat && theme !== 'mat') ||
+    (ios && theme !== 'ios')
   )
 }
 
@@ -64,39 +58,28 @@ export default {
 
     const ctx = {
       enabled: value !== false,
-      modifiers: {
-        stop: modifiers.stop,
-        center: modifiers.center
-      },
       click (evt) {
-        if (ctx.enabled && evt.detail !== -1) {
-          showRipple(evt, el, ctx.modifiers)
-        }
-      },
-      keyup (evt) {
-        if (ctx.enabled && evt.keyCode === 13) {
-          showRipple(evt, el, ctx.modifiers)
+        if (ctx.enabled) {
+          showRipple(evt, el, modifiers.stop)
         }
       }
     }
 
     el.__qripple = ctx
     el.addEventListener('click', ctx.click, false)
-    el.addEventListener('keyup', ctx.keyup, false)
   },
-  update (el, { value, modifiers: { stop, center } }) {
-    const ctx = el.__qripple
-    if (ctx) {
-      ctx.enabled = value !== false
-      ctx.modifiers = { stop, center }
+  update (el, { value, oldValue }) {
+    if (el.__qripple && value !== oldValue) {
+      el.__qripple.enabled = value !== false
     }
   },
   unbind (el, { modifiers }) {
-    const ctx = el.__qripple
-    if (ctx && !shouldAbort(modifiers)) {
-      el.removeEventListener('click', ctx.click, false)
-      el.removeEventListener('keyup', ctx.keyup, false)
-      delete el.__qripple
+    if (shouldAbort(modifiers)) {
+      return
     }
+
+    const ctx = el.__qripple
+    el.removeEventListener('click', ctx.click, false)
+    delete el.__qripple
   }
 }

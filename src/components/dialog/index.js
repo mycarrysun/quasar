@@ -1,5 +1,4 @@
-import QDialog from './QDialog'
+import Modal from '../../utils/modal'
+import Dialog from './Dialog.vue'
 
-export {
-  QDialog
-}
+export default Modal(Dialog)

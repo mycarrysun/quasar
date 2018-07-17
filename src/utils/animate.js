@@ -5,7 +5,7 @@ let ids = {}
 
 export function start ({name, duration = 300, to, from, apply, done, cancel, easing}) {
   let id = name
-  const start = new Date()
+  const start = performance.now()
 
   if (id) {
     stop(id)
@@ -16,7 +16,7 @@ export function start ({name, duration = 300, to, from, apply, done, cancel, eas
 
   const delta = easing || linear
   const handler = () => {
-    let progress = ((new Date()) - start) / duration
+    let progress = (performance.now() - start) / duration
     if (progress > 1) {
       progress = 1
     }
@@ -34,12 +34,12 @@ export function start ({name, duration = 300, to, from, apply, done, cancel, eas
       pos: newPos,
       progress
     }
-    anim.timer = requestAnimationFrame(handler)
+    anim.timer = window.requestAnimationFrame(handler)
   }
 
   const anim = ids[id] = {
     cancel,
-    timer: requestAnimationFrame(handler)
+    timer: window.requestAnimationFrame(handler)
   }
 
   return id

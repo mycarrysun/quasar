@@ -2,11 +2,8 @@ import { RouterLinkMixin, routerLinkEvent, routerLinkEventName } from '../../uti
 import TabMixin from './tab-mixin'
 
 export default {
-  name: 'QRouteTab',
+  name: 'q-route-tab',
   mixins: [TabMixin, RouterLinkMixin],
-  inject: {
-    selectTabRouter: {}
-  },
   watch: {
     $route () {
       this.checkIfSelected()
@@ -17,48 +14,40 @@ export default {
       this.$emit('click', this.name)
       if (!this.disable) {
         this.$el.dispatchEvent(routerLinkEvent)
-        this.selectTabRouter({ value: this.name, selected: true })
+        this.selectTab(this.name)
       }
     },
     checkIfSelected () {
       this.$nextTick(() => {
-        if (this.$el.classList.contains('q-router-link-exact-active')) {
-          this.selectTabRouter({ value: this.name, selectable: true, exact: true })
-        }
-        else if (this.$el.classList.contains('q-router-link-active')) {
-          const path = this.$router.resolve(this.to, undefined, this.append)
-          this.selectTabRouter({ value: this.name, selectable: true, priority: path.href.length })
-        }
-        else if (this.active) {
-          this.selectTabRouter({ value: null })
+        if (this.$el.classList.contains('router-link-active') || this.$el.classList.contains('router-link-exact-active')) {
+          this.selectTab(this.name)
         }
       })
     }
   },
-  mounted () {
+  created () {
     this.checkIfSelected()
   },
   render (h) {
     return h('router-link', {
       props: {
-        tag: 'a',
+        tag: 'div',
         to: this.to,
-        exact: this.exact,
-        append: this.append,
         replace: this.replace,
-        event: routerLinkEventName,
-        activeClass: 'q-router-link-active',
-        exactActiveClass: 'q-router-link-exact-active'
+        append: this.append,
+        event: routerLinkEventName
       },
       nativeOn: {
-        click: this.select,
-        keyup: e => e.keyCode === 13 && this.select(e)
+        click: this.select
       },
-      staticClass: 'q-link q-tab column flex-center relative-position',
+      staticClass: 'q-tab column flex-center relative-position',
       'class': this.classes,
-      directives: process.env.THEME === 'mat'
-        ? [{ name: 'ripple' }]
-        : null
+      directives: [{
+        name: 'ripple',
+        modifiers: {
+          mat: true
+        }
+      }]
     }, this.__getTabContent(h))
   }
 }

@@ -1,9 +1,7 @@
-import { QBtn, QBtnDropdown, QBtnGroup } from '../btn'
-import { QInput } from '../input'
+import { QBtn, QBtnToggle, QBtnDropdown, QBtnGroup } from '../btn'
 import { QTooltip } from '../tooltip'
 import { QList, QItem, QItemSide, QItemMain } from '../list'
 import extend from '../../utils/extend'
-import { getEventKey } from '../../utils/event'
 
 function run (e, btn, vm) {
   if (btn.handler) {
@@ -14,11 +12,8 @@ function run (e, btn, vm) {
   }
 }
 
-function getBtn (h, vm, btn, clickHandler, active = false) {
+function getBtn (h, vm, btn, clickHandler) {
   const
-    toggled = active || (btn.type === 'toggle'
-      ? (btn.toggled ? btn.toggled(vm) : btn.cmd && vm.caret.is(btn.cmd, btn.param))
-      : false),
     child = [],
     events = {
       click (e) {
@@ -37,16 +32,30 @@ function getBtn (h, vm, btn, clickHandler, active = false) {
     ]))
   }
 
-  return h(QBtn, {
-    props: extend({
-      icon: btn.icon,
-      color: toggled ? btn.toggleColor || vm.toolbarToggleColor : btn.color || vm.toolbarColor,
-      textColor: toggled && (vm.toolbarFlat || vm.toolbarOutline) ? null : btn.textColor || vm.toolbarTextColor,
-      label: btn.label,
-      disable: btn.disable ? (typeof btn.disable === 'function' ? btn.disable(vm) : true) : false
-    }, vm.buttonProps),
-    on: events
-  }, child)
+  if (btn.type === void 0) {
+    return h(QBtnToggle, {
+      props: extend({
+        icon: btn.icon,
+        label: btn.label,
+        toggled: vm.caret.is(btn.cmd, btn.param),
+        color: vm.color,
+        toggleColor: vm.toggleColor,
+        disable: btn.disable ? btn.disable(vm) : false
+      }, vm.buttonProps),
+      on: events
+    }, child)
+  }
+  if (btn.type === 'no-state') {
+    return h(QBtn, {
+      props: extend({
+        icon: btn.icon,
+        color: vm.color,
+        label: btn.label,
+        disable: btn.disable ? btn.disable(vm) : false
+      }, vm.buttonProps),
+      on: events
+    }, child)
+  }
 }
 
 function getDropdown (h, vm, btn) {
@@ -55,11 +64,10 @@ function getDropdown (h, vm, btn) {
     icon = btn.icon,
     noIcons = btn.list === 'no-icons',
     onlyIcons = btn.list === 'only-icons',
-    contentClass,
     Items
 
   function closeDropdown () {
-    Dropdown.componentInstance.hide()
+    Dropdown.componentInstance.close()
   }
 
   if (onlyIcons) {
@@ -72,17 +80,12 @@ function getDropdown (h, vm, btn) {
         label = btn.tip
         icon = btn.icon
       }
-      return getBtn(h, vm, btn, closeDropdown, active)
+      return getBtn(h, vm, btn, closeDropdown)
     })
-    contentClass = vm.toolbarBackgroundClass
     Items = [
       h(
         QBtnGroup,
-        {
-          props: vm.buttonProps,
-          staticClass: 'relative-position q-editor-toolbar-padding',
-          style: { borderRadius: '0' }
-        },
+        { props: vm.buttonProps, staticClass: 'relative-position q-editor-toolbar-padding' },
         Items
       )
     ]
@@ -99,18 +102,16 @@ function getDropdown (h, vm, btn) {
         icon = btn.icon
       }
 
-      const htmlTip = btn.htmlTip
-
       return h(
         QItem,
         {
           props: { active, link: !disable },
-          'class': { disabled: disable },
-          nativeOn: {
+          staticClass: disable ? 'disabled' : '',
+          on: {
             click (e) {
               if (disable) { return }
               closeDropdown()
-              vm.$refs.content && vm.$refs.content.focus()
+              vm.$refs.content.focus()
               vm.caret.restore()
               run(e, btn, vm)
             }
@@ -119,36 +120,25 @@ function getDropdown (h, vm, btn) {
         [
           noIcons ? '' : h(QItemSide, {props: {icon: btn.icon}}),
           h(QItemMain, {
-            props: !htmlTip && btn.tip
-              ? { label: btn.tip }
-              : null,
-            domProps: htmlTip
-              ? { innerHTML: btn.htmlTip }
-              : null
+            props: {
+              label: btn.htmlTip || btn.tip
+            }
           })
         ]
       )
     })
-    contentClass = [vm.toolbarBackgroundClass, vm.toolbarTextColor ? `text-${vm.toolbarTextColor}` : '']
-    Items = [
-      h(QList, {
-        props: { separator: true }
-      }, [ Items ])
-    ]
+    Items = [ h(QList, { props: { separator: true } }, [ Items ]) ]
   }
 
-  const highlight = btn.highlight && label !== btn.label
   const Dropdown = h(
     QBtnDropdown,
     {
       props: extend({
         noCaps: true,
         noWrap: true,
-        color: highlight ? vm.toolbarToggleColor : vm.toolbarColor,
-        textColor: highlight && (vm.toolbarFlat || vm.toolbarOutline) ? null : vm.toolbarTextColor,
+        color: btn.highlight && label !== btn.label ? vm.toggleColor : vm.color,
         label: btn.fixedLabel ? btn.label : label,
-        icon: btn.fixedIcon ? btn.icon : icon,
-        contentClass
+        icon: btn.fixedIcon ? btn.icon : icon
       }, vm.buttonProps)
     },
     Items
@@ -160,7 +150,7 @@ export function getToolbar (h, vm) {
   if (vm.caret) {
     return vm.buttons.map(group => h(
       QBtnGroup,
-      { props: vm.buttonProps, staticClass: 'items-center relative-position' },
+      { props: vm.buttonProps, staticClass: 'relative-position' },
       group.map(btn => {
         if (btn.type === 'slot') {
           return vm.$slots[btn.slot]
@@ -176,7 +166,7 @@ export function getToolbar (h, vm) {
   }
 }
 
-export function getFonts (defaultFont, defaultFontLabel, defaultFontIcon, fonts = {}) {
+export function getFonts (defaultFont, fonts = {}) {
   const aliases = Object.keys(fonts)
   if (aliases.length === 0) {
     return {}
@@ -186,8 +176,8 @@ export function getFonts (defaultFont, defaultFontLabel, defaultFontIcon, fonts 
     default_font: {
       cmd: 'fontName',
       param: defaultFont,
-      icon: defaultFontIcon,
-      tip: defaultFontLabel
+      icon: 'font_download',
+      tip: 'Default Font'
     }
   }
 
@@ -196,84 +186,11 @@ export function getFonts (defaultFont, defaultFontLabel, defaultFontIcon, fonts 
     def[alias] = {
       cmd: 'fontName',
       param: name,
-      icon: defaultFontIcon,
+      icon: 'font_download',
       tip: name,
       htmlTip: `<font face="${name}">${name}</font>`
     }
   })
 
   return def
-}
-
-export function getLinkEditor (h, vm) {
-  if (vm.caret) {
-    const color = vm.toolbarColor || vm.toolbarTextColor
-    let link = vm.editLinkUrl
-    const updateLink = () => {
-      vm.caret.restore()
-      if (link !== vm.editLinkUrl) {
-        document.execCommand('createLink', false, link === '' ? ' ' : link)
-      }
-      vm.editLinkUrl = null
-    }
-
-    return [
-      h('div', { staticClass: 'q-mx-xs', 'class': `text-${color}` }, [`${vm.$q.i18n.editor.url}: `]),
-      h(QInput, {
-        key: 'qedt_btm_input',
-        staticClass: 'q-ma-none q-pa-none col q-editor-input',
-        props: {
-          value: link,
-          color,
-          autofocus: true,
-          hideUnderline: true
-        },
-        on: {
-          input: val => { link = val },
-          keydown: event => {
-            switch (getEventKey(event)) {
-              case 13: // ENTER key
-                return updateLink()
-              case 27: // ESCAPE key
-                vm.caret.restore()
-                vm.editLinkUrl = null
-                break
-            }
-          }
-        }
-      }),
-      h(QBtnGroup, {
-        key: 'qedt_btm_grp',
-        props: vm.buttonProps
-      }, [
-        h(QBtn, {
-          key: 'qedt_btm_rem',
-          attrs: {
-            tabindex: -1
-          },
-          props: extend({
-            label: vm.$q.i18n.label.remove,
-            noCaps: true
-          }, vm.buttonProps),
-          on: {
-            click: () => {
-              vm.caret.restore()
-              document.execCommand('unlink')
-              vm.editLinkUrl = null
-            }
-          }
-        }),
-        h(QBtn, {
-          key: 'qedt_btm_upd',
-          props: extend({
-            label: vm.$q.i18n.label.update,
-            noCaps: true
-          }, vm.buttonProps),
-          on: {
-            click: updateLink
-          }
-        })
-      ])
-    ]
-  }
 }

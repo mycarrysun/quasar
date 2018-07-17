@@ -14,7 +14,7 @@
         </thead>
 
         <tbody>
-          <tr v-for="(value, prop) in $q.platform.is">
+          <tr v-for="(value, prop) in platform">
             <td>{{ prop }}</td>
             <td>{{ value }}</td>
           </tr>
@@ -29,10 +29,17 @@
 </template>
 
 <script>
+import { Platform } from 'quasar'
+
 export default {
+  data () {
+    return {
+      platform: Platform.is
+    }
+  },
   computed: {
     touch () {
-      return this.$q.platform.has.touch ? 'has' : 'does not have'
+      return Platform.has.touch ? 'has' : 'does not have'
     }
   }
 }

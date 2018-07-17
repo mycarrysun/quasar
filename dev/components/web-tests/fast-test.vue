@@ -47,8 +47,3 @@ export default {
   }
 }
 </script>
-
-<style lang="stylus">
-@import '~variables'
-
-</style>

@@ -1,14 +1,14 @@
 <template>
-  <div class="layout-padding row justify-center">
-    <div style="width: 500px; max-width: 90vw;">
+  <div>
+    <div class="layout-padding" style="padding-bottom: 1000px;">
       <p class="caption">
         <span class="desktop-only">
-          Right click on the colored area below.
+          Right click anywhere on the Page below (not on header though).
           <br>
           On a real mobile device it works different by opening a minimized Modal triggered by a long tap.
         </span>
         <span class="mobile-only">
-          Long Tap on the colored area below (not on header though).
+          Long Tap anywhere on the Page below (not on header though).
           <br>
           On a desktop it works different by opening a Popover.
         </span>
@@ -28,129 +28,30 @@
         can dismiss the Context Menu
         by hitting the &lt;ESCAPE&gt; key.
       </p>
-
-      <div
-        style="height: 600px; margin-top: 40px;"
-        class="bg-secondary text-white row items-stretch"
-      >
-        <div class="col-6 flex flex-center" v-for="n in 4" :key="n" >
-          Target area {{ n }}
-        </div>
-
-        <q-context-menu @show="onShow" @hide="onHide">
-          <q-list link separator no-border style="min-width: 150px; max-height: 300px;">
-            <q-item
-              v-for="n in 10"
-              :key="n"
-              v-close-overlay
-              @click.native="showNotify()"
-            >
-              <q-item-main label="Label" sublabel="Value" />
-            </q-item>
-          </q-list>
-        </q-context-menu>
-      </div>
-      <p class="caption">Visible: {{ visible }}</p>
-      <pre v-if="event && event.target">{{ event.target.innerText }}</pre>
-
-      <div class="block-1 q-ma-md">
-        <q-context-menu>
-          <q-list link separator style="min-width: 150px;">
-            <q-item v-close-overlay><q-item-main label="Foo"/></q-item>
-            <q-item v-close-overlay><q-item-main label="Bar"/></q-item>
-          </q-list>
-        </q-context-menu>
-      </div>
-
-      <div class="block-2 q-ma-md">
-        <q-context-menu>
-          <q-list link separator style="min-width: 150px;">
-            <q-item v-close-overlay><q-item-main label="Foo"/></q-item>
-            <q-item v-close-overlay><q-item-main label="Bar"/></q-item>
-          </q-list>
-        </q-context-menu>
-      </div>
-
-      <div class="block-3 q-ma-md">
-        <q-context-menu>
-          <q-list link separator style="min-width: 150px;">
-            <q-item v-close-overlay><q-item-main label="Foo"/></q-item>
-            <q-item v-close-overlay><q-item-main label="Bar"/></q-item>
-          </q-list>
-        </q-context-menu>
-      </div>
-
-      <div class="block-4 q-ma-md">
-        <q-context-menu>
-          <q-list link separator style="min-width: 150px;">
-            <q-item v-close-overlay><q-item-main label="Foo"/></q-item>
-            <q-item v-close-overlay><q-item-main label="Bar"/></q-item>
-          </q-list>
-        </q-context-menu>
-      </div>
     </div>
+
+    <q-context-menu ref="context">
+      <q-list link separator style="min-width: 150px; max-height: 300px;">
+        <q-item
+          v-for="n in 10"
+          :key="n"
+          @click="showToast(), $refs.context.close()"
+        >
+          <q-item-main label="Label" sublabel="Value" />
+        </q-item>
+      </q-list>
+    </q-context-menu>
   </div>
 </template>
 
 <script>
-import {
-  QContextMenu,
-  QList,
-  QItem,
-  QItemMain
-} from 'quasar'
+import { Platform, Toast } from 'quasar'
 
 export default {
-  components: {
-    QContextMenu,
-    QList,
-    QItem,
-    QItemMain
-  },
-  data () {
-    return {
-      event: null,
-      visible: false
-    }
-  },
   methods: {
-    showNotify () {
-      this.$q.notify((this.$q.platform.is.desktop ? 'Clicked' : 'Tapped') + ' on a context menu item.')
-    },
-    onShow (showEv) {
-      console.log('Show event:', showEv)
-      this.event = showEv
-      this.visible = true
-    },
-    onHide (showEv, hideEv) {
-      console.log('Hide event:', hideEv)
-      this.event = showEv
-      this.visible = false
+    showToast () {
+      Toast.create((Platform.is.desktop ? 'Clicked' : 'Tapped') + ' on a context menu item.')
     }
   }
 }
 </script>
-
-<style lang="stylus">
-.block-1, .block-2, .block-3, .block-4 {
-  display: inline-block;
-  width: 150px;
-  height: 150px;
-}
-
-.block-1 {
-  background: red;
-}
-
-.block-2 {
-  background: yellow;
-}
-
-.block-3 {
-  background: blue;
-}
-
-.block-4 {
-  background: pink;
-}
-</style>

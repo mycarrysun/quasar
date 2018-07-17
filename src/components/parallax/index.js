@@ -1,4 +1,4 @@
-import QParallax from './QParallax'
+import QParallax from './QParallax.vue'
 
 export {
   QParallax

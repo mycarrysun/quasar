@@ -3,7 +3,7 @@ const units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB']
 export function humanStorageSize (bytes) {
   let u = 0
 
-  while (parseInt(bytes, 10) >= 1024 && u < units.length - 1) {
+  while (Math.abs(bytes) >= 1024 && u < units.length - 1) {
     bytes /= 1024
     ++u
   }
@@ -29,12 +29,12 @@ export function normalizeToInterval (v, min, max) {
 
   const size = (max - min + 1)
 
-  let index = min + (v - min) % size
+  let index = v % size
   if (index < min) {
     index = size + index
   }
 
-  return index === 0 ? 0 : index // fix for (-a % a) => -0
+  return index
 }
 
 export function pad (v, length = 2, char = '0') {

@@ -13,6 +13,10 @@
     display block
     background $backdrop-background
 
+.no-border
+  border 0 !important
+.no-outline
+  outline 0 !important
 .round-borders
   border-radius $generic-border-radius !important
 
@@ -38,18 +42,3 @@
   &:-ms-input-placeholder
     color inherit
     opacity .5
-
-/* body */
-.q-body-fullscreen-mixin, .q-body-prevent-scroll
-  overflow hidden !important
-
-.q-no-input-spinner
-  -moz-appearance textfield
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button
-    -webkit-appearance none
-    margin 0
-
-a.q-link
-  color inherit !important
-  text-decoration none

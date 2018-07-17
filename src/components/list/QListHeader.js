@@ -1,14 +1,17 @@
 export default {
-  name: 'QListHeader',
+  name: 'q-list-header',
+  functional: true,
   props: {
     inset: Boolean
   },
-  render (h) {
-    return h('div', {
-      staticClass: 'q-list-header',
-      'class': {
-        'q-list-header-inset': this.inset
-      }
-    }, this.$slots.default)
+  render (h, ctx) {
+    const
+      data = ctx.data,
+      cls = data.staticClass,
+      prop = ctx.props
+
+    data.staticClass = `q-list-header ${prop.inset ? ' q-list-header-inset' : ''}${cls ? ` ${cls}` : ''}`
+
+    return h('div', data, ctx.children)
   }
 }

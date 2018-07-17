@@ -1,6 +1,5 @@
 import { debounce } from '../utils/debounce'
 import { getScrollPosition, setScrollPosition, getScrollTarget } from '../utils/scroll'
-import { listenOpts } from '../utils/event'
 
 function updateBinding (el, { value, modifiers }) {
   const ctx = el.__qbacktotop
@@ -42,56 +41,42 @@ function updateBinding (el, { value, modifiers }) {
 export default {
   name: 'back-to-top',
   bind (el) {
-    const ctx = {
+    let ctx = {
       offset: 200,
       duration: 300,
-      updateNow: () => {
-        const trigger = getScrollPosition(ctx.scrollTarget) <= ctx.offset
-
-        if (trigger !== el.classList.contains('hidden')) {
-          el.classList[trigger ? 'add' : 'remove']('hidden')
+      update: debounce(() => {
+        const trigger = getScrollPosition(ctx.scrollTarget) > ctx.offset
+        if (ctx.visible !== trigger) {
+          ctx.visible = trigger
+          el.classList[trigger ? 'remove' : 'add']('hidden')
         }
-      },
+      }, 25),
       goToTop () {
         setScrollPosition(ctx.scrollTarget, 0, ctx.animate ? ctx.duration : 0)
-      },
-      goToTopKey (evt) {
-        if (evt.keyCode === 13) {
-          setScrollPosition(ctx.scrollTarget, 0, ctx.animate ? ctx.duration : 0)
-        }
       }
     }
-    ctx.update = debounce(ctx.updateNow, 25)
     el.classList.add('hidden')
     el.__qbacktotop = ctx
   },
   inserted (el, binding) {
-    const ctx = el.__qbacktotop
+    let ctx = el.__qbacktotop
     ctx.scrollTarget = getScrollTarget(el)
     ctx.animate = binding.modifiers.animate
     updateBinding(el, binding)
-    ctx.scrollTarget.addEventListener('scroll', ctx.update, listenOpts.passive)
-    window.addEventListener('resize', ctx.update, listenOpts.passive)
+    ctx.scrollTarget.addEventListener('scroll', ctx.update)
+    window.addEventListener('resize', ctx.update)
     el.addEventListener('click', ctx.goToTop)
-    el.addEventListener('keyup', ctx.goToTopKey)
   },
   update (el, binding) {
-    if (JSON.stringify(binding.oldValue) !== JSON.stringify(binding.value)) {
+    if (binding.oldValue !== binding.value) {
       updateBinding(el, binding)
-    }
-    else {
-      setTimeout(() => {
-        el.__qbacktotop && el.__qbacktotop.updateNow()
-      }, 0)
     }
   },
   unbind (el) {
-    const ctx = el.__qbacktotop
-    if (!ctx) { return }
-    ctx.scrollTarget.removeEventListener('scroll', ctx.update, listenOpts.passive)
-    window.removeEventListener('resize', ctx.update, listenOpts.passive)
+    let ctx = el.__qbacktotop
+    ctx.scrollTarget.removeEventListener('scroll', ctx.update)
+    window.removeEventListener('resize', ctx.update)
     el.removeEventListener('click', ctx.goToTop)
-    el.removeEventListener('keyup', ctx.goToTopKey)
     delete el.__qbacktotop
   }
 }

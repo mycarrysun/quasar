@@ -1,25 +1,26 @@
 <template>
   <div>
     <div class="layout-padding" style="max-width: 500px">
-      <router-link tag="div" to="/layout-quick/a" class="cursor-pointer text-center" style="margin-bottom: 25px">
+      <div class="row justify-center" style="padding-bottom: 25px">
         <img src="statics/quasar-logo.png">
-      </router-link>
+      </div>
       <div
         class="list no-border"
         v-for="(category, title) in list"
-        :key="`category-${title}`"
       >
         <h4 class="uppercase">
           {{ title }}
         </h4>
-        <q-item
+        <router-link
           v-for="feature in category"
           :key="`${feature.route}${feature.title}`"
+          tag="div"
+          class="q-item q-item-link"
           :to="feature.route"
         >
           <q-item-main :label="feature.title" />
           <q-item-side right icon="chevron_right" />
-        </q-item>
+        </router-link>
       </div>
     </div>
   </div>

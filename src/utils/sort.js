@@ -1,7 +1,4 @@
 export function sortString (a, b) {
-  if (typeof a !== 'string') {
-    throw new TypeError('The value for sorting must be a String')
-  }
   return a.localeCompare(b)
 }
 

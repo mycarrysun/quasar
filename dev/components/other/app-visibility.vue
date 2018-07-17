@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { Events } from 'quasar'
+
 function pad (number) {
   return (number < 10 ? '0' : '') + number
 }
@@ -35,17 +37,25 @@ export default {
       eventList: []
     }
   },
-  watch: {
-    '$q.appVisible' (state) {
+  methods: {
+    writeVisibilityState (state) {
       const date = new Date()
 
       this.eventList.unshift({
         timestamp: pad(date.getHours()) + ':' +
             pad(date.getMinutes()) + ':' + pad(date.getSeconds()) + '.' +
             date.getMilliseconds(),
-        label: ` App became ${state ? 'visible' : 'hidden'}`
+        label: ` App became ${state}`
       })
     }
+  },
+  mounted () {
+    this.$nextTick(() => {
+      Events.$on('app:visibility', this.writeVisibilityState)
+    })
+  },
+  beforeDestroy () {
+    Events.$off('app:visibility', this.writeVisibilityState)
   }
 }
 </script>

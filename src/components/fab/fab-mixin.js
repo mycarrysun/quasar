@@ -4,7 +4,6 @@ export default {
     push: Boolean,
     flat: Boolean,
     color: String,
-    textColor: String,
     glossy: Boolean
   }
 }

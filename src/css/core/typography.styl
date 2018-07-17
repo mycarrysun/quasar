@@ -1,5 +1,5 @@
 body
-  min-width 100px
+  min-width 200px
   font-family $typography-font-family
   -ms-text-size-adjust 100%
   -webkit-text-size-adjust 100%
@@ -8,39 +8,71 @@ body
   font-smoothing antialiased
   background $body-background
   color $body-color
-  min-height 100vh
 
-for $heading, $value in $h-tags
-  {$heading}
-    font-size: $value.size
-    font-weight: $value.weight
-    if $value.line-height
-      line-height: $value.line-height
-    if $value.letter-spacing
-      letter-spacing: $value.letter-spacing
-    @media screen and (max-width $breakpoint-sm)
-      font-size: ($value.size * .6)
+a
+  color $link-color
+  text-decoration none
+  cursor pointer
+  outline 0
+  transition color .25s
+  &:hover
+    color $link-color-active
+  &:active, &:hover
+    outline-width 0
 
-for $heading, $value in $headings
-  .q-{$heading}-opacity
-    opacity: $value.opacity
-  .q-{$heading}
-    font-size: $value.size
-    font-weight: $value.weight
-    if $value.line-height
-      line-height: $value.line-height
-    if $value.letter-spacing
-      letter-spacing: $value.letter-spacing
+h1, h2, h3, h4, h5, h6
+  font-weight 400
+  line-height 110%
+  -webkit-font-smoothing antialised
+
+h1
+  font-size 4.2rem
+  letter-spacing -.04em
+  margin 2.1rem 0 1.68rem
+  font-weight 300
+
+h2
+  font-size 3.56rem
+  letter-spacing -.02em
+  margin 1.78rem 0 1.424rem
+
+h3
+  font-size 2.92rem
+  margin 1.46rem 0 1.168rem
+
+h4
+  font-size 2.28rem
+  margin 1.14rem 0 .912rem
+
+h5
+  font-size 1.64rem
+  margin .82rem 0 .656rem
+  -moz-osx-font-smoothing grayscale
+
+h6
+  font-size 1rem
+  letter-spacing .02em
+  margin .5rem 0 .4rem
+  font-weight 500
 
 p
-  margin: 0 0 $spaces.md.y
-
-.caption
-  color $grey-9
+  font-size 1rem
   letter-spacing 0
+  margin 0 0 1rem
   line-height 24px
   padding 0
-  font-weight 300
+  -webkit-font-smoothing antialiased
+  &.caption
+    font-weight 300
+    &:not(:first-child)
+      margin-top 2rem
+
+.token
+  color opposite-non-color($primary)
+  background alpha($primary, .7)
+  border-radius $generic-border-radius
+  padding 3px 5px
+  font-size 90%
 
 .uppercase
   text-transform uppercase
@@ -49,28 +81,26 @@ p
 .capitalize
   text-transform capitalize
 
-.text-
-  &center
++prefix-classes('text-')
+  .center
     text-align center
-  &left
+  .left
     text-align left
-  &right
+  .right
     text-align right
-  &justify
+  .justify
     text-align justify
     hyphens auto
 
-  &italic
+  .italic
     font-style italic
-  &bold
+  .bold
     font-weight bold
 
-  &no-wrap
-    white-space nowrap
-
-  for $weight, $value in $text-weights
-    &weight-{$weight}
-      font-weight $value
+.light-paragraph
+  font-weight 300
+.thin-paragraph
+  font-weight 100
 
 small
   font-size 80%
@@ -81,17 +111,20 @@ sub
 sup
   top -.5em
 
+.strong
+  font-weight bold
+.emphasize
+  font-style italic
+
 blockquote
-  padding: $spaces.sm.y $spaces.md.x
-  margin 0
-  font-size 16px
-  border-left: $spaces.xs.x solid $primary
-  border-left: $spaces.xs.x solid var(--q-color-primary)
+  padding 10px 20px
+  margin 0 0 20px
+  font-size 17.5px
+  border-left 5px solid $primary
   &.text-right
-    padding-right: $spaces.md.x
+    padding-right 15px
     padding-left 0
-    border-right: $spaces.xs.x solid $primary
-    border-right: $spaces.xs.x solid var(--q-color-primary)
+    border-right 5px solid $primary
     border-left 0
     text-align right
 
@@ -99,7 +132,6 @@ blockquote
     display block
     line-height 1.4
     color $faded
-    color var(--q-color-faded)
     &:before
       content '\2014 \00A0'
 
@@ -107,12 +139,10 @@ blockquote
   padding 10px 20px
   margin 0 0 20px
   border-left 5px solid $primary
-  border-left 5px solid var(--q-color-primary)
   &.text-right
     padding-right 15px
     padding-left 0
     border-right 5px solid $primary
-    border-right 5px solid var(--q-color-primary)
     border-left 0
     text-align right
 
@@ -137,13 +167,23 @@ dl
     dd
       margin-left 30%
 
-hr
-  &.q-hr, &.q-hr-dark
-    height 1px
-    min-height 1px
-    display block
-    border none
-    width 100%
-    background rgba(0, 0, 0, .12)
-  &.q-hr-dark
-    background rgba(255, 255, 255, .36)
+
+
+::-webkit-selection,
+::-moz-selection,
+::selection
+  background $primary
+  color alpha(opposite-non-color($primary), .87)
+
+textarea::-webkit-selection,
+input::-webkit-selection,
+textarea::-moz-selection,
+input::-moz-selection,
+textarea::selection,
+input::selection
+  background alpha($primary, .4)
+  color alpha(opposite-non-color($primary), .87)
+
+*:-webkit-full-screen // @stylint ignore
+  width 100%
+  height 100%

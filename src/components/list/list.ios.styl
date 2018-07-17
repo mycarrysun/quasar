@@ -4,12 +4,16 @@
   white-space nowrap
   margin .3rem 0
 
-.q-item-side
-  color $item-side-color
-  flex 0 0 auto
-  min-width $item-primary-size
 .q-item-side-right
   text-align right
+  color $item-secondary-color
+  display flex
+  flex-direction column
+  align-items flex-end
+
+.q-item-side
+  color $item-primary-color
+  min-width $item-primary-size
 .q-item-avatar, .q-item-avatar img
   width $item-primary-size
   height $item-primary-size
@@ -17,14 +21,12 @@
 
 .q-item-letter, .q-item-icon
   font-size $item-icon-size
-.q-item-inverted
+.q-item-icon-inverted
   border-radius 50%
+  font-size $item-inverted-icon-size
   color white
-  background $item-side-color
-  height $item-primary-size
-  width $item-primary-size
-  &, .q-icon
-    font-size $item-inverted-icon-size
+  background $primary
+  padding 9px
 
 .q-item-main
   flex 1 1 auto
@@ -38,8 +40,6 @@
   color $item-content-secondary-text-color
   font-size 90%
   margin-top .2rem
-  > span
-    font-weight 500
 
 .q-item-section + .q-item-section
   margin-left $item-gutter
@@ -54,7 +54,7 @@
   padding ($item-padding / 2) $item-padding
   min-height $item-min-height
 
-  &.active, &.{$router-link-active}, &:focus
+  &.active, &.router-link-active, &:focus
     background $item-active-color
 
   &:focus
@@ -95,14 +95,17 @@
   padding ($item-padding * $item-sparse-factor) $item-padding
   min-height ($item-min-height * $item-sparse-factor)
 
-.q-list-striped > .q-item:nth-child(even)
+.q-list-striped .q-item:nth-child(even)
   background-color $item-stripe-color
-.q-list-striped-odd > .q-item:nth-child(odd)
+.q-list-striped-odd .q-item:nth-child(odd)
   background-color $item-stripe-color
 
 .q-list
   border 1px solid $item-separator-color
   padding ($item-padding / 2) 0
+
+  & + .q-list
+    margin-top 32px
 
 .q-item-separator-component
   margin ($item-padding / 2) 0
@@ -112,52 +115,15 @@
   &:last-child
     display none
   & + .q-list-header
-    margin-top ($item-padding / 2)
+    margin-top (- $item-padding / 2)
 .q-item-separator-inset-component
   margin-left ($item-padding + $item-gutter + $item-primary-size)
 
 .q-list-header
   color $item-label-color
-  font-size 10px
+  font-size 14px
   font-weight 500
-  min-height 35px
-  padding ($item-padding / 2) $item-padding
-  line-height 14px
-  letter-spacing 1px
-  text-transform uppercase
+  line-height 48px
+  padding-left $item-padding
 .q-list-header-inset
   padding-left ($item-padding + $item-gutter + $item-primary-size)
-
-
-.q-list-dark, .q-item-dark
-  .q-item-side
-    color $item-side-dark-color
-  .q-item-inverted
-    color black
-    background $item-side-dark-color
-  .q-item-label > span, .q-item-sublabel
-    color $item-content-secondary-text-dark-color
-  .q-item
-    color white
-    &.active, &.{$router-link-active}, &:focus
-      background $item-active-dark-color
-.q-list-dark
-  border 1px solid $item-separator-dark-color
-  &.q-list-separator > .q-item-division + .q-item-division, .q-item-division + .q-item-separator
-    border-top 1px solid $item-separator-dark-color
-  &.q-list-inset-separator > .q-item-division + .q-item-division, .q-item-division + .q-item-inset-separator
-    &:after
-      background $item-separator-dark-color
-  &.q-list-striped > .q-item:nth-child(even)
-    background-color $item-stripe-dark-color
-  &.q-list-striped-odd > .q-item:nth-child(odd)
-    background-color $item-stripe-dark-color
-  .q-item-separator-component
-    background-color $item-separator-dark-color
-  .q-list-header
-    color $item-label-dark-color
-
-  &.q-list-highlight > .q-item, .q-item-highlight,
-  &.q-list-link > .q-item, .q-item-link
-    &:hover
-      background $item-highlight-dark-color

@@ -1,34 +1,25 @@
-import { isSSR } from '../plugins/platform'
-
 export const routerLinkEventName = 'qrouterlinkclick'
 
-let evt = null
+let evt
 
-if (!isSSR) {
-  try {
-    evt = new Event(routerLinkEventName)
-  }
-  catch (e) {
-    // IE doesn't support `new Event()`, so...`
-    evt = document.createEvent('Event')
-    evt.initEvent(routerLinkEventName, true, false)
-  }
+try {
+  evt = new Event(routerLinkEventName)
 }
-
-export const routerLinkProps = {
-  to: [String, Object],
-  exact: Boolean,
-  append: Boolean,
-  replace: Boolean,
-  event: [String, Array],
-  activeClass: String,
-  exactActiveClass: String
+catch (e) {
+  // IE doesn't support `new Event()`, so...`
+  evt = document.createEvent('Event')
+  evt.initEvent(routerLinkEventName, true, false)
 }
 
 export { evt as routerLinkEvent }
 
 export const RouterLinkMixin = {
-  props: routerLinkProps,
+  props: {
+    to: [String, Object],
+    exact: Boolean,
+    append: Boolean,
+    replace: Boolean
+  },
   data () {
     return {
       routerLinkEventName

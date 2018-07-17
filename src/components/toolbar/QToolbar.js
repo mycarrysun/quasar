@@ -1,35 +1,30 @@
 export default {
-  name: 'QToolbar',
+  name: 'q-toolbar',
+  functional: true,
   props: {
-    color: {
-      type: String,
-      default: 'primary'
-    },
-    textColor: String,
+    color: String,
     inverted: Boolean,
     glossy: Boolean
   },
-  computed: {
-    classes () {
-      const cls = [ `q-toolbar-${this.inverted ? 'inverted' : 'normal'}` ]
+  render (h, ctx) {
+    const
+      cls = ctx.data.staticClass,
+      prop = ctx.props
 
-      this.glossy && cls.push('glossy')
-
-      if (this.inverted) {
-        cls.push(`text-${this.textColor || this.color}`)
-      }
-      else {
-        cls.push(`bg-${this.color}`)
-        cls.push(`text-${this.textColor || 'white'}`)
-      }
-
-      return cls
+    let classes = `q-toolbar-${prop.inverted ? 'inverted' : 'normal'}`
+    if (prop.color) {
+      classes += ` ${prop.inverted ? 'text' : 'bg'}-${prop.color}`
     }
-  },
-  render (h) {
-    return h('div', {
-      staticClass: 'q-toolbar row no-wrap items-center relative-position',
-      'class': this.classes
-    }, this.$slots.default)
+    if (prop.glossy) {
+      classes += ` glossy`
+    }
+
+    ctx.data.staticClass = `q-toolbar row no-wrap items-center relative-position ${classes}${cls ? ` ${cls}` : ''}`
+
+    return h(
+      'div',
+      ctx.data,
+      ctx.children
+    )
   }
 }

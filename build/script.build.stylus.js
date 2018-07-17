@@ -1,104 +1,120 @@
-const
+var
+  fs = require('fs'),
   path = require('path'),
   stylus = require('stylus'),
-  rtl = require('postcss-rtl'),
-  postcss = require('postcss'),
-  cssnano = require('cssnano'),
-  autoprefixer = require('autoprefixer'),
-  buildConf = require('./build.conf'),
-  buildUtils = require('./build.utils'),
-  pathList = [path.join(__dirname, '../src/css/')]
+  shell = require('shelljs'),
+  rtlcss = require('rtlcss'),
+  // postcss = require('postcss'),
+  // cssnano = require('cssnano'),
+  // autoprefixer = require('autoprefixer'),
+  themes = ['ios', 'mat'],
+  version = process.env.VERSION || require('../package.json').version,
+  pathList = [path.join(__dirname, '../src/css/')],
+  banner =
+    '/*!\n' +
+    ' * Quasar Framework v' + version + '\n' +
+    ' * (c) ' + new Date().getFullYear() + ' Razvan Stoenescu\n' +
+    ' * Released under the MIT License.\n' +
+    ' */\n'
 
-Promise
-  .all(
-    buildConf.themes.map(generateTheme)
-      .concat(generateAddon())
-  )
-  .catch(e => {
-    console.error(e)
-  })
+/* copy core.variables.styl */
+shell.cp(
+  path.join(__dirname, '../src/css/core.variables.styl'),
+  path.join(__dirname, '../dist')
+)
 
-function generateTheme (theme) {
-  const src = `src/css/${theme}.styl`
-  const deps = stylus(buildUtils.readFile(src))
+themes.forEach(function (theme) {
+  var
+    src = 'src/css/' + theme + '.styl',
+    ieSrc = 'src/ie-compat/ie.' + theme + '.styl',
+    deps,
+    data
+
+  deps = stylus(readFile(src))
     .set('paths', pathList)
     .deps()
 
-  return generateFiles({
-    sources: [src].concat(deps),
-    name: theme,
-    styl: true
-  })
-}
+  data = compile([src].concat(deps))
 
-function generateAddon () {
-  return generateFiles({
-    sources: [
-      'src/css/core.variables.styl',
-      'src/css/flex-addon.styl'
-    ],
-    name: 'addon'
-  })
-}
+  // write Stylus file
+  writeFile('dist/quasar.' + theme + '.styl', data)
 
-function generateFiles ({ sources, name, styl }) {
-  return prepareStylus(sources)
-    .then(code => {
-      if (styl) { return buildUtils.writeFile(`dist/quasar.${name}.styl`, code) }
-      else { return code }
-    })
-    .then(code => compileStylus(code))
-    .then(code => postcss([ autoprefixer ]).process(code))
-    .then(code => {
-      code.warnings().forEach(warn => {
-        console.warn(warn.toString())
+  // write compiled CSS file
+  stylus(data)
+    .set('paths', pathList)
+    .render(function (err, css) {
+      if (err) {
+        console.log()
+        logError('Stylus could not compile ' + src.gray + ' file...\n')
+        throw err
+      }
+
+      // write unprefixed non-standalone version
+      writeFile('dist/quasar.' + theme + '.css', css)
+      writeFile('dist/quasar.' + theme + '.rtl.css', rtlcss.process(css))
+
+      /*
+      // write auto-prefixed standalone version
+      postcss([autoprefixer]).process(css).then(function (result) {
+        result.warnings().forEach(function (warn) {
+          console.warn(warn.toString())
+        })
+        writeFile('dist/quasar.' + theme + '.standalone.css', result.css)
+        cssnano.process(result.css).then(function (result) {
+          writeFile('dist/quasar.' + theme + '.standalone.min.css', result.css)
+        })
       })
-      return code.css
-    })
-    .then(code => Promise.all([
-      generateUMD(name, code),
-      postcss([ rtl({}) ]).process(code).then(code => generateUMD(name, code.css, '.rtl'))
-    ]))
-}
-
-function generateUMD (name, code, ext = '') {
-  return buildUtils.writeFile(`dist/umd/quasar.${name}${ext}.css`, code, true)
-    .then(code => cssnano.process(code))
-    .then(code => buildUtils.writeFile(`dist/umd/quasar.${name}${ext}.min.css`, code.css, true))
-}
-
-function prepareStylus (src) {
-  return new Promise((resolve, reject) => {
-    let code = buildConf.banner
-
-    src.forEach(function (file) {
-      code += buildUtils.readFile(file) + '\n'
+      */
     })
 
-    code = code
-      // remove imports
-      .replace(/@import\s+'[^']+'[\s\r\n]+/g, '')
-      // remove comments
-      .replace(/(\/\*[\w'-.,`\s\r\n*@]*\*\/)|(\/\/[^\r\n]*)/g, '')
-      // remove unnecessary newlines
-      .replace(/[\r\n]+/g, '\n')
+  // write IE compatibility css file
+  stylus(readFile(ieSrc))
+    .render(function (err, css) {
+      if (err) {
+        console.log()
+        logError('Stylus could not compile ' + ieSrc.gray + ' file...\n')
+        throw err
+      }
 
-    resolve(code)
+      writeFile('dist/quasar.ie.' + theme + '.css', css)
+      writeFile('dist/quasar.ie.' + theme + '.rtl.css', rtlcss.process(css))
+    })
+})
+
+function logError (err) {
+  console.error('[Error]'.red, err)
+}
+
+function readFile (file) {
+  return fs.readFileSync(file, 'utf-8')
+}
+
+function writeFile (file, data) {
+  fs.writeFile(file, data, 'utf-8', function (err) {
+    if (err) {
+      logError('Could not write ' + file.gray + ' file...')
+      return
+    }
+    console.log(file.bold + ' ' + getSize(data).gray)
   })
 }
 
-function compileStylus (code) {
-  return new Promise((resolve, reject) => {
-    stylus(code)
-      .set('paths', pathList)
-      .render((err, code) => {
-        if (err) {
-          console.log()
-          reject(err)
-        }
-        else {
-          resolve(code)
-        }
-      })
+function compile (src) {
+  var data = banner
+
+  src.forEach(function (file) {
+    data += readFile(file) + '\n'
   })
+
+  return data
+    // remove imports
+    .replace(/@import\s+'[^']+'[\s\r\n]+/g, '')
+    // remove comments
+    .replace(/(\/\*[\w'-.,`\s\r\n*@]*\*\/)|(\/\/[^\r\n]*)/g, '')
+    // remove unnecessary newlines
+    .replace(/[\r\n]+/g, '\n')
+}
+
+function getSize (code) {
+  return (code.length / 1024).toFixed(2) + 'kb'
 }
