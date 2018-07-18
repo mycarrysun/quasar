@@ -7,9 +7,11 @@ import Scroll from './directives/scroll'
 import TouchHold from './directives/touch-hold'
 import TouchPan from './directives/touch-pan'
 import TouchSwipe from './directives/touch-swipe'
+import CloseOverlay from './directives/close-overlay'
 
 export {
   BackToTop,
+  CloseOverlay,
   GoBack,
   Move,
   Ripple,
