@@ -2978,7 +2978,13 @@ var ModelToggleMixin = {
 
             this.__hide(evt);
             return this.hidePromise || Promise.resolve(evt)
-        }
+        },
+        open: function open(e){
+            this.show(e);
+        },
+        close: function close(e){
+            this.hide(e);
+        },
     },
     beforeDestroy: function beforeDestroy () {
         if (this.showing) {

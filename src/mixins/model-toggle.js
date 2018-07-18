@@ -122,7 +122,13 @@ export default {
 
             this.__hide(evt)
             return this.hidePromise || Promise.resolve(evt)
-        }
+        },
+        open(e){
+            this.show(e)
+        },
+        close(e){
+            this.hide(e)
+        },
     },
     beforeDestroy () {
         if (this.showing) {
