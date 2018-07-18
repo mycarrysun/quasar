@@ -6,7 +6,7 @@ export default {
         let vm = vnode.componentInstance
         while ((vm = vm.$parent)) {
           const name = vm.$options.name
-          if (name === 'QPopover' || name === 'QModal') {
+          if (name === 'q-popover' || name === 'q-modal') {
             vm.hide(ev)
             break
           }
