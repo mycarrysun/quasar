@@ -1,28 +1,48 @@
-function getEvent (e) {
-  return e || window.event
+export const listenOpts = {}
+Object.defineProperty(listenOpts, 'passive', {
+  configurable: true,
+  get () {
+    let passive
+
+    try {
+      var opts = Object.defineProperty({}, 'passive', {
+        get () {
+          passive = { passive: true }
+        }
+      })
+      window.addEventListener('qtest', null, opts)
+      window.removeEventListener('qtest', null, opts)
+    }
+    catch (e) {}
+
+    listenOpts.passive = passive
+    return passive
+  },
+  set (val) {
+    Object.defineProperty(this, 'passive', {
+      value: val
+    })
+  }
+})
+
+export function leftClick (e = window.event) {
+  return e.button === 0
 }
 
-export function rightClick (e) {
-  e = getEvent(e)
-
-  if (e.which) {
-    return e.which === 3
-  }
-  if (e.button) {
-    return e.button === 2
-  }
-
-  return false
+export function middleClick (e = window.event) {
+  return e.button === 1
 }
 
-export function getEventKey (e) {
-  e = getEvent(e)
+export function rightClick (e = window.event) {
+  return e.button === 2
+}
+
+export function getEventKey (e = window.event) {
   return e.which || e.keyCode
 }
 
-export function position (e) {
+export function position (e = window.event) {
   let posx, posy
-  e = getEvent(e)
 
   if (e.touches && e.touches[0]) {
     e = e.touches[0]
@@ -39,6 +59,11 @@ export function position (e) {
     posx = e.pageX - document.body.scrollLeft - document.documentElement.scrollLeft
     posy = e.pageY - document.body.scrollTop - document.documentElement.scrollTop
   }
+  else {
+    const offset = targetElement(e).getBoundingClientRect()
+    posx = ((offset.right - offset.left) / 2) + offset.left
+    posy = ((offset.bottom - offset.top) / 2) + offset.top
+  }
 
   return {
     top: posy,
@@ -46,9 +71,8 @@ export function position (e) {
   }
 }
 
-export function targetElement (e) {
+export function targetElement (e = window.event) {
   let target
-  e = getEvent(e)
 
   if (e.target) {
     target = e.target
@@ -65,13 +89,37 @@ export function targetElement (e) {
   return target
 }
 
+export function getEventPath (e = window.event) {
+  if (e.path) {
+    return e.path
+  }
+  if (e.composedPath) {
+    return e.composedPath()
+  }
+
+  const path = []
+  let el = e.target
+
+  while (el) {
+    path.push(el)
+
+    if (el.tagName === 'HTML') {
+      path.push(document)
+      path.push(window)
+      return path
+    }
+
+    el = el.parentElement
+  }
+}
+
 // Reasonable defaults
 const
   PIXEL_STEP = 10,
   LINE_HEIGHT = 40,
   PAGE_HEIGHT = 800
 
-export function getMouseWheelDistance (e) {
+export function getMouseWheelDistance (e = window.event) {
   var
     sX = 0, sY = 0, // spinX, spinY
     pX = 0, pY = 0 // pixelX, pixelY
@@ -121,4 +169,12 @@ export function getMouseWheelDistance (e) {
     pixelX: pX,
     pixelY: pY
   }
+}
+
+export function stopAndPrevent (e = window.event) {
+  if (!e) {
+    return
+  }
+  e.preventDefault()
+  e.stopPropagation()
 }

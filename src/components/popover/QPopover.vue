@@ -16,7 +16,7 @@
     import {getScrollTarget} from '../../utils/scroll'
     import {width, viewport} from '../../utils/dom'
     import EscapeKey from '../../features/escape-key'
-    import ModelToggleMixin from '../../utils/mixin-model-toggle'
+    import ModelToggleMixin from '../../mixins/model-toggle'
 
     export default {
         name: 'q-popover',
@@ -88,15 +88,15 @@
             if(this.anchorClick && this.anchorEl){
                 this.anchorEl.removeEventListener('click', this.toggle)
             }
-            this.close()
+            this.hide()
         },
         methods: {
             toggle(event) {
                 if(this.opened){
-                    this.close()
+                    this.hide()
                 }
                 else{
-                    this.open(event)
+                    this.show(event)
                 }
             },
             open(evt) {
@@ -116,7 +116,7 @@
                 document.body.click() // close other Popovers
                 document.body.appendChild(this.$el)
                 EscapeKey.register(() => {
-                    this.close()
+                    this.hide()
                 })
                 this.scrollTarget = getScrollTarget(this.anchorEl)
                 this.scrollTarget.addEventListener('scroll', this.__updatePosition)
@@ -124,8 +124,8 @@
                 this.reposition(evt)
                 this.timer = setTimeout(() => {
                     this.timer = null
-                    document.body.addEventListener('click', this.close, true)
-                    document.body.addEventListener('touchstart', this.close, true)
+                    document.body.addEventListener('click', this.hide, true)
+                    document.body.addEventListener('touchstart', this.hide, true)
                     this.__updateModel(true)
                     this.$emit('open')
                 }, 1)
@@ -136,8 +136,8 @@
                 }
 
                 clearTimeout(this.timer)
-                document.body.removeEventListener('click', this.close, true)
-                document.body.removeEventListener('touchstart', this.close, true)
+                document.body.removeEventListener('click', this.hide, true)
+                document.body.removeEventListener('touchstart', this.hide, true)
                 let st = this.scrollTarget
                 if(st){
                     st.removeEventListener('scroll', this.__updatePosition)
@@ -173,7 +173,7 @@
                     const {top} = this.anchorEl.getBoundingClientRect()
                     const {height} = viewport()
                     if(top < 0 || top > height){
-                        return this.close()
+                        return this.hide()
                     }
                     setPosition({
                         event,

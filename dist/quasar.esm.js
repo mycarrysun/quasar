@@ -1626,31 +1626,61 @@ function frameDebounce (fn) {
   }
 }
 
-function getEvent (e) {
-  return e || window.event
+var listenOpts = {};
+Object.defineProperty(listenOpts, 'passive', {
+  configurable: true,
+  get: function get () {
+    var passive;
+
+    try {
+      var opts = Object.defineProperty({}, 'passive', {
+        get: function get () {
+          passive = { passive: true };
+        }
+      });
+      window.addEventListener('qtest', null, opts);
+      window.removeEventListener('qtest', null, opts);
+    }
+    catch (e) {}
+
+    listenOpts.passive = passive;
+    return passive
+  },
+  set: function set (val) {
+    Object.defineProperty(this, 'passive', {
+      value: val
+    });
+  }
+});
+
+function leftClick (e) {
+  if ( e === void 0 ) e = window.event;
+
+  return e.button === 0
+}
+
+function middleClick (e) {
+  if ( e === void 0 ) e = window.event;
+
+  return e.button === 1
 }
 
 function rightClick (e) {
-  e = getEvent(e);
+  if ( e === void 0 ) e = window.event;
 
-  if (e.which) {
-    return e.which === 3
-  }
-  if (e.button) {
-    return e.button === 2
-  }
-
-  return false
+  return e.button === 2
 }
 
 function getEventKey (e) {
-  e = getEvent(e);
+  if ( e === void 0 ) e = window.event;
+
   return e.which || e.keyCode
 }
 
 function position (e) {
+  if ( e === void 0 ) e = window.event;
+
   var posx, posy;
-  e = getEvent(e);
 
   if (e.touches && e.touches[0]) {
     e = e.touches[0];
@@ -1667,6 +1697,11 @@ function position (e) {
     posx = e.pageX - document.body.scrollLeft - document.documentElement.scrollLeft;
     posy = e.pageY - document.body.scrollTop - document.documentElement.scrollTop;
   }
+  else {
+    var offset = targetElement(e).getBoundingClientRect();
+    posx = ((offset.right - offset.left) / 2) + offset.left;
+    posy = ((offset.bottom - offset.top) / 2) + offset.top;
+  }
 
   return {
     top: posy,
@@ -1675,8 +1710,9 @@ function position (e) {
 }
 
 function targetElement (e) {
+  if ( e === void 0 ) e = window.event;
+
   var target;
-  e = getEvent(e);
 
   if (e.target) {
     target = e.target;
@@ -1693,12 +1729,40 @@ function targetElement (e) {
   return target
 }
 
+function getEventPath (e) {
+  if ( e === void 0 ) e = window.event;
+
+  if (e.path) {
+    return e.path
+  }
+  if (e.composedPath) {
+    return e.composedPath()
+  }
+
+  var path = [];
+  var el = e.target;
+
+  while (el) {
+    path.push(el);
+
+    if (el.tagName === 'HTML') {
+      path.push(document);
+      path.push(window);
+      return path
+    }
+
+    el = el.parentElement;
+  }
+}
+
 // Reasonable defaults
 var PIXEL_STEP = 10;
 var LINE_HEIGHT = 40;
 var PAGE_HEIGHT = 800;
 
 function getMouseWheelDistance (e) {
+  if ( e === void 0 ) e = window.event;
+
   var
     sX = 0, sY = 0, // spinX, spinY
     pX = 0, pY = 0; // pixelX, pixelY
@@ -1750,13 +1814,27 @@ function getMouseWheelDistance (e) {
   }
 }
 
+function stopAndPrevent (e) {
+  if ( e === void 0 ) e = window.event;
+
+  if (!e) {
+    return
+  }
+  e.preventDefault();
+  e.stopPropagation();
+}
 
 var event = Object.freeze({
+	listenOpts: listenOpts,
+	leftClick: leftClick,
+	middleClick: middleClick,
 	rightClick: rightClick,
 	getEventKey: getEventKey,
 	position: position,
 	targetElement: targetElement,
-	getMouseWheelDistance: getMouseWheelDistance
+	getEventPath: getEventPath,
+	getMouseWheelDistance: getMouseWheelDistance,
+	stopAndPrevent: stopAndPrevent
 });
 
 function showRipple (evt, el, stopPropagation) {
@@ -2740,248 +2818,324 @@ function parsePosition (pos) {
 
 var handlers = [];
 
-if (Platform$2.is.desktop) {
-  window.addEventListener('keyup', function (evt) {
-    if (handlers.length === 0) {
-      return
-    }
-
-    if (evt.which === 27 || evt.keyCode === 27) {
-      handlers[handlers.length - 1]();
-    }
-  });
-}
-
 var EscapeKey = {
-  register: function register (handler) {
-    if (Platform$2.is.desktop) {
-      handlers.push(handler);
+    __installed: false,
+    __install: function __install () {
+        this.__installed = true;
+        window.addEventListener('keyup', function (evt) {
+            if (handlers.length === 0) {
+                return
+            }
+
+            if (evt.which === 27 || evt.keyCode === 27) {
+                handlers[handlers.length - 1]();
+            }
+        });
+    },
+
+    register: function register (handler) {
+        if (Platform.is.desktop) {
+            if (!this.__installed) {
+                this.__install();
+            }
+
+            handlers.push(handler);
+        }
+    },
+
+    pop: function pop () {
+        if (Platform.is.desktop) {
+            handlers.pop();
+        }
     }
-  },
-  pop: function pop () {
-    if (Platform$2.is.desktop) {
-      handlers.pop();
-    }
-  }
 };
 
+// Needs:
+// __show()
+// __hide()
+// Calling this.showPromiseResolve, this.hidePromiseResolve
+// avoid backbutton with setting noShowingHistory
 var ModelToggleMixin = {
+    props: {
+        value: Boolean
+    },
+    data: function data () {
+        return {
+            showing: false
+        }
+    },
+    watch: {
+        value: function value (val) {
+            var this$1 = this;
+
+            if (this.disable && val) {
+                this.$emit('input', false);
+                return
+            }
+
+            this.$nextTick(function () {
+                if (this$1.value !== this$1.showing) {
+                    this$1[val ? 'show' : 'hide']();
+                }
+            });
+        }
+    },
+    methods: {
+        toggle: function toggle (evt) {
+            if (!this.disable) {
+                return this[this.showing ? 'hide' : 'show'](evt)
+            }
+        },
+        show: function show (evt) {
+            var this$1 = this;
+
+            if (this.disable) {
+                return Promise.reject('disabled')
+            }
+
+            if (this.showing) {
+                return this.showPromise || Promise.resolve(evt)
+            }
+
+            if (this.hidePromise) {
+                this.hidePromiseReject();
+            }
+
+            this.showing = true;
+            if (this.value === false) {
+                this.$emit('input', true);
+            }
+
+            if (this.$options.modelToggle === void 0 || this.$options.modelToggle.history) {
+                this.__historyEntry = {
+                    handler: this.hide
+                };
+                History.add(this.__historyEntry);
+            }
+
+            if (!this.__show) {
+                this.$emit('show');
+                return Promise.resolve(evt)
+            }
+
+            this.showPromise = new Promise(function (resolve, reject) {
+                this$1.showPromiseResolve = function () {
+                    this$1.showPromise = null;
+                    this$1.$emit('show');
+                    resolve(evt);
+                };
+                this$1.showPromiseReject = function () {
+                    this$1.showPromise = null;
+                    reject('cancelled');
+                };
+            });
+
+            this.__show(evt);
+            return this.showPromise || Promise.resolve(evt)
+        },
+        hide: function hide (evt) {
+            var this$1 = this;
+
+            if (this.disable) {
+                return Promise.reject('disabled')
+            }
+
+            if (!this.showing) {
+                return this.hidePromise || Promise.resolve(evt)
+            }
+
+
+            if (this.showPromise) {
+                this.showPromiseReject();
+            }
+
+            this.showing = false;
+            if (this.value === true) {
+                this.$emit('input', false);
+            }
+
+            if (this.__historyEntry) {
+                History.remove(this.__historyEntry);
+                this.__historyEntry = null;
+            }
+
+            if (!this.__hide) {
+                this.$emit('hide');
+                return Promise.resolve()
+            }
+
+            this.hidePromise = new Promise(function (resolve, reject) {
+                this$1.hidePromiseResolve = function () {
+                    this$1.hidePromise = null;
+                    this$1.$emit('hide');
+                    resolve();
+                };
+                this$1.hidePromiseReject = function () {
+                    this$1.hidePromise = null;
+                    reject('cancelled');
+                };
+            });
+
+            this.__hide(evt);
+            return this.hidePromise || Promise.resolve(evt)
+        }
+    },
+    beforeDestroy: function beforeDestroy () {
+        if (this.showing) {
+            this.showPromise && this.showPromiseReject();
+            this.hidePromise && this.hidePromiseReject();
+            this.$emit('input', false);
+            this.__hide && this.__hide();
+        }
+    }
+};
+
+var QPopover = {
+  name: 'QPopover',
+  mixins: [ModelToggleMixin],
   props: {
-    value: Boolean
+    anchor: {
+      type: String,
+      validator: positionValidator
+    },
+    self: {
+      type: String,
+      validator: positionValidator
+    },
+    fit: Boolean,
+    maxHeight: String,
+    touchPosition: Boolean,
+    anchorClick: {
+      /*
+        for handling anchor outside of Popover
+        example: context menu component
+      */
+      type: Boolean,
+      default: true
+    },
+    offset: {
+      type: Array,
+      validator: offsetValidator
+    },
+    disable: Boolean
   },
   watch: {
-    value: function value (v) {
-      if (v) {
-        this.open();
-      }
-      else {
-        this.close();
-      }
+    $route: function $route () {
+      this.hide();
     }
+  },
+  computed: {
+    anchorOrigin: function anchorOrigin () {
+      return parsePosition(this.anchor || ("bottom " + (this.$q.i18n.rtl ? 'right' : 'left')))
+    },
+    selfOrigin: function selfOrigin () {
+      return parsePosition(this.self || ("top " + (this.$q.i18n.rtl ? 'right' : 'left')))
+    }
+  },
+  render: function render (h) {
+    return h('div', {
+      staticClass: 'q-popover scroll',
+      on: {
+        click: function click (e) { e.stopPropagation(); }
+      }
+    }, [
+      this.$slots.default
+    ])
+  },
+  created: function created () {
+    var this$1 = this;
+
+    this.__updatePosition = frameDebounce(function (_, event, animate) { return this$1.reposition(event, animate); });
   },
   mounted: function mounted () {
     var this$1 = this;
 
     this.$nextTick(function () {
-      setTimeout(function () {
-        if (this$1.value) {
-          this$1.open();
-        }
-      }, 100);
+      this$1.anchorEl = this$1.$el.parentNode;
+      this$1.anchorEl.removeChild(this$1.$el);
+      if (this$1.anchorEl.classList.contains('q-btn-inner') || this$1.anchorEl.classList.contains('q-if-inner')) {
+        this$1.anchorEl = this$1.anchorEl.parentNode;
+      }
+      if (this$1.anchorClick) {
+        this$1.anchorEl.classList.add('cursor-pointer');
+        this$1.anchorEl.addEventListener('click', this$1.toggle);
+      }
     });
+    if (this.value) {
+      this.show();
+    }
+  },
+  beforeDestroy: function beforeDestroy () {
+    if (this.anchorClick && this.anchorEl) {
+      this.anchorEl.removeEventListener('click', this.toggle);
+    }
   },
   methods: {
-    __updateModel: function __updateModel (val) {
-      if (this.value !== val) {
-        this.$emit('input', val);
+    __show: function __show (evt) {
+      var this$1 = this;
+
+      document.body.appendChild(this.$el);
+      EscapeKey.register(function () { this$1.hide(); });
+      this.scrollTarget = getScrollTarget(this.anchorEl);
+      this.scrollTarget.addEventListener('scroll', this.__updatePosition, listenOpts.passive);
+      window.addEventListener('resize', this.__updatePosition, listenOpts.passive);
+      this.__updatePosition(0, evt, true);
+
+      clearTimeout(this.timer);
+      this.timer = setTimeout(function () {
+        document.body.addEventListener('click', this$1.__bodyHide, true);
+        document.body.addEventListener('touchstart', this$1.__bodyHide, true);
+        this$1.showPromise && this$1.showPromiseResolve();
+      }, 0);
+    },
+    __bodyHide: function __bodyHide (evt) {
+      if (
+        evt && evt.target &&
+        (this.$el.contains(evt.target) || this.anchorEl.contains(evt.target))
+      ) {
+        return
       }
+
+      this.hide(evt);
+    },
+    __hide: function __hide () {
+      clearTimeout(this.timer);
+
+      document.body.removeEventListener('click', this.__bodyHide, true);
+      document.body.removeEventListener('touchstart', this.__bodyHide, true);
+      this.scrollTarget.removeEventListener('scroll', this.__updatePosition, listenOpts.passive);
+      window.removeEventListener('resize', this.__updatePosition, listenOpts.passive);
+      EscapeKey.pop();
+
+      document.body.removeChild(this.$el);
+      this.hidePromise && this.hidePromiseResolve();
+    },
+    reposition: function reposition (event, animate) {
+      if (this.fit) {
+        this.$el.style.minWidth = width(this.anchorEl) + 'px';
+      }
+      var ref = this.anchorEl.getBoundingClientRect();
+      var top = ref.top;
+      var bottom = ref.bottom;
+
+      if (bottom < 0 || top > window.innerHeight) {
+        return this.hide()
+      }
+
+      setPosition({
+        event: event,
+        animate: animate,
+        el: this.$el,
+        offset: this.offset,
+        anchorEl: this.anchorEl,
+        anchorOrigin: this.anchorOrigin,
+        selfOrigin: this.selfOrigin,
+        maxHeight: this.maxHeight,
+        anchorClick: this.anchorClick,
+        touchPosition: this.touchPosition
+      });
     }
   }
-};
-
-var QPopover = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"q-popover animate-scale",style:(_vm.transformCSS),on:{"click":function($event){$event.stopPropagation();}}},[_vm._t("default")],2)},staticRenderFns: [],
-    name: 'q-popover',
-    mixins: [ModelToggleMixin],
-    props: {
-        anchor: {
-            type: String,
-            default: 'bottom left',
-            validator: positionValidator
-        },
-        self: {
-            type: String,
-            default: 'top left',
-            validator: positionValidator
-        },
-        fit: Boolean,
-        maxHeight: String,
-        touchPosition: Boolean,
-        anchorClick: {
-            /*
-              for handling anchor outside of Popover
-              example: context menu component
-            */
-            type: Boolean,
-            default: true
-        },
-        offset: {
-            type: Array,
-            validator: offsetValidator
-        },
-        disable: Boolean
-    },
-    data: function data() {
-        return {
-            opened: false,
-            progress: false
-        }
-    },
-    computed: {
-        transformCSS: function transformCSS() {
-            return getTransformProperties({selfOrigin: this.selfOrigin})
-        },
-        anchorOrigin: function anchorOrigin() {
-            return parsePosition(this.anchor)
-        },
-        selfOrigin: function selfOrigin() {
-            return parsePosition(this.self)
-        }
-    },
-    created: function created() {
-        var this$1 = this;
-
-        this.__updatePosition = frameDebounce(function () {
-            this$1.reposition();
-        });
-    },
-    mounted: function mounted() {
-        var this$1 = this;
-
-        this.$nextTick(function () {
-            this$1.anchorEl = this$1.$el.parentNode;
-            this$1.anchorEl.removeChild(this$1.$el);
-            if(this$1.anchorEl.classList.contains('q-btn-inner')){
-                this$1.anchorEl = this$1.anchorEl.parentNode;
-            }
-            if(this$1.anchorClick){
-                this$1.anchorEl.classList.add('cursor-pointer');
-                this$1.anchorEl.addEventListener('click', this$1.toggle);
-            }
-        });
-    },
-    beforeDestroy: function beforeDestroy() {
-        if(this.anchorClick && this.anchorEl){
-            this.anchorEl.removeEventListener('click', this.toggle);
-        }
-        this.close();
-    },
-    methods: {
-        toggle: function toggle(event) {
-            if(this.opened){
-                this.close();
-            }
-            else{
-                this.open(event);
-            }
-        },
-        open: function open(evt) {
-            var this$1 = this;
-
-            if(this.disable){
-                return
-            }
-            if(this.opened){
-                this.__updatePosition();
-                return
-            }
-            if(evt){
-                evt.stopPropagation();
-                evt.preventDefault();
-            }
-
-            this.opened = true;
-            document.body.click(); // close other Popovers
-            document.body.appendChild(this.$el);
-            EscapeKey.register(function () {
-                this$1.close();
-            });
-            this.scrollTarget = getScrollTarget(this.anchorEl);
-            this.scrollTarget.addEventListener('scroll', this.__updatePosition);
-            window.addEventListener('resize', this.__updatePosition);
-            this.reposition(evt);
-            this.timer = setTimeout(function () {
-                this$1.timer = null;
-                document.body.addEventListener('click', this$1.close, true);
-                document.body.addEventListener('touchstart', this$1.close, true);
-                this$1.__updateModel(true);
-                this$1.$emit('open');
-            }, 1);
-        },
-        close: function close(fn) {
-            var this$1 = this;
-
-            if(!this.opened || this.progress || (fn && fn.target && this.$el.contains(fn.target))){
-                return
-            }
-
-            clearTimeout(this.timer);
-            document.body.removeEventListener('click', this.close, true);
-            document.body.removeEventListener('touchstart', this.close, true);
-            var st = this.scrollTarget;
-            if(st){
-                st.removeEventListener('scroll', this.__updatePosition);
-            }
-
-            window.removeEventListener('resize', this.__updatePosition);
-            EscapeKey.pop();
-            this.progress = true;
-
-            /*
-              Using setTimeout to allow
-              v-models to take effect
-            */
-            setTimeout(function () {
-                this$1.opened = false;
-                this$1.progress = false;
-                if(document.body.contains(this$1.$el)){
-                    document.body.removeChild(this$1.$el);
-                }
-
-                this$1.__updateModel(false);
-                this$1.$emit('close');
-                if(typeof fn === 'function'){
-                    fn();
-                }
-            }, 1);
-        },
-        reposition: function reposition(event) {
-            var this$1 = this;
-
-            this.$nextTick(function () {
-                if(this$1.fit){
-                    this$1.$el.style.minWidth = width(this$1.anchorEl) + 'px';
-                }
-                var ref = this$1.anchorEl.getBoundingClientRect();
-                var top = ref.top;
-                var ref$1 = viewport();
-                var height$$1 = ref$1.height;
-                if(top < 0 || top > height$$1){
-                    return this$1.close()
-                }
-                setPosition({
-                    event: event,
-                    el: this$1.$el,
-                    offset: this$1.offset,
-                    anchorEl: this$1.anchorEl,
-                    anchorOrigin: this$1.anchorOrigin,
-                    selfOrigin: this$1.selfOrigin,
-                    maxHeight: this$1.maxHeight,
-                    anchorClick: this$1.anchorClick,
-                    touchPosition: this$1.touchPosition
-                });
-            });
-        }
-    }
 };
 
 function textStyle (n) {
@@ -5132,180 +5286,6 @@ var ContextMenuDesktop = {render: function(){var _vm=this;var _h=_vm.$createElem
   }
 };
 
-var handlers$1 = [];
-
-var EscapeKey$1 = {
-    __installed: false,
-    __install: function __install () {
-        this.__installed = true;
-        window.addEventListener('keyup', function (evt) {
-            if (handlers$1.length === 0) {
-                return
-            }
-
-            if (evt.which === 27 || evt.keyCode === 27) {
-                handlers$1[handlers$1.length - 1]();
-            }
-        });
-    },
-
-    register: function register (handler) {
-        if (Platform.is.desktop) {
-            if (!this.__installed) {
-                this.__install();
-            }
-
-            handlers$1.push(handler);
-        }
-    },
-
-    pop: function pop () {
-        if (Platform.is.desktop) {
-            handlers$1.pop();
-        }
-    }
-};
-
-// Needs:
-// __show()
-// __hide()
-// Calling this.showPromiseResolve, this.hidePromiseResolve
-// avoid backbutton with setting noShowingHistory
-var ModelToggleMixin$1 = {
-    props: {
-        value: Boolean
-    },
-    data: function data () {
-        return {
-            showing: false
-        }
-    },
-    watch: {
-        value: function value (val) {
-            var this$1 = this;
-
-            if (this.disable && val) {
-                this.$emit('input', false);
-                return
-            }
-
-            this.$nextTick(function () {
-                if (this$1.value !== this$1.showing) {
-                    this$1[val ? 'show' : 'hide']();
-                }
-            });
-        }
-    },
-    methods: {
-        toggle: function toggle (evt) {
-            if (!this.disable) {
-                return this[this.showing ? 'hide' : 'show'](evt)
-            }
-        },
-        show: function show (evt) {
-            var this$1 = this;
-
-            if (this.disable) {
-                return Promise.reject('disabled')
-            }
-
-            if (this.showing) {
-                return this.showPromise || Promise.resolve(evt)
-            }
-
-            if (this.hidePromise) {
-                this.hidePromiseReject();
-            }
-
-            this.showing = true;
-            if (this.value === false) {
-                this.$emit('input', true);
-            }
-
-            if (this.$options.modelToggle === void 0 || this.$options.modelToggle.history) {
-                this.__historyEntry = {
-                    handler: this.hide
-                };
-                History.add(this.__historyEntry);
-            }
-
-            if (!this.__show) {
-                this.$emit('show');
-                return Promise.resolve(evt)
-            }
-
-            this.showPromise = new Promise(function (resolve, reject) {
-                this$1.showPromiseResolve = function () {
-                    this$1.showPromise = null;
-                    this$1.$emit('show');
-                    resolve(evt);
-                };
-                this$1.showPromiseReject = function () {
-                    this$1.showPromise = null;
-                    reject('cancelled');
-                };
-            });
-
-            this.__show(evt);
-            return this.showPromise || Promise.resolve(evt)
-        },
-        hide: function hide (evt) {
-            var this$1 = this;
-
-            if (this.disable) {
-                return Promise.reject('disabled')
-            }
-
-            if (!this.showing) {
-                return this.hidePromise || Promise.resolve(evt)
-            }
-
-
-            if (this.showPromise) {
-                this.showPromiseReject();
-            }
-
-            this.showing = false;
-            if (this.value === true) {
-                this.$emit('input', false);
-            }
-
-            if (this.__historyEntry) {
-                History.remove(this.__historyEntry);
-                this.__historyEntry = null;
-            }
-
-            if (!this.__hide) {
-                this.$emit('hide');
-                return Promise.resolve()
-            }
-
-            this.hidePromise = new Promise(function (resolve, reject) {
-                this$1.hidePromiseResolve = function () {
-                    this$1.hidePromise = null;
-                    this$1.$emit('hide');
-                    resolve();
-                };
-                this$1.hidePromiseReject = function () {
-                    this$1.hidePromise = null;
-                    reject('cancelled');
-                };
-            });
-
-            this.__hide(evt);
-            return this.hidePromise || Promise.resolve(evt)
-        }
-    },
-    beforeDestroy: function beforeDestroy () {
-        if (this.showing) {
-            this.showPromise && this.showPromiseReject();
-            this.hidePromise && this.hidePromiseReject();
-            this.$emit('input', false);
-            this.__hide && this.__hide();
-        }
-    }
-};
-
 var __THEME__$1 = ENVUTILS.platform.theme;
 
 var positions = {
@@ -5353,7 +5333,7 @@ var openedModalNumber = 0;
 
 var QModal = {
     name: 'q-modal',
-    mixins: [ModelToggleMixin$1],
+    mixins: [ModelToggleMixin],
     props: {
         position: {
             type: String,
@@ -5446,7 +5426,7 @@ var QModal = {
             body.appendChild(this.$el);
             body.classList.add('with-modal');
 
-            EscapeKey$1.register(function () {
+            EscapeKey.register(function () {
                 if (!this$1.noEscDismiss) {
                     this$1.hide().then(function () {
                         this$1.$emit('escape-key');
@@ -5468,7 +5448,7 @@ var QModal = {
 
         },
         __hide: function __hide() {
-            EscapeKey$1.pop();
+            EscapeKey.pop();
             openedModalNumber--;
 
             var body = document.body;
@@ -7918,9 +7898,43 @@ var SortIcon = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c
   }
 };
 
+var ModelToggleMixin$1 = {
+  props: {
+    value: Boolean
+  },
+  watch: {
+    value: function value (v) {
+      if (v) {
+        this.open();
+      }
+      else {
+        this.close();
+      }
+    }
+  },
+  mounted: function mounted () {
+    var this$1 = this;
+
+    this.$nextTick(function () {
+      setTimeout(function () {
+        if (this$1.value) {
+          this$1.open();
+        }
+      }, 100);
+    });
+  },
+  methods: {
+    __updateModel: function __updateModel (val) {
+      if (this.value !== val) {
+        this.$emit('input', val);
+      }
+    }
+  }
+};
+
 var QTooltip = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"q-tooltip animate-scale",style:(_vm.transformCSS)},[_vm._t("default")],2)},staticRenderFns: [],
     name: 'q-tooltip',
-    mixins: [ModelToggleMixin],
+    mixins: [ModelToggleMixin$1],
     props: {
         anchor: {
             type: String,
@@ -9740,7 +9754,7 @@ var FabMixin = {
 
 var QFab = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"q-fab z-fab row inline justify-center",class:{'q-fab-opened': _vm.opened}},[_c('q-btn',{class:{glossy: _vm.glossy},attrs:{"round":"","outline":_vm.outline,"push":_vm.push,"flat":_vm.flat,"color":_vm.color},on:{"click":_vm.toggle}},[_vm._t("tooltip"),_c('q-icon',{staticClass:"q-fab-icon absolute-full row flex-center full-width full-height",attrs:{"name":_vm.icon}}),_c('q-icon',{staticClass:"q-fab-active-icon absolute-full row flex-center full-width full-height",attrs:{"name":_vm.activeIcon}})],2),_c('div',{staticClass:"q-fab-actions flex no-wrap inline items-center",class:("q-fab-" + (_vm.direction))},[_vm._t("default")],2)],1)},staticRenderFns: [],
   name: 'q-fab',
-  mixins: [FabMixin, ModelToggleMixin],
+  mixins: [FabMixin, ModelToggleMixin$1],
   components: {
     QBtn: QBtn,
     QIcon: QIcon
