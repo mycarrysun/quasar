@@ -6,7 +6,7 @@ export default {
         let vm = vnode.componentInstance
         while ((vm = vm.$parent)) {
           const name = vm.$options.name
-          if (['q-popover', 'QPopover', 'q-modal', 'QModal'].include(name)) {
+          if (['q-popover', 'QPopover', 'q-modal', 'QModal'].includes(name)) {
             vm.hide(ev)
             break
           }

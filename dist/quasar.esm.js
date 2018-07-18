@@ -12868,7 +12868,7 @@ var closeOverlay = {
         var vm = vnode.componentInstance;
         while ((vm = vm.$parent)) {
           var name = vm.$options.name;
-          if (['q-popover', 'QPopover', 'q-modal', 'QModal'].include(name)) {
+          if (['q-popover', 'QPopover', 'q-modal', 'QModal'].includes(name)) {
             vm.hide(ev);
             break
           }
