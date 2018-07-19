@@ -131,18 +131,20 @@
                 this.$el.offsetHeight // eslint-disable-line
 
                 this.anchorEl = this.$el.parentNode
-                this.anchorEl.removeChild(this.$el)
-                if (this.anchorEl.classList.contains('q-btn-inner')) {
-                    this.anchorEl = this.anchorEl.parentNode
-                }
-                if (Platform.is.mobile) {
-                    this.anchorEl.addEventListener('click', this.open)
-                }
-                else {
-                    this.anchorEl.addEventListener('mouseenter', this.__delayOpen)
-                    this.anchorEl.addEventListener('focus', this.__delayOpen)
-                    this.anchorEl.addEventListener('mouseleave', this.close)
-                    this.anchorEl.addEventListener('blur', this.close)
+                if(this.anchorEl){
+                    this.anchorEl.removeChild(this.$el)
+                    if (this.anchorEl.classList.contains('q-btn-inner')) {
+                      this.anchorEl = this.anchorEl.parentNode
+                    }
+                    if (Platform.is.mobile) {
+                      this.anchorEl.addEventListener('click', this.open)
+                    }
+                    else {
+                      this.anchorEl.addEventListener('mouseenter', this.__delayOpen)
+                      this.anchorEl.addEventListener('focus', this.__delayOpen)
+                      this.anchorEl.addEventListener('mouseleave', this.close)
+                      this.anchorEl.addEventListener('blur', this.close)
+                    }
                 }
             })
         },

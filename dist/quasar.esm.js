@@ -8056,18 +8056,20 @@ var QTooltip = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c
             this$1.$el.offsetHeight; // eslint-disable-line
 
             this$1.anchorEl = this$1.$el.parentNode;
-            this$1.anchorEl.removeChild(this$1.$el);
-            if (this$1.anchorEl.classList.contains('q-btn-inner')) {
-                this$1.anchorEl = this$1.anchorEl.parentNode;
-            }
-            if (Platform$2.is.mobile) {
-                this$1.anchorEl.addEventListener('click', this$1.open);
-            }
-            else {
-                this$1.anchorEl.addEventListener('mouseenter', this$1.__delayOpen);
-                this$1.anchorEl.addEventListener('focus', this$1.__delayOpen);
-                this$1.anchorEl.addEventListener('mouseleave', this$1.close);
-                this$1.anchorEl.addEventListener('blur', this$1.close);
+            if(this$1.anchorEl){
+                this$1.anchorEl.removeChild(this$1.$el);
+                if (this$1.anchorEl.classList.contains('q-btn-inner')) {
+                  this$1.anchorEl = this$1.anchorEl.parentNode;
+                }
+                if (Platform$2.is.mobile) {
+                  this$1.anchorEl.addEventListener('click', this$1.open);
+                }
+                else {
+                  this$1.anchorEl.addEventListener('mouseenter', this$1.__delayOpen);
+                  this$1.anchorEl.addEventListener('focus', this$1.__delayOpen);
+                  this$1.anchorEl.addEventListener('mouseleave', this$1.close);
+                  this$1.anchorEl.addEventListener('blur', this$1.close);
+                }
             }
         });
     },
