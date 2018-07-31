@@ -5821,12 +5821,17 @@ var QSearch = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=
   }
 };
 
-var TableFilter = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"q-data-table-toolbar upper-toolbar row col items-center"},[_c('q-search',{staticClass:"col",attrs:{"placeholder":_vm.labels.search},model:{value:(_vm.filtering.terms),callback:function ($$v) {_vm.$set(_vm.filtering, "terms", $$v);},expression:"filtering.terms"}})],1)},staticRenderFns: [],
+var TableFilter = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"q-data-table-toolbar upper-toolbar row col items-center"},[_c('q-search',{staticClass:"col",attrs:{"placeholder":_vm.labels.search},on:{"keyup":_vm.keyup},model:{value:(_vm.filtering.terms),callback:function ($$v) {_vm.$set(_vm.filtering, "terms", $$v);},expression:"filtering.terms"}})],1)},staticRenderFns: [],
   name: 'q-table-filter',
   components: {
     QSearch: QSearch
   },
-  props: ['filtering', 'columns', 'labels']
+  props: ['filtering', 'columns', 'labels'],
+  methods:{
+    keyup: function keyup(e){
+      console.log(e);
+    }
+  }
 };
 
 var Filter = {

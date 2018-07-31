@@ -4,6 +4,7 @@
       class="col"
       v-model="filtering.terms"
       :placeholder="labels.search"
+      @keyup="keyup"
     ></q-search>
   </div>
 </template>
@@ -16,6 +17,11 @@ export default {
   components: {
     QSearch
   },
-  props: ['filtering', 'columns', 'labels']
+  props: ['filtering', 'columns', 'labels'],
+  methods:{
+    keyup(e){
+      console.log(e)
+    }
+  }
 }
 </script>
