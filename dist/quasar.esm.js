@@ -5829,7 +5829,9 @@ var TableFilter = {render: function(){var _vm=this;var _h=_vm.$createElement;var
   props: ['filtering', 'columns', 'labels'],
   methods:{
     keyup: function keyup(e){
-      console.log(e);
+      if(e.keyCode === 13){ //enter key
+        this.$emit('search', this.filtering.terms);
+      }
     }
   }
 };

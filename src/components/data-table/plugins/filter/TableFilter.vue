@@ -20,7 +20,9 @@ export default {
   props: ['filtering', 'columns', 'labels'],
   methods:{
     keyup(e){
-      console.log(e)
+      if(e.keyCode === 13){ //enter key
+        this.$emit('search', this.filtering.terms)
+      }
     }
   }
 }
