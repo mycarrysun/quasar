@@ -55,7 +55,7 @@ export default {
   },
   render (h) {
     return h('div', {
-      staticClass: 'q-popover scroll animate-fade',
+      class: 'q-popover scroll animate-fade '+this.self.replace(' ', '-'),
       on: {
         click (e) { e.stopPropagation() }
       }
