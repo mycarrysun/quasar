@@ -3040,7 +3040,7 @@ var QPopover = {
   },
   render: function render (h) {
     return h('div', {
-      staticClass: 'q-popover scroll',
+      staticClass: 'q-popover scroll animate-fade',
       on: {
         click: function click (e) { e.stopPropagation(); }
       }
