@@ -55,7 +55,7 @@ export default {
   },
   render (h) {
     return h('div', {
-      staticClass: 'q-popover scroll',
+      staticClass: 'q-popover scroll animate-fade',
       on: {
         click (e) { e.stopPropagation() }
       }
