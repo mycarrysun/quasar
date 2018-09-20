@@ -66,6 +66,7 @@
       :disabled="disable"
       :readonly="readonly"
       :maxlength="maxLength"
+      :autocomplete="disableAutocomplete ? 'off' : 'on'"
 
       :min="min"
       :max="max"
@@ -145,7 +146,8 @@ export default {
       type: Number,
       default: 1
     },
-    maxDecimals: Number
+    maxDecimals: Number,
+    disableAutocomplete: Boolean,
   },
   data () {
     return {
