@@ -213,8 +213,12 @@
                         prevent(e)
                         break
                     case 27: // escape
+                        this.__clearSearch()
+                        break
+
                     case 9: //tab
                         this.__clearSearch()
+                        this.close()
                         break
 
                 }
