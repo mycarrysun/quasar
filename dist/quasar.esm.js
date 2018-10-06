@@ -3760,6 +3760,7 @@ var QAutocomplete = {render: function(){var _vm=this;var _h=_vm.$createElement;v
                     prevent(e);
                     break
                 case 27: // escape
+                case 9: //tab
                     this.__clearSearch();
                     break
 
