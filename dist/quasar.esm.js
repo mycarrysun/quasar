@@ -3762,9 +3762,6 @@ var QAutocomplete = {render: function(){var _vm=this;var _h=_vm.$createElement;v
                 case 27: // escape
                     this.__clearSearch();
                     break
-                case 9: //tab
-                    this.setCurrentSelection();
-                    break
 
             }
         },
