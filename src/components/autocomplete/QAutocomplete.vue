@@ -213,6 +213,7 @@
                         prevent(e)
                         break
                     case 27: // escape
+                    case 9: //tab
                         this.__clearSearch()
                         break
 
