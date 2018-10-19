@@ -267,6 +267,12 @@ export default {
     if (this.$el.parentNode) {
       this.$el.parentNode.removeChild(this.$el)
     }
+
+    if (!openedModalNumber) {
+      const body = document.body
+      body.classList.remove('with-modal')
+      body.style.paddingRight = this.bodyPadding
+    }
   }
 }
 </script>
