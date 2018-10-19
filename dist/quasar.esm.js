@@ -5298,254 +5298,257 @@ var ContextMenuDesktop = {render: function(){var _vm=this;var _h=_vm.$createElem
 var __THEME__$1 = ENVUTILS.platform.theme;
 
 var positions = {
-    top: 'items-start justify-center with-backdrop',
-    bottom: 'items-end justify-center with-backdrop',
-    right: 'items-center justify-end with-backdrop',
-    left: 'items-center justify-start with-backdrop'
+  top: 'items-start justify-center with-backdrop',
+  bottom: 'items-end justify-center with-backdrop',
+  right: 'items-center justify-end with-backdrop',
+  left: 'items-center justify-start with-backdrop'
 };
 var positionCSS = __THEME__$1 === 'mat'
-    ? {
-        maxHeight: '80vh',
-        height: 'auto'
-    }
-    : {
-        maxHeight: '80vh',
-        height: 'auto',
-        boxShadow: 'none'
-    };
+  ? {
+    maxHeight: '80vh',
+    height: 'auto'
+  }
+  : {
+    maxHeight: '80vh',
+    height: 'auto',
+    boxShadow: 'none'
+  };
 
-function additionalCSS(position) {
-    var css = {};
+function additionalCSS (position) {
+  var css = {};
 
-    if (['left', 'right'].includes(position)) {
-        css.maxWidth = '90vw';
+  if (['left', 'right'].includes(position)) {
+    css.maxWidth = '90vw';
+  }
+  if (__THEME__$1 === 'ios') {
+    if (['left', 'top'].includes(position)) {
+      css.borderTopLeftRadius = 0;
     }
-    if (__THEME__$1 === 'ios') {
-        if (['left', 'top'].includes(position)) {
-            css.borderTopLeftRadius = 0;
-        }
-        if (['right', 'top'].includes(position)) {
-            css.borderTopRightRadius = 0;
-        }
-        if (['left', 'bottom'].includes(position)) {
-            css.borderBottomLeftRadius = 0;
-        }
-        if (['right', 'bottom'].includes(position)) {
-            css.borderBottomRightRadius = 0;
-        }
+    if (['right', 'top'].includes(position)) {
+      css.borderTopRightRadius = 0;
     }
+    if (['left', 'bottom'].includes(position)) {
+      css.borderBottomLeftRadius = 0;
+    }
+    if (['right', 'bottom'].includes(position)) {
+      css.borderBottomRightRadius = 0;
+    }
+  }
 
-    return css
+  return css
 }
 
 var openedModalNumber = 0;
 
 var QModal = {
-    name: 'q-modal',
-    mixins: [ModelToggleMixin],
-    props: {
-        position: {
-            type: String,
-            default: '',
-            validator: function validator(val) {
-                return val === '' || ['top', 'bottom', 'left', 'right'].includes(val)
-            }
-        },
-        transition: String,
-        enterClass: String,
-        leaveClass: String,
-        positionClasses: {
-            type: String,
-            default: 'flex-center'
-        },
-        contentClasses: [Object, Array, String],
-        contentCss: [Object, Array, String],
-        noBackdropDismiss: {
-            type: Boolean,
-            default: false
-        },
-        noEscDismiss: {
-            type: Boolean,
-            default: false
-        },
-        minimized: Boolean,
-        maximized: Boolean
+  name: 'q-modal',
+  mixins: [ModelToggleMixin],
+  props: {
+    position: {
+      type: String,
+      default: '',
+      validator: function validator (val) {
+        return val === '' || ['top', 'bottom', 'left', 'right'].includes(val)
+      }
     },
-    watch: {
-
+    transition: String,
+    enterClass: String,
+    leaveClass: String,
+    positionClasses: {
+      type: String,
+      default: 'flex-center'
     },
-    computed: {
-        modalClasses: function modalClasses() {
-            var cls = this.position
-                ? positions[this.position]
-                : this.positionClasses;
-            if (this.maximized) {
-                return ['maximized', cls]
-            }
-            else if (this.minimized) {
-                return ['minimized', cls]
-            }
-            return cls
-        },
-        modalTransition: function modalTransition() {
-            if (this.position) {
-                return ("q-modal-" + (this.position))
-            }
-            if (this.enterClass === void 0 && this.leaveClass === void 0) {
-                return this.transition || 'q-modal'
-            }
-        },
-        modalCss: function modalCss() {
-            if (this.position) {
-                var css = Array.isArray(this.contentCss)
-                    ? this.contentCss
-                    : [this.contentCss];
-
-                css.unshift(extend(
-                    {},
-                    positionCSS,
-                    additionalCSS(this.position)
-                ));
-
-                return css
-            }
-
-            return this.contentCss
-        },
-        active: function active(){
-            return this.showing
-        }
+    contentClasses: [Object, Array, String],
+    contentCss: [Object, Array, String],
+    noBackdropDismiss: {
+      type: Boolean,
+      default: false
     },
-    methods: {
-        __dismiss: function __dismiss() {
-            var this$1 = this;
-
-            if (this.noBackdropDismiss) {
-                return
-            }
-            this.hide().then(function () {
-                this$1.$emit('dismiss');
-            });
-        },
-        __show: function __show() {
-            var this$1 = this;
-
-            var body = document.body;
-
-            body.appendChild(this.$el);
-            body.classList.add('with-modal');
-
-            EscapeKey.register(function () {
-                if (!this$1.noEscDismiss) {
-                    this$1.hide().then(function () {
-                        this$1.$emit('escape-key');
-                    });
-                }
-            });
-
-            openedModalNumber++;
-
-            var content = this.$refs.content;
-            if(content){
-                content.scrollTop = 0
-                ;['modal-scroll', 'layout-view'].forEach(function (c) {
-                    [].slice.call(content.getElementsByClassName(c)).forEach(function (el) {
-                        el.scrollTop = 0;
-                    });
-                });
-            }
-
-        },
-        __hide: function __hide() {
-            EscapeKey.pop();
-            openedModalNumber--;
-
-            var body = document.body;
-
-            if(body.contains(this.$el)){
-                body.removeChild(this.$el);
-                if(body.contains(this.$el)){
-                    throw new Error('Modal was not destroyed')
-                }
-            }
-
-            if (openedModalNumber <= 0) {
-                body.classList.remove('with-modal');
-                body.style.paddingRight = this.bodyPadding;
-            }
-        },
-        open: function open(){
-            this.show();
-        },
-        close: function close(fn){
-            if (typeof fn === 'function') {
-                fn();
-            }
-            this.hide();
-        }
+    noEscDismiss: {
+      type: Boolean,
+      default: false
     },
-    mounted: function mounted() {
-        if (this.value) {
-            this.show();
-        }
+    minimized: Boolean,
+    maximized: Boolean
+  },
+  watch: {},
+  computed: {
+    modalClasses: function modalClasses () {
+      var cls = this.position
+        ? positions[this.position]
+        : this.positionClasses;
+      if (this.maximized) {
+        return ['maximized', cls]
+      }
+      else if (this.minimized) {
+        return ['minimized', cls]
+      }
+      return cls
     },
-    beforeDestroy: function beforeDestroy() {
-        if (this.$el.parentNode) {
-            this.$el.parentNode.removeChild(this.$el);
-        }
+    modalTransition: function modalTransition () {
+      if (this.position) {
+        return ("q-modal-" + (this.position))
+      }
+      if (this.enterClass === void 0 && this.leaveClass === void 0) {
+        return this.transition || 'q-modal'
+      }
     },
-    render: function render(h) {
-        var this$1 = this;
+    modalCss: function modalCss () {
+      if (this.position) {
+        var css = Array.isArray(this.contentCss)
+          ? this.contentCss
+          : [this.contentCss];
 
-        return h(QTransition, {
-            props: {
-                name: this.modalTransition,
-                enter: this.enterClass,
-                leave: this.leaveClass
-            },
-            on: {
-                afterEnter: function () {
-                    this$1.showPromise && this$1.showPromiseResolve();
-                },
-                enterCancelled: function () {
-                    this$1.showPromise && this$1.showPromiseReject();
-                },
-                afterLeave: function () {
-                    this$1.hidePromise && this$1.hidePromiseResolve();
-                },
-                leaveCancelled: function () {
-                    this$1.hidePromise && this$1.hidePromiseReject();
-                }
-            }
-        }, [
-            h('div', {
-                staticClass: 'modal fullscreen row',
-                'class': this.modalClasses,
-                on: {
-                    click: this.__dismiss
-                },
-                directives: [{
-                    name: 'show',
-                    value: this.showing
-                }]
-            }, [
-                h('div', {
-                    ref: 'content',
-                    staticClass: 'modal-content scroll',
-                    style: this.modalCss,
-                    'class': this.contentClasses,
-                    on: {
-                        click: function click(e) {
-                            e.stopPropagation();
-                        },
-                        touchstart: function touchstart(e) {
-                            e.stopPropagation();
-                        }
-                    }
-                }, [this.$slots.default])
-            ])
-        ])
+        css.unshift(extend(
+          {},
+          positionCSS,
+          additionalCSS(this.position)
+        ));
+
+        return css
+      }
+
+      return this.contentCss
+    },
+    active: function active () {
+      return this.showing
     }
+  },
+  methods: {
+    __dismiss: function __dismiss () {
+      var this$1 = this;
+
+      if (this.noBackdropDismiss) {
+        return
+      }
+      this.hide().then(function () {
+        this$1.$emit('dismiss');
+      });
+    },
+    __show: function __show () {
+      var this$1 = this;
+
+      var body = document.body;
+
+      body.appendChild(this.$el);
+      body.classList.add('with-modal');
+
+      EscapeKey.register(function () {
+        if (!this$1.noEscDismiss) {
+          this$1.hide().then(function () {
+            this$1.$emit('escape-key');
+          });
+        }
+      });
+
+      openedModalNumber++;
+
+      var content = this.$refs.content;
+      if (content) {
+        content.scrollTop = 0
+        ;['modal-scroll', 'layout-view'].forEach(function (c) {
+          [].slice.call(content.getElementsByClassName(c)).forEach(function (el) {
+            el.scrollTop = 0;
+          });
+        });
+      }
+
+    },
+    __hide: function __hide () {
+      EscapeKey.pop();
+      openedModalNumber--;
+
+      var body = document.body;
+
+      if (body.contains(this.$el)) {
+        body.removeChild(this.$el);
+        if (body.contains(this.$el)) {
+          throw new Error('Modal was not destroyed')
+        }
+      }
+
+      if (openedModalNumber <= 0) {
+        body.classList.remove('with-modal');
+        body.style.paddingRight = this.bodyPadding;
+      }
+    },
+    open: function open () {
+      this.show();
+    },
+    close: function close (fn) {
+      if (typeof fn === 'function') {
+        fn();
+      }
+      this.hide();
+    }
+  },
+  mounted: function mounted () {
+    if (this.value) {
+      this.show();
+    }
+  },
+  beforeDestroy: function beforeDestroy () {
+    if (this.$el.parentNode) {
+      this.$el.parentNode.removeChild(this.$el);
+    }
+    if (openedModalNumber <= 0) {
+      var body = document.body;
+      body.classList.remove('with-modal');
+      body.style.paddingRight = this.bodyPadding;
+    }
+  },
+  render: function render (h) {
+    var this$1 = this;
+
+    return h(QTransition, {
+      props: {
+        name: this.modalTransition,
+        enter: this.enterClass,
+        leave: this.leaveClass
+      },
+      on: {
+        afterEnter: function () {
+          this$1.showPromise && this$1.showPromiseResolve();
+        },
+        enterCancelled: function () {
+          this$1.showPromise && this$1.showPromiseReject();
+        },
+        afterLeave: function () {
+          this$1.hidePromise && this$1.hidePromiseResolve();
+        },
+        leaveCancelled: function () {
+          this$1.hidePromise && this$1.hidePromiseReject();
+        }
+      }
+    }, [
+      h('div', {
+        staticClass: 'modal fullscreen row',
+        'class': this.modalClasses,
+        on: {
+          click: this.__dismiss
+        },
+        directives: [{
+          name: 'show',
+          value: this.showing
+        }]
+      }, [
+        h('div', {
+          ref: 'content',
+          staticClass: 'modal-content scroll',
+          style: this.modalCss,
+          'class': this.contentClasses,
+          on: {
+            click: function click (e) {
+              e.stopPropagation();
+            },
+            touchstart: function touchstart (e) {
+              e.stopPropagation();
+            }
+          }
+        }, [this.$slots.default])
+      ])
+    ])
+  }
 };
 
 var __THEME__$2 = ENVUTILS.platform.theme;
