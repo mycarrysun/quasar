@@ -7952,154 +7952,156 @@ var ModelToggleMixin$1 = {
 };
 
 var QTooltip = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('span',{staticClass:"q-tooltip animate-scale",style:(_vm.transformCSS)},[_vm._t("default")],2)},staticRenderFns: [],
-    name: 'q-tooltip',
-    mixins: [ModelToggleMixin$1],
-    props: {
-        anchor: {
-            type: String,
-            default: 'top middle',
-            validator: positionValidator
-        },
-        self: {
-            type: String,
-            default: 'bottom middle',
-            validator: positionValidator
-        },
-        offset: {
-            type: Array,
-            validator: offsetValidator
-        },
-        delay: {
-            type: Number,
-            default: 0
-        },
-        maxHeight: String,
-        disable: Boolean
+  name: 'q-tooltip',
+  mixins: [ModelToggleMixin$1],
+  props: {
+    anchor: {
+      type: String,
+      default: 'top middle',
+      validator: positionValidator
     },
-    data: function data() {
-        return {
-            opened: false
-        }
+    self: {
+      type: String,
+      default: 'bottom middle',
+      validator: positionValidator
     },
-    computed: {
-        anchorOrigin: function anchorOrigin() {
-            return parsePosition(this.anchor)
-        },
-        selfOrigin: function selfOrigin() {
-            return parsePosition(this.self)
-        },
-        transformCSS: function transformCSS() {
-            return getTransformProperties({
-                selfOrigin: this.selfOrigin
-            })
-        }
+    offset: {
+      type: Array,
+      validator: offsetValidator
     },
-    methods: {
-        toggle: function toggle() {
-            if (this.opened) {
-                this.close();
-            }
-            else {
-                this.open();
-            }
-        },
-        open: function open() {
-            if (this.disable || this.opened) {
-                return
-            }
-            clearTimeout(this.timer);
-            this.opened = true;
-            document.body.appendChild(this.$el);
-            this.scrollTarget = getScrollTarget(this.anchorEl);
-            this.scrollTarget.addEventListener('scroll', this.close);
-            window.addEventListener('resize', this.__debouncedUpdatePosition);
-            if (Platform$2.is.mobile) {
-                document.body.addEventListener('click', this.close, true);
-            }
-            this.__updateModel(true);
-            this.$emit('open');
-            this.__updatePosition();
-        },
-        close: function close() {
-            clearTimeout(this.timer);
-            if (this.opened) {
-                this.opened = false;
-                this.scrollTarget.removeEventListener('scroll', this.close);
-                window.removeEventListener('resize', this.__debouncedUpdatePosition);
-                document.body.removeChild(this.$el);
-                if (Platform$2.is.mobile) {
-                    document.body.removeEventListener('click', this.close, true);
-                }
-                this.__updateModel(false);
-                this.$emit('close');
-            }
-        },
-        __updatePosition: function __updatePosition() {
-            setPosition({
-                el: this.$el,
-                offset: this.offset,
-                anchorEl: this.anchorEl,
-                anchorOrigin: this.anchorOrigin,
-                selfOrigin: this.selfOrigin,
-                maxHeight: this.maxHeight
-            });
-        },
-        __delayOpen: function __delayOpen() {
-            clearTimeout(this.timer);
-            this.timer = setTimeout(this.open, this.delay);
-        }
+    delay: {
+      type: Number,
+      default: 0
     },
-    created: function created() {
-        var this$1 = this;
-
-        this.__debouncedUpdatePosition = debounce(function () {
-            this$1.__updatePosition();
-        }, 70);
-    },
-    mounted: function mounted() {
-        var this$1 = this;
-
-        this.$nextTick(function () {
-            if(!this$1.$el) { return; }
-            /*
-              The following is intentional.
-              Fixes a bug in Chrome regarding offsetHeight by requiring browser
-              to calculate this before removing from DOM and using it for first time.
-            */
-            this$1.$el.offsetHeight; // eslint-disable-line
-
-            this$1.anchorEl = this$1.$el.parentNode;
-            if(this$1.anchorEl){
-                this$1.anchorEl.removeChild(this$1.$el);
-                if (this$1.anchorEl.classList.contains('q-btn-inner')) {
-                  this$1.anchorEl = this$1.anchorEl.parentNode;
-                }
-                if (Platform$2.is.mobile) {
-                  this$1.anchorEl.addEventListener('click', this$1.open);
-                }
-                else {
-                  this$1.anchorEl.addEventListener('mouseenter', this$1.__delayOpen);
-                  this$1.anchorEl.addEventListener('focus', this$1.__delayOpen);
-                  this$1.anchorEl.addEventListener('mouseleave', this$1.close);
-                  this$1.anchorEl.addEventListener('blur', this$1.close);
-                }
-            }
-        });
-    },
-    beforeDestroy: function beforeDestroy() {
-        if (this.anchorEl) {
-            if (Platform$2.is.mobile) {
-                this.anchorEl.removeEventListener('click', this.open);
-            }
-            else {
-                this.anchorEl.removeEventListener('mouseenter', this.__delayOpen);
-                this.anchorEl.removeEventListener('focus', this.__delayOpen);
-                this.anchorEl.removeEventListener('mouseleave', this.close);
-                this.anchorEl.removeEventListener('blur', this.close);
-            }
-        }
-        this.close();
+    maxHeight: String,
+    disable: Boolean
+  },
+  data: function data () {
+    return {
+      opened: false
     }
+  },
+  computed: {
+    anchorOrigin: function anchorOrigin () {
+      return parsePosition(this.anchor)
+    },
+    selfOrigin: function selfOrigin () {
+      return parsePosition(this.self)
+    },
+    transformCSS: function transformCSS () {
+      return getTransformProperties({
+        selfOrigin: this.selfOrigin
+      })
+    }
+  },
+  methods: {
+    toggle: function toggle () {
+      if (this.opened) {
+        this.close();
+      }
+      else {
+        this.open();
+      }
+    },
+    open: function open () {
+      if (this.disable || this.opened) {
+        return
+      }
+      clearTimeout(this.timer);
+      this.opened = true;
+      document.body.appendChild(this.$el);
+      this.scrollTarget = getScrollTarget(this.anchorEl);
+      this.scrollTarget.addEventListener('scroll', this.close);
+      window.addEventListener('resize', this.__debouncedUpdatePosition);
+      if (Platform$2.is.mobile) {
+        document.body.addEventListener('click', this.close, true);
+      }
+      this.__updateModel(true);
+      this.$emit('open');
+      this.__updatePosition();
+    },
+    close: function close () {
+      clearTimeout(this.timer);
+      if (this.opened) {
+        this.opened = false;
+        this.scrollTarget.removeEventListener('scroll', this.close);
+        window.removeEventListener('resize', this.__debouncedUpdatePosition);
+        if (document.body.contains(this.$el)) {
+          document.body.removeChild(this.$el);
+        }
+        if (Platform$2.is.mobile) {
+          document.body.removeEventListener('click', this.close, true);
+        }
+        this.__updateModel(false);
+        this.$emit('close');
+      }
+    },
+    __updatePosition: function __updatePosition () {
+      setPosition({
+        el: this.$el,
+        offset: this.offset,
+        anchorEl: this.anchorEl,
+        anchorOrigin: this.anchorOrigin,
+        selfOrigin: this.selfOrigin,
+        maxHeight: this.maxHeight
+      });
+    },
+    __delayOpen: function __delayOpen () {
+      clearTimeout(this.timer);
+      this.timer = setTimeout(this.open, this.delay);
+    }
+  },
+  created: function created () {
+    var this$1 = this;
+
+    this.__debouncedUpdatePosition = debounce(function () {
+      this$1.__updatePosition();
+    }, 70);
+  },
+  mounted: function mounted () {
+    var this$1 = this;
+
+    this.$nextTick(function () {
+      if (!this$1.$el) { return }
+      /*
+        The following is intentional.
+        Fixes a bug in Chrome regarding offsetHeight by requiring browser
+        to calculate this before removing from DOM and using it for first time.
+      */
+      this$1.$el.offsetHeight; // eslint-disable-line
+
+      this$1.anchorEl = this$1.$el.parentNode;
+      if (this$1.anchorEl) {
+        this$1.anchorEl.removeChild(this$1.$el);
+        if (this$1.anchorEl.classList.contains('q-btn-inner')) {
+          this$1.anchorEl = this$1.anchorEl.parentNode;
+        }
+        if (Platform$2.is.mobile) {
+          this$1.anchorEl.addEventListener('click', this$1.open);
+        }
+        else {
+          this$1.anchorEl.addEventListener('mouseenter', this$1.__delayOpen);
+          this$1.anchorEl.addEventListener('focus', this$1.__delayOpen);
+          this$1.anchorEl.addEventListener('mouseleave', this$1.close);
+          this$1.anchorEl.addEventListener('blur', this$1.close);
+        }
+      }
+    });
+  },
+  beforeDestroy: function beforeDestroy () {
+    if (this.anchorEl) {
+      if (Platform$2.is.mobile) {
+        this.anchorEl.removeEventListener('click', this.open);
+      }
+      else {
+        this.anchorEl.removeEventListener('mouseenter', this.__delayOpen);
+        this.anchorEl.removeEventListener('focus', this.__delayOpen);
+        this.anchorEl.removeEventListener('mouseleave', this.close);
+        this.anchorEl.removeEventListener('blur', this.close);
+      }
+    }
+    this.close();
+  }
 };
 
 var TableSticky = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('table',{staticClass:"q-table horizontal-separator"},[_c('colgroup',[(_vm.selection)?_c('col',{staticStyle:{"width":"45px"}}):_vm._e(),_vm._l((_vm.cols),function(col){return _c('col',{style:({width: col.width})})})],2),(!_vm.noHeader)?_c('thead',[_c('tr',[(_vm.selection)?_c('th',[_vm._v(" ")]):_vm._e(),_vm._l((_vm.cols),function(col,index){return _c('th',{class:{invisible: _vm.hidden(index), sortable: col.sort},on:{"click":function($event){_vm.sort(col);}}},[(!_vm.hidden(index))?[(col.sort)?_c('sort-icon',{attrs:{"field":col.field,"sorting":_vm.sorting}}):_vm._e(),_c('span',{domProps:{"innerHTML":_vm._s(col.label)}}),(col.label)?_c('q-tooltip',{domProps:{"innerHTML":_vm._s(col.label)}}):_vm._e()]:_vm._e()],2)})],2)]):_vm._e(),(!_vm.head)?_c('tbody',[_vm._t("default")],2):_vm._e()])},staticRenderFns: [],
