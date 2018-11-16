@@ -42,6 +42,7 @@
           :readonly="readonly"
           :maxlength="maxLength"
           :rows="minRows"
+          :autocomplete="autocompleteVal"
 
           :value="value"
           @input="__set"
@@ -66,7 +67,7 @@
       :disabled="disable"
       :readonly="readonly"
       :maxlength="maxLength"
-      :autocomplete="disableAutocomplete ? 'off' : 'on'"
+      :autocomplete="autocompleteVal"
 
       :min="min"
       :max="max"
@@ -147,7 +148,7 @@ export default {
       default: 1
     },
     maxDecimals: Number,
-    disableAutocomplete: Boolean,
+    disableAutocomplete: Boolean
   },
   data () {
     return {
@@ -214,6 +215,14 @@ export default {
     },
     editable () {
       return !this.disable && !this.readonly
+    },
+    autocompleteVal () {
+      // generate a unique value if disable autocomplete
+      return this.disableAutocomplete
+        ? Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        : this.name
+          ? this.name
+          : 'on'
     }
   },
   methods: {

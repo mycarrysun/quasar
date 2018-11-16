@@ -2380,152 +2380,159 @@ var tail = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm
   mixins: [mixin]
 };
 
-var QInput = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('q-input-frame',{staticClass:"q-input",attrs:{"prefix":_vm.prefix,"suffix":_vm.suffix,"stack-label":_vm.stackLabel,"float-label":_vm.floatLabel,"error":_vm.error,"disable":_vm.disable,"inverted":_vm.inverted,"dark":_vm.dark,"before":_vm.before,"after":_vm.after,"color":_vm.color,"focused":_vm.focused,"length":_vm.length,"top-addons":_vm.isTextarea},on:{"click":_vm.__onClick}},[_vm._t("before"),(_vm.isTextarea)?[_c('div',{staticClass:"col row relative-position"},[_c('q-resize-observable',{on:{"resize":function($event){_vm.__updateArea();}}}),_c('textarea',{ref:"shadow",staticClass:"col q-input-target q-input-shadow absolute-top",attrs:{"rows":_vm.minRows},domProps:{"value":_vm.value}}),_vm._v(" "),_c('textarea',{ref:"input",staticClass:"col q-input-target q-input-area",attrs:{"name":_vm.name,"placeholder":_vm.inputPlaceholder,"disabled":_vm.disable,"readonly":_vm.readonly,"maxlength":_vm.maxLength,"rows":_vm.minRows},domProps:{"value":_vm.value},on:{"input":_vm.__set,"focus":_vm.__onFocus,"blur":_vm.__onBlur,"keydown":_vm.__onKeydown,"keyup":_vm.__onKeyup}})],1)]:_c('input',{ref:"input",staticClass:"col q-input-target",class:[("text-" + (_vm.align))],attrs:{"name":_vm.name,"placeholder":_vm.inputPlaceholder,"pattern":_vm.pattern,"disabled":_vm.disable,"readonly":_vm.readonly,"maxlength":_vm.maxLength,"autocomplete":_vm.disableAutocomplete ? 'off' : 'on',"min":_vm.min,"max":_vm.max,"step":_vm.inputStep,"type":_vm.inputType},domProps:{"value":_vm.value},on:{"input":_vm.__set,"focus":_vm.__onFocus,"blur":_vm.__onBlur,"keydown":_vm.__onKeydown,"keyup":_vm.__onKeyup}}),(_vm.isPassword && !_vm.noPassToggle && _vm.length)?_c('q-icon',{staticClass:"q-if-control",attrs:{"slot":"after","name":_vm.showPass ? 'visibility' : 'visibility_off'},on:{"click":_vm.togglePass},slot:"after"}):_vm._e(),(_vm.clearable && _vm.length)?_c('q-icon',{staticClass:"q-if-control",attrs:{"slot":"after","name":"cancel"},on:{"click":_vm.clear},slot:"after"}):_vm._e(),(_vm.isLoading)?_c('q-spinner',{staticClass:"q-if-control",attrs:{"slot":"after","size":"24px"},slot:"after"}):_vm._e(),_vm._t("after"),_vm._t("default")],2)},staticRenderFns: [],
+var QInput = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('q-input-frame',{staticClass:"q-input",attrs:{"prefix":_vm.prefix,"suffix":_vm.suffix,"stack-label":_vm.stackLabel,"float-label":_vm.floatLabel,"error":_vm.error,"disable":_vm.disable,"inverted":_vm.inverted,"dark":_vm.dark,"before":_vm.before,"after":_vm.after,"color":_vm.color,"focused":_vm.focused,"length":_vm.length,"top-addons":_vm.isTextarea},on:{"click":_vm.__onClick}},[_vm._t("before"),(_vm.isTextarea)?[_c('div',{staticClass:"col row relative-position"},[_c('q-resize-observable',{on:{"resize":function($event){_vm.__updateArea();}}}),_c('textarea',{ref:"shadow",staticClass:"col q-input-target q-input-shadow absolute-top",attrs:{"rows":_vm.minRows},domProps:{"value":_vm.value}}),_vm._v(" "),_c('textarea',{ref:"input",staticClass:"col q-input-target q-input-area",attrs:{"name":_vm.name,"placeholder":_vm.inputPlaceholder,"disabled":_vm.disable,"readonly":_vm.readonly,"maxlength":_vm.maxLength,"rows":_vm.minRows,"autocomplete":_vm.autocompleteVal},domProps:{"value":_vm.value},on:{"input":_vm.__set,"focus":_vm.__onFocus,"blur":_vm.__onBlur,"keydown":_vm.__onKeydown,"keyup":_vm.__onKeyup}})],1)]:_c('input',{ref:"input",staticClass:"col q-input-target",class:[("text-" + (_vm.align))],attrs:{"name":_vm.name,"placeholder":_vm.inputPlaceholder,"pattern":_vm.pattern,"disabled":_vm.disable,"readonly":_vm.readonly,"maxlength":_vm.maxLength,"autocomplete":_vm.autocompleteVal,"min":_vm.min,"max":_vm.max,"step":_vm.inputStep,"type":_vm.inputType},domProps:{"value":_vm.value},on:{"input":_vm.__set,"focus":_vm.__onFocus,"blur":_vm.__onBlur,"keydown":_vm.__onKeydown,"keyup":_vm.__onKeyup}}),(_vm.isPassword && !_vm.noPassToggle && _vm.length)?_c('q-icon',{staticClass:"q-if-control",attrs:{"slot":"after","name":_vm.showPass ? 'visibility' : 'visibility_off'},on:{"click":_vm.togglePass},slot:"after"}):_vm._e(),(_vm.clearable && _vm.length)?_c('q-icon',{staticClass:"q-if-control",attrs:{"slot":"after","name":"cancel"},on:{"click":_vm.clear},slot:"after"}):_vm._e(),(_vm.isLoading)?_c('q-spinner',{staticClass:"q-if-control",attrs:{"slot":"after","size":"24px"},slot:"after"}):_vm._e(),_vm._t("after"),_vm._t("default")],2)},staticRenderFns: [],
   name: 'q-input',
   mixins: [FrameMixin, InputMixin],
   components: {
-    QInputFrame: QInputFrame,
-    QSpinner: QSpinner,
-    QResizeObservable: QResizeObservable
+      QInputFrame: QInputFrame,
+      QSpinner: QSpinner,
+      QResizeObservable: QResizeObservable
   },
   props: {
-    value: { required: true },
-    type: {
-      type: String,
-      default: 'text',
-      validator: function (t) { return inputTypes.includes(t); }
-    },
-    minRows: Number,
-    clearable: Boolean,
-    noPassToggle: Boolean,
-    readonly: Boolean,
+      value: { required: true },
+      type: {
+        type: String,
+        default: 'text',
+        validator: function (t) { return inputTypes.includes(t); }
+      },
+      minRows: Number,
+      clearable: Boolean,
+      noPassToggle: Boolean,
+      readonly: Boolean,
 
-    min: Number,
-    max: Number,
-    step: {
-      type: Number,
-      default: 1
-    },
-    maxDecimals: Number,
-    disableAutocomplete: Boolean,
+      min: Number,
+      max: Number,
+      step: {
+        type: Number,
+        default: 1
+      },
+      maxDecimals: Number,
+      disableAutocomplete: Boolean
   },
   data: function data () {
-    var this$1 = this;
+      var this$1 = this;
 
-    return {
-      focused: false,
-      showPass: false,
-      shadow: {
-        val: this.value,
-        set: this.__set,
-        loading: false,
-        hasFocus: function () {
-          return document.activeElement === this$1.$refs.input
-        },
-        register: function () {
-          this$1.watcher = this$1.$watch('value', function (val) {
-            this$1.shadow.val = val;
-          });
-        },
-        unregister: function () {
-          this$1.watcher();
-        },
-        getEl: function () {
-          return this$1.$refs.input
+      return {
+        focused: false,
+        showPass: false,
+        shadow: {
+          val: this.value,
+          set: this.__set,
+          loading: false,
+          hasFocus: function () {
+            return document.activeElement === this$1.$refs.input
+          },
+          register: function () {
+            this$1.watcher = this$1.$watch('value', function (val) {
+              this$1.shadow.val = val;
+            });
+          },
+          unregister: function () {
+            this$1.watcher();
+          },
+          getEl: function () {
+            return this$1.$refs.input
+          }
         }
       }
-    }
   },
   provide: function provide () {
-    return {
-      __input: this.shadow
-    }
+      return {
+        __input: this.shadow
+      }
   },
   computed: {
-    isNumber: function isNumber () {
-      return this.type === 'number'
-    },
-    isPassword: function isPassword () {
-      return this.type === 'password'
-    },
-    isTextarea: function isTextarea () {
-      return this.type === 'textarea'
-    },
-    isLoading: function isLoading () {
-      return this.loading || this.shadow.loading
-    },
-    pattern: function pattern () {
-      if (this.isNumber) {
-        return '[0-9]*'
+      isNumber: function isNumber () {
+        return this.type === 'number'
+      },
+      isPassword: function isPassword () {
+        return this.type === 'password'
+      },
+      isTextarea: function isTextarea () {
+        return this.type === 'textarea'
+      },
+      isLoading: function isLoading () {
+        return this.loading || this.shadow.loading
+      },
+      pattern: function pattern () {
+        if (this.isNumber) {
+          return '[0-9]*'
+        }
+      },
+      inputStep: function inputStep () {
+        if (this.isNumber) {
+          return this.step
+        }
+      },
+      inputType: function inputType () {
+        return this.isPassword
+          ? (this.showPass ? 'text' : 'password')
+          : this.type
+      },
+      length: function length () {
+        return this.value || (this.isNumber && this.value !== null)
+          ? ('' + this.value).length
+          : 0
+      },
+      editable: function editable () {
+        return !this.disable && !this.readonly
+      },
+      autocompleteVal: function autocompleteVal () {
+        return this.disableAutocomplete
+          ? Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+          : this.name
+            ? this.name
+            : 'on'
       }
-    },
-    inputStep: function inputStep () {
-      if (this.isNumber) {
-        return this.step
-      }
-    },
-    inputType: function inputType () {
-      return this.isPassword
-        ? (this.showPass ? 'text' : 'password')
-        : this.type
-    },
-    length: function length () {
-      return this.value || (this.isNumber && this.value !== null)
-        ? ('' + this.value).length
-        : 0
-    },
-    editable: function editable () {
-      return !this.disable && !this.readonly
-    }
   },
   methods: {
-    togglePass: function togglePass () {
-      this.showPass = !this.showPass;
-    },
-    clear: function clear () {
-      if (this.editable) {
-        this.$emit('input', '');
-        this.$emit('change', '');
-      }
-    },
-
-    __set: function __set (e) {
-      var val = e.target ? e.target.value : e;
-      if (val !== this.value) {
-        if (this.isNumber) {
-          if (val === '') {
-            val = null;
-          }
-          else {
-            val = Number.isInteger(this.maxDecimals)
-              ? parseFloat(val).toFixed(this.maxDecimals)
-              : parseFloat(val);
-          }
+      togglePass: function togglePass () {
+        this.showPass = !this.showPass;
+      },
+      clear: function clear () {
+        if (this.editable) {
+          this.$emit('input', '');
+          this.$emit('change', '');
         }
-        this.$emit('input', val);
-        this.$emit('change', val);
+      },
+
+      __set: function __set (e) {
+        var val = e.target ? e.target.value : e;
+        if (val !== this.value) {
+          if (this.isNumber) {
+            if (val === '') {
+              val = null;
+            }
+            else {
+              val = Number.isInteger(this.maxDecimals)
+                ? parseFloat(val).toFixed(this.maxDecimals)
+                : parseFloat(val);
+            }
+          }
+          this.$emit('input', val);
+          this.$emit('change', val);
+        }
+      },
+      __updateArea: function __updateArea () {
+        var shadow = this.$refs.shadow;
+        if (shadow) {
+          var h = shadow.scrollHeight;
+          var max = this.maxHeight || h;
+          this.$refs.input.style.minHeight = (between(h, 19, max)) + "px";
+        }
       }
-    },
-    __updateArea: function __updateArea () {
-      var shadow = this.$refs.shadow;
-      if (shadow) {
-        var h = shadow.scrollHeight;
-        var max = this.maxHeight || h;
-        this.$refs.input.style.minHeight = (between(h, 19, max)) + "px";
-      }
-    }
   },
   mounted: function mounted () {
-    this.__updateArea = frameDebounce(this.__updateArea);
-    if (this.isTextarea) {
-      this.__updateArea();
-      this.watcher = this.$watch('value', this.__updateArea);
-    }
+      this.__updateArea = frameDebounce(this.__updateArea);
+      if (this.isTextarea) {
+        this.__updateArea();
+        this.watcher = this.$watch('value', this.__updateArea);
+      }
   },
   beforeDestroy: function beforeDestroy () {
-    if (this.watcher !== void 0) {
-      this.watcher();
-    }
+      if (this.watcher !== void 0) {
+        this.watcher();
+      }
   }
 };
 
