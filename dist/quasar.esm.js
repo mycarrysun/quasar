@@ -2384,155 +2384,152 @@ var QInput = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_
   name: 'q-input',
   mixins: [FrameMixin, InputMixin],
   components: {
-      QInputFrame: QInputFrame,
-      QSpinner: QSpinner,
-      QResizeObservable: QResizeObservable
+    QInputFrame: QInputFrame,
+    QSpinner: QSpinner,
+    QResizeObservable: QResizeObservable
   },
   props: {
-      value: { required: true },
-      type: {
-        type: String,
-        default: 'text',
-        validator: function (t) { return inputTypes.includes(t); }
-      },
-      minRows: Number,
-      clearable: Boolean,
-      noPassToggle: Boolean,
-      readonly: Boolean,
+    value: { required: true },
+    type: {
+      type: String,
+      default: 'text',
+      validator: function (t) { return inputTypes.includes(t); }
+    },
+    minRows: Number,
+    clearable: Boolean,
+    noPassToggle: Boolean,
+    readonly: Boolean,
 
-      min: Number,
-      max: Number,
-      step: {
-        type: Number,
-        default: 1
-      },
-      maxDecimals: Number,
-      disableAutocomplete: Boolean
+    min: Number,
+    max: Number,
+    step: {
+      type: Number,
+      default: 1
+    },
+    maxDecimals: Number,
+    disableAutocomplete: Boolean
   },
   data: function data () {
-      var this$1 = this;
+    var this$1 = this;
 
-      return {
-        focused: false,
-        showPass: false,
-        shadow: {
-          val: this.value,
-          set: this.__set,
-          loading: false,
-          hasFocus: function () {
-            return document.activeElement === this$1.$refs.input
-          },
-          register: function () {
-            this$1.watcher = this$1.$watch('value', function (val) {
-              this$1.shadow.val = val;
-            });
-          },
-          unregister: function () {
-            this$1.watcher();
-          },
-          getEl: function () {
-            return this$1.$refs.input
-          }
+    return {
+      focused: false,
+      showPass: false,
+      shadow: {
+        val: this.value,
+        set: this.__set,
+        loading: false,
+        hasFocus: function () {
+          return document.activeElement === this$1.$refs.input
+        },
+        register: function () {
+          this$1.watcher = this$1.$watch('value', function (val) {
+            this$1.shadow.val = val;
+          });
+        },
+        unregister: function () {
+          this$1.watcher();
+        },
+        getEl: function () {
+          return this$1.$refs.input
         }
       }
+    }
   },
   provide: function provide () {
-      return {
-        __input: this.shadow
-      }
+    return {
+      __input: this.shadow
+    }
   },
   computed: {
-      isNumber: function isNumber () {
-        return this.type === 'number'
-      },
-      isPassword: function isPassword () {
-        return this.type === 'password'
-      },
-      isTextarea: function isTextarea () {
-        return this.type === 'textarea'
-      },
-      isLoading: function isLoading () {
-        return this.loading || this.shadow.loading
-      },
-      pattern: function pattern () {
-        if (this.isNumber) {
-          return '[0-9]*'
-        }
-      },
-      inputStep: function inputStep () {
-        if (this.isNumber) {
-          return this.step
-        }
-      },
-      inputType: function inputType () {
-        return this.isPassword
-          ? (this.showPass ? 'text' : 'password')
-          : this.type
-      },
-      length: function length () {
-        return this.value || (this.isNumber && this.value !== null)
-          ? ('' + this.value).length
-          : 0
-      },
-      editable: function editable () {
-        return !this.disable && !this.readonly
-      },
-      autocompleteVal: function autocompleteVal () {
-        return this.disableAutocomplete
-          ? Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-          : this.name
-            ? this.name
-            : 'on'
+    isNumber: function isNumber () {
+      return this.type === 'number'
+    },
+    isPassword: function isPassword () {
+      return this.type === 'password'
+    },
+    isTextarea: function isTextarea () {
+      return this.type === 'textarea'
+    },
+    isLoading: function isLoading () {
+      return this.loading || this.shadow.loading
+    },
+    pattern: function pattern () {
+      if (this.isNumber) {
+        return '[0-9]*'
       }
+    },
+    inputStep: function inputStep () {
+      if (this.isNumber) {
+        return this.step
+      }
+    },
+    inputType: function inputType () {
+      return this.isPassword
+        ? (this.showPass ? 'text' : 'password')
+        : this.type
+    },
+    length: function length () {
+      return this.value || (this.isNumber && this.value !== null)
+        ? ('' + this.value).length
+        : 0
+    },
+    editable: function editable () {
+      return !this.disable && !this.readonly
+    },
+    autocompleteVal: function autocompleteVal () {
+      // generate a unique value always
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    }
   },
   methods: {
-      togglePass: function togglePass () {
-        this.showPass = !this.showPass;
-      },
-      clear: function clear () {
-        if (this.editable) {
-          this.$emit('input', '');
-          this.$emit('change', '');
-        }
-      },
-
-      __set: function __set (e) {
-        var val = e.target ? e.target.value : e;
-        if (val !== this.value) {
-          if (this.isNumber) {
-            if (val === '') {
-              val = null;
-            }
-            else {
-              val = Number.isInteger(this.maxDecimals)
-                ? parseFloat(val).toFixed(this.maxDecimals)
-                : parseFloat(val);
-            }
-          }
-          this.$emit('input', val);
-          this.$emit('change', val);
-        }
-      },
-      __updateArea: function __updateArea () {
-        var shadow = this.$refs.shadow;
-        if (shadow) {
-          var h = shadow.scrollHeight;
-          var max = this.maxHeight || h;
-          this.$refs.input.style.minHeight = (between(h, 19, max)) + "px";
-        }
+    togglePass: function togglePass () {
+      this.showPass = !this.showPass;
+    },
+    clear: function clear () {
+      if (this.editable) {
+        this.$emit('input', '');
+        this.$emit('change', '');
       }
+    },
+
+    __set: function __set (e) {
+      var val = e.target ? e.target.value : e;
+      if (val !== this.value) {
+        if (this.isNumber) {
+          if (val === '') {
+            val = null;
+          }
+          else {
+            val = Number.isInteger(this.maxDecimals)
+              ? parseFloat(val).toFixed(this.maxDecimals)
+              : parseFloat(val);
+          }
+        }
+        this.$emit('input', val);
+        this.$emit('change', val);
+      }
+    },
+    __updateArea: function __updateArea () {
+      var shadow = this.$refs.shadow;
+      if (shadow) {
+        var h = shadow.scrollHeight;
+        var max = this.maxHeight || h;
+        this.$refs.input.style.minHeight = (between(h, 19, max)) + "px";
+      }
+    }
   },
   mounted: function mounted () {
-      this.__updateArea = frameDebounce(this.__updateArea);
-      if (this.isTextarea) {
-        this.__updateArea();
-        this.watcher = this.$watch('value', this.__updateArea);
-      }
+    this.__updateArea = frameDebounce(this.__updateArea);
+    if (this.isTextarea) {
+      this.__updateArea();
+      this.watcher = this.$watch('value', this.__updateArea);
+    }
   },
   beforeDestroy: function beforeDestroy () {
-      if (this.watcher !== void 0) {
-        this.watcher();
-      }
+    if (this.watcher !== void 0) {
+      this.watcher();
+    }
   }
 };
 
