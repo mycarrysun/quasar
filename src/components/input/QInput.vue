@@ -217,12 +217,8 @@ export default {
       return !this.disable && !this.readonly
     },
     autocompleteVal () {
-      // generate a unique value if disable autocomplete
-      return this.disableAutocomplete
-        ? Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-        : this.name
-          ? this.name
-          : 'on'
+      // generate a unique value always
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
     }
   },
   methods: {
