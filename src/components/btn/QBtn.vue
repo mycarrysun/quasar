@@ -73,7 +73,8 @@
         type: [Number, Boolean],
         default: 0
       },
-      countColor: String
+      countColor: String,
+      countBgColor: String
     },
     data: () => ({
       _loading: false,
@@ -142,8 +143,9 @@
       },
       countClasses () {
         let cls = []
-        if (this.countColor) {
+        if (this.countColor && this.countBgColor) {
           cls.push(`text-${this.countColor}`)
+          cls.push(`bg-${this.countBgColor}`)
         }
         else if (this.color) {
           if (this.flat || this.outline) {

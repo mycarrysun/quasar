@@ -3850,7 +3850,8 @@ var QBtn = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm
       type: [Number, Boolean],
       default: 0
     },
-    countColor: String
+    countColor: String,
+    countBgColor: String
   },
   data: function () { return ({
     _loading: false,
@@ -3919,8 +3920,9 @@ var QBtn = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm
     },
     countClasses: function countClasses () {
       var cls = [];
-      if (this.countColor) {
+      if (this.countColor && this.countBgColor) {
         cls.push(("text-" + (this.countColor)));
+        cls.push(("bg-" + (this.countBgColor)));
       }
       else if (this.color) {
         if (this.flat || this.outline) {
