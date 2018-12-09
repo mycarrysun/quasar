@@ -3815,145 +3815,149 @@ var QAutocomplete = {render: function(){var _vm=this;var _h=_vm.$createElement;v
 };
 
 var QBtn = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{directives:[{name:"ripple",rawName:"v-ripple.mat",value:(!_vm.isDisabled),expression:"!isDisabled",modifiers:{"mat":true}}],staticClass:"q-btn row inline flex-center q-focusable q-hoverable relative-position",class:_vm.classes,on:{"click":_vm.click}},[_c('div',{staticClass:"desktop-only q-focus-helper"}),(_vm.isLoading && _vm.hasPercentage)?_c('div',{staticClass:"q-btn-progress absolute-full",class:{'q-btn-dark-progress': _vm.darkPercentage},style:({width: _vm.width})}):_vm._e(),_c('span',{staticClass:"q-btn-inner row col flex-center"},[(_vm.isLoading)?_vm._t("loading",[_c('q-spinner')]):[(_vm.count > 0)?_c('div',{staticClass:"count",class:_vm.countClasses},[_c('span',[_vm._v(_vm._s(_vm.count))])]):_vm._e(),(_vm.icon)?_c('q-icon',{class:{'on-left': !_vm.round},attrs:{"name":_vm.icon}}):_vm._e(),_vm._t("default"),(!_vm.round && _vm.iconRight)?_c('q-icon',{staticClass:"on-right",attrs:{"name":_vm.iconRight}}):_vm._e()]],2)])},staticRenderFns: [],
-    name: 'q-btn',
-    components: {
-        QSpinner: QSpinner,
-        QIcon: QIcon
+  name: 'q-btn',
+  components: {
+    QSpinner: QSpinner,
+    QIcon: QIcon
+  },
+  directives: {
+    Ripple: Ripple
+  },
+  props: {
+    value: Boolean,
+    disable: Boolean,
+    noCaps: {
+      type: Boolean,
+      default: false
     },
-    directives: {
-        Ripple: Ripple
+    icon: String,
+    iconRight: String,
+    round: Boolean,
+    outline: Boolean,
+    flat: Boolean,
+    rounded: Boolean,
+    push: Boolean,
+    mini: Boolean,
+    small: Boolean,
+    big: Boolean,
+    color: String,
+    glossy: Boolean,
+
+    loader: Boolean,
+    percentage: Number,
+    darkPercentage: Boolean,
+    count: {
+      type: [Number, Boolean],
+      default: 0
     },
-    props: {
-        value: Boolean,
-        disable: Boolean,
-        noCaps: {
-            type: Boolean,
-            default: false
-        },
-        icon: String,
-        iconRight: String,
-        round: Boolean,
-        outline: Boolean,
-        flat: Boolean,
-        rounded: Boolean,
-        push: Boolean,
-        mini: Boolean,
-        small: Boolean,
-        big: Boolean,
-        color: String,
-        glossy: Boolean,
-
-        loader: Boolean,
-        percentage: Number,
-        darkPercentage: Boolean,
-        count:{
-            type: [Number, Boolean],
-            default: 0,
-        }
-    },
-    data:function (){ return ({
-        _loading: false,
-    }); },
-    watch:{
-        value: function value(val){
-            this.$set(this._data, '_loading', val);
-        }
-    },
-    computed: {
-        isLoading: function isLoading(){
-            return this.value
-        },
-        size: function size() {
-            if(this.mini){
-              return 'q-btn-mini'
-            }
-            return ("q-btn-" + (this.small ? 'small' : (this.big ? 'big' : 'standard')))
-        },
-        shape: function shape() {
-            return ("q-btn-" + (this.round ? 'round' : 'rectangle'))
-        },
-        hasPercentage: function hasPercentage() {
-            return this.percentage !== void 0
-        },
-        width: function width() {
-            return ((between(this.percentage, 0, 100)) + "%")
-        },
-        isDisabled: function isDisabled() {
-            return this.disable || this.isLoading
-        },
-        classes: function classes() {
-            var cls = [this.shape, this.size];
-
-            if (this.flat) {
-                cls.push('q-btn-flat');
-            }
-            else if (this.outline) {
-                cls.push('q-btn-outline');
-            }
-            else if (this.push) {
-                cls.push('q-btn-push');
-            }
-
-            this.isDisabled && cls.push('disabled');
-            this.noCaps && cls.push('q-btn-no-uppercase');
-            this.rounded && cls.push('q-btn-rounded');
-            this.glossy && cls.push('glossy');
-
-            if (this.color) {
-                if (this.flat || this.outline) {
-                    cls.push(("text-" + (this.color)));
-                }
-                else {
-                    cls.push(("bg-" + (this.color)));
-                    if(this.color == 'light'){
-                        cls.push('text-dark');
-                    }else{
-                        cls.push("text-white");
-                    }
-                }
-            }
-
-            return cls
-        },
-        countClasses: function countClasses(){
-            var cls = [];
-            if(this.color){
-
-                if (this.flat || this.outline) {
-                    cls.push(("text-" + (this.color)));
-                }
-                else {
-                    cls.push(("text-" + (this.color)));
-                    if(this.color == 'light'){
-                        cls.push('bg-dark');
-                    }else{
-                        cls.push("bg-white");
-                    }
-
-                }
-            }
-            return cls
-        }
-    },
-    methods: {
-        click: function click(e) {
-            var this$1 = this;
-
-            this.$el.blur();
-
-            if (this.isDisabled) {
-                return
-            }
-            if (this.loader !== false || this.$slots.loading) {
-                this._data._loading = true;
-                this.$emit('input', true);
-            }
-            this.$emit('click', e, function () {
-                this$1._data._loading = false;
-                this$1.$emit('input', false);
-            });
-        }
+    countColor: String
+  },
+  data: function () { return ({
+    _loading: false,
+  }); },
+  watch: {
+    value: function value (val) {
+      this.$set(this._data, '_loading', val);
     }
+  },
+  computed: {
+    isLoading: function isLoading () {
+      return this.value
+    },
+    size: function size () {
+      if (this.mini) {
+        return 'q-btn-mini'
+      }
+      return ("q-btn-" + (this.small ? 'small' : (this.big ? 'big' : 'standard')))
+    },
+    shape: function shape () {
+      return ("q-btn-" + (this.round ? 'round' : 'rectangle'))
+    },
+    hasPercentage: function hasPercentage () {
+      return this.percentage !== void 0
+    },
+    width: function width () {
+      return ((between(this.percentage, 0, 100)) + "%")
+    },
+    isDisabled: function isDisabled () {
+      return this.disable || this.isLoading
+    },
+    classes: function classes () {
+      var cls = [this.shape, this.size];
+
+      if (this.flat) {
+        cls.push('q-btn-flat');
+      }
+      else if (this.outline) {
+        cls.push('q-btn-outline');
+      }
+      else if (this.push) {
+        cls.push('q-btn-push');
+      }
+
+      this.isDisabled && cls.push('disabled');
+      this.noCaps && cls.push('q-btn-no-uppercase');
+      this.rounded && cls.push('q-btn-rounded');
+      this.glossy && cls.push('glossy');
+
+      if (this.color) {
+        if (this.flat || this.outline) {
+          cls.push(("text-" + (this.color)));
+        }
+        else {
+          cls.push(("bg-" + (this.color)));
+          if (this.color === 'light') {
+            cls.push('text-dark');
+          }
+          else {
+            cls.push("text-white");
+          }
+        }
+      }
+
+      return cls
+    },
+    countClasses: function countClasses () {
+      var cls = [];
+      if (this.countColor) {
+        cls.push(("text-" + (this.countColor)));
+      }
+      else if (this.color) {
+        if (this.flat || this.outline) {
+          cls.push(("text-" + (this.color)));
+        }
+        else {
+          cls.push(("text-" + (this.color)));
+          if (this.color === 'light') {
+            cls.push('bg-dark');
+          }
+          else {
+            cls.push("bg-white");
+          }
+        }
+      }
+      return cls
+    }
+  },
+  methods: {
+    click: function click (e) {
+      var this$1 = this;
+
+      this.$el.blur();
+
+      if (this.isDisabled) {
+        return
+      }
+      if (this.loader !== false || this.$slots.loading) {
+        this._data._loading = true;
+        this.$emit('input', true);
+      }
+      this.$emit('click', e, function () {
+        this$1._data._loading = false;
+        this$1.$emit('input', false);
+      });
+    }
+  }
 };
 
 var QCard = {
