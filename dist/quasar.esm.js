@@ -3217,8 +3217,7 @@ var RouterLinkMixin = {
     to: [String, Object],
     exact: Boolean,
     append: Boolean,
-    replace: Boolean,
-    tag: String
+    replace: Boolean
   },
   data: function data () {
     return {
