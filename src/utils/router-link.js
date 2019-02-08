@@ -18,7 +18,8 @@ export const RouterLinkMixin = {
     to: [String, Object],
     exact: Boolean,
     append: Boolean,
-    replace: Boolean
+    replace: Boolean,
+    tag: String
   },
   data () {
     return {

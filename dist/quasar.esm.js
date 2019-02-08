@@ -3217,7 +3217,8 @@ var RouterLinkMixin = {
     to: [String, Object],
     exact: Boolean,
     append: Boolean,
-    replace: Boolean
+    replace: Boolean,
+    tag: String
   },
   data: function data () {
     return {
@@ -10897,11 +10898,11 @@ var QSideLink = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
   props: {
     item: Boolean
   },
-    inject: {
-        layout: {
-            default: null,
-        }
-    },
+  inject: {
+    layout: {
+      default: null
+    }
+  },
   computed: {
     classes: function classes () {
       this.link = true;
