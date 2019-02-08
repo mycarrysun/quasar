@@ -10912,7 +10912,9 @@ var QSideLink = {render: function(){var _vm=this;var _h=_vm.$createElement;var _
     trigger: function trigger () {
       var this$1 = this;
 
+      console.log('Hiding current side menu');
       this.layout.hideCurrentSide(function () {
+        console.log('Dispatching router link event');
         this$1.$el.dispatchEvent(evt);
       });
     }

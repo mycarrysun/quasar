@@ -41,7 +41,9 @@
     },
     methods: {
       trigger () {
+        console.log('Hiding current side menu')
         this.layout.hideCurrentSide(() => {
+          console.log('Dispatching router link event')
           this.$el.dispatchEvent(routerLinkEvent)
         })
       }
