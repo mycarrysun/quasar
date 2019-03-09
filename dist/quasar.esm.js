@@ -2478,8 +2478,7 @@ var QInput = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_
       return !this.disable && !this.readonly
     },
     autocompleteVal: function autocompleteVal () {
-      // generate a unique value always
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+      return 'disabled'
     }
   },
   methods: {
