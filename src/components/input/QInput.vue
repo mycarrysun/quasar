@@ -228,6 +228,7 @@ export default {
       if (this.editable) {
         this.$emit('input', '')
         this.$emit('change', '')
+        this.$emit('cleared')
       }
     },
 

@@ -2489,6 +2489,7 @@ var QInput = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_
       if (this.editable) {
         this.$emit('input', '');
         this.$emit('change', '');
+        this.$emit('cleared');
       }
     },
 
