@@ -10019,7 +10019,7 @@ var QInfiniteScroll = {render: function(){var _vm=this;var _h=_vm.$createElement
   }
 };
 
-var QInnerLoading = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.visible)?_c('div',{staticClass:"q-inner-loading animate-fade absolute-full column flex-center",class:{dark: _vm.dark}},[_vm._t("default",[_c('q-spinner',{attrs:{"size":_vm.size,"color":_vm.color}})])],2):_vm._e()},staticRenderFns: [],
+var QInnerLoading = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return (_vm.visible)?_c('div',{staticClass:"q-inner-loading absolute-full column flex-center",class:{dark: _vm.dark}},[_vm._t("default",[_c('q-spinner',{attrs:{"size":_vm.size,"color":_vm.color}})])],2):_vm._e()},staticRenderFns: [],
   name: 'q-inner-loading',
   components: {
     QSpinner: QSpinner
