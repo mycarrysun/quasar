@@ -26,10 +26,10 @@ export default {
     else if (icon.startsWith('fa-')) {
       name = `${icon}`
       if (ctx.props.brand) {
-        name += 'fab'
+        name += ' fab'
       }
       else {
-        name += 'fa'
+        name += ' fa'
       }
     }
     else if (icon.startsWith('ion-') || icon.startsWith('icon-')) {
