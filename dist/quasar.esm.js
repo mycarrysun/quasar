@@ -1287,7 +1287,8 @@ var QIcon = {
     mat: String,
     ios: String,
     color: String,
-    size: String
+    size: String,
+    brand: Boolean
   },
   render: function render (h, ctx) {
     var name, text;
@@ -1304,7 +1305,13 @@ var QIcon = {
       name = '';
     }
     else if (icon.startsWith('fa-')) {
-      name = "fa " + icon;
+      name = "" + icon;
+      if (ctx.props.brand) {
+        name += 'fab';
+      }
+      else {
+        name += 'fa';
+      }
     }
     else if (icon.startsWith('ion-') || icon.startsWith('icon-')) {
       name = "" + icon;
@@ -3814,7 +3821,7 @@ var QAutocomplete = {render: function(){var _vm=this;var _h=_vm.$createElement;v
     }
 };
 
-var QBtn = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{directives:[{name:"ripple",rawName:"v-ripple.mat",value:(!_vm.isDisabled),expression:"!isDisabled",modifiers:{"mat":true}}],staticClass:"q-btn row inline flex-center q-focusable q-hoverable relative-position",class:_vm.classes,on:{"click":_vm.click}},[_c('div',{staticClass:"desktop-only q-focus-helper"}),(_vm.isLoading && _vm.hasPercentage)?_c('div',{staticClass:"q-btn-progress absolute-full",class:{'q-btn-dark-progress': _vm.darkPercentage},style:({width: _vm.width})}):_vm._e(),_c('span',{staticClass:"q-btn-inner row col flex-center"},[(_vm.isLoading)?_vm._t("loading",[_c('q-spinner')]):[(_vm.count > 0)?_c('div',{staticClass:"count",class:_vm.countClasses},[_c('span',[_vm._v(_vm._s(_vm.count))])]):_vm._e(),(_vm.icon)?_c('q-icon',{class:{'on-left': !_vm.round},attrs:{"name":_vm.icon}}):_vm._e(),_vm._t("default"),(!_vm.round && _vm.iconRight)?_c('q-icon',{staticClass:"on-right",attrs:{"name":_vm.iconRight}}):_vm._e()]],2)])},staticRenderFns: [],
+var QBtn = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('button',{directives:[{name:"ripple",rawName:"v-ripple.mat",value:(!_vm.isDisabled),expression:"!isDisabled",modifiers:{"mat":true}}],staticClass:"q-btn row inline flex-center q-focusable q-hoverable relative-position",class:_vm.classes,on:{"click":_vm.click}},[_c('div',{staticClass:"desktop-only q-focus-helper"}),(_vm.isLoading && _vm.hasPercentage)?_c('div',{staticClass:"q-btn-progress absolute-full",class:{'q-btn-dark-progress': _vm.darkPercentage},style:({width: _vm.width})}):_vm._e(),_c('span',{staticClass:"q-btn-inner row col flex-center"},[(_vm.isLoading)?_vm._t("loading",[_c('q-spinner')]):[(_vm.count > 0)?_c('div',{staticClass:"count",class:_vm.countClasses},[_c('span',[_vm._v(_vm._s(_vm.count))])]):_vm._e(),(_vm.icon)?_c('q-icon',{class:{'on-left': !_vm.round},attrs:{"name":_vm.icon,"brand":_vm.brandIcon}}):_vm._e(),_vm._t("default"),(!_vm.round && _vm.iconRight)?_c('q-icon',{staticClass:"on-right",attrs:{"name":_vm.iconRight,"brand":_vm.brandIcon}}):_vm._e()]],2)])},staticRenderFns: [],
   name: 'q-btn',
   components: {
     QSpinner: QSpinner,
@@ -3851,10 +3858,11 @@ var QBtn = {render: function(){var _vm=this;var _h=_vm.$createElement;var _c=_vm
       default: 0
     },
     countColor: String,
-    countBgColor: String
+    countBgColor: String,
+    brandIcon: Boolean
   },
   data: function () { return ({
-    _loading: false,
+    _loading: false
   }); },
   watch: {
     value: function value (val) {
