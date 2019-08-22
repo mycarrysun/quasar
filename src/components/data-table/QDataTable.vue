@@ -1,198 +1,198 @@
 <template>
-    <div class="q-data-table">
-        <template v-if="hasToolbar && toolbar === ''">
-            <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end">
-                <div v-if="config.title" class="q-data-table-title ellipsis col" v-html="config.title"></div>
-                <div class="row items-center">
-                    <q-btn v-if="config.refresh"
-                           icon="refresh"
-                           round
-                           flat
-                           small
-                           color="primary"
-                           @click="refresh"
-                           loader
-                           :value="refreshing">
-                        <q-tooltip>Refresh</q-tooltip>
-                    </q-btn>
-                    <q-select
-                            multiple
-                            toggle
-                            v-if="config.columnPicker"
-                            v-model="columnSelection"
-                            :options="columnSelectionOptions"
-                            :display-value="labels.columns"
-                            simple
-                            style="margin: 0 0 0 10px"
-                    ></q-select>
-                </div>
-            </div>
-        </template>
-
-        <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end q-data-table-selection"
-             v-show="toolbar === 'selection'">
-            <div class="col">
-                {{ rowsSelected }}
-                <span v-if="rowsSelected === 1">{{ labels.selected.singular }}</span>
-                <span v-else>{{ labels.selected.plural }}</span>
-                <q-btn flat small color="primary" @click="clearSelection">{{ labels.clear }}</q-btn>
-            </div>
-            <div>
-                <slot name="selection" :rows="selectedRows"></slot>
-            </div>
+  <div class="q-data-table">
+    <template v-if="hasToolbar && toolbar === ''">
+      <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end">
+        <div v-if="config.title" class="q-data-table-title ellipsis col" v-html="config.title"></div>
+        <div class="row items-center">
+          <q-btn v-if="config.refresh"
+                 icon="refresh"
+                 round
+                 flat
+                 small
+                 color="primary"
+                 @click="refresh"
+                 loader
+                 :value="refreshing">
+            <q-tooltip>Refresh</q-tooltip>
+          </q-btn>
+          <q-select
+            multiple
+            toggle
+            v-if="config.columnPicker"
+            v-model="columnSelection"
+            :options="columnSelectionOptions"
+            :display-value="labels.columns"
+            simple
+            style="margin: 0 0 0 10px"
+          ></q-select>
         </div>
+      </div>
+    </template>
 
-        <table-filter v-if="filteringCols.length"
-                      @search="search"
-                      :filtering="filtering"
-                      :columns="filteringCols"
-                      :labels="labels"></table-filter>
-
-        <template v-if="responsive">
-            <div v-if="message" class="q-data-table-message row flex-center" v-html="message"></div>
-            <div v-else :style="bodyStyle" style="overflow: auto">
-                <table class="q-table horizontal-separator responsive" ref="body">
-                    <tbody>
-                    <tr v-for="(row, index) in rows" @click="emitRowClick(row)">
-                        <td v-if="config.selection">
-                            <q-checkbox v-if="config.selection === 'multiple'"
-                                        v-model="rowSelection[index]"></q-checkbox>
-                            <q-radio v-else v-model="rowSelection[0]" :val="index"></q-radio>
-                        </td>
-                        <td v-for="col in cols"
-                            :data-th="col.label"
-                            :style="formatStyle(col, row[col.field])"
-                            :class="formatClass(col, row[col.field])">
-                            <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
-                                <span v-html="format(row, col)"></span>
-                            </slot>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </template>
-
-        <div v-else
-             class="q-data-table-container"
-             @wheel="mouseWheel"
-             @mousewheel="mouseWheel"
-             @DOMMouseScroll="mouseWheel">
-            <div v-if="hasHeader" class="q-data-table-head" ref="head" :style="{marginRight: scroll.vert}">
-                <table-content head
-                               :cols="cols"
-                               :sorting="sorting"
-                               :scroll="scroll"
-                               :selection="config.selection"
-                               @sort="setSortField"></table-content>
-            </div>
-            <div
-                    class="q-data-table-body"
-                    :style="bodyStyle"
-                    ref="body"
-                    @scroll="scrollHandler"
-            >
-                <div v-if="message" class="q-data-table-message row flex-center" v-html="message"></div>
-                <table-content v-else :cols="cols" :selection="config.selection">
-                    <tr v-for="row in rows" :style="rowStyle" @click="emitRowClick(row)">
-                        <td v-if="config.selection"></td>
-                        <td v-if="leftStickyColumns" :colspan="leftStickyColumns"></td>
-                        <td v-for="col in regularCols"
-                            :style="formatStyle(col, row[col.field])"
-                            :class="formatClass(col, row[col.field])">
-                            <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
-                                <span v-html="format(row, col)"></span>
-                            </slot>
-                        </td>
-                        <td v-if="rightStickyColumns" :colspan="rightStickyColumns"></td>
-                    </tr>
-                </table-content>
-            </div>
-
-            <template v-if="!message && (leftStickyColumns || config.selection)">
-                <div
-                        class="q-data-table-sticky-left"
-                        ref="stickyLeft"
-                        :style="{bottom: scroll.horiz}"
-                >
-                    <table-sticky :no-header="!hasHeader"
-                                  :sticky-cols="leftStickyColumns"
-                                  :cols="cols"
-                                  :sorting="sorting"
-                                  :selection="config.selection">
-                        <tr v-for="(row, index) in rows" :style="rowStyle" @click="emitRowClick(row)">
-                            <td v-if="config.selection">
-                                <q-checkbox v-if="config.selection === 'multiple'"
-                                            v-model="rowSelection[index]"></q-checkbox>
-                                <q-radio v-else v-model="rowSelection[0]" :val="index"></q-radio>
-                            </td>
-                            <td v-for="col in leftCols"
-                                :style="formatStyle(col, row[col.field])"
-                                :class="formatClass(col, row[col.field])">
-                                <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
-                                    <span v-html="format(row, col)"></span>
-                                </slot>
-                            </td>
-                        </tr>
-                    </table-sticky>
-                </div>
-                <div v-if="hasHeader" class="q-data-table-sticky-left" :style="{bottom: scroll.horiz}">
-                    <table-sticky head
-                                  :sticky-cols="leftStickyColumns"
-                                  :scroll="scroll"
-                                  :cols="cols"
-                                  :sorting="sorting"
-                                  @sort="setSortField"
-                                  :selection="config.selection"></table-sticky>
-                </div>
-            </template>
-
-            <template v-if="!message && rightStickyColumns">
-                <div
-                        class="q-data-table-sticky-right"
-                        ref="stickyRight"
-                        :style="{right: scroll.vert, bottom: scroll.horiz}"
-                >
-                    <table-sticky :no-header="!hasHeader"
-                                  right
-                                  :sticky-cols="rightStickyColumns"
-                                  :cols="cols"
-                                  :sorting="sorting"
-                                  :selection="config.selection">
-                        <tr v-for="row in rows" :style="rowStyle" @click="emitRowClick(row)">
-                            <td v-if="config.selection" class="invisible"></td>
-                            <td :colspan="cols.length - rightStickyColumns" class="invisible"></td>
-                            <td v-for="col in rightCols"
-                                :style="formatStyle(col, row[col.field])"
-                                :class="formatClass(col, row[col.field])">
-                                <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
-                                    <span v-html="format(row, col)"></span>
-                                </slot>
-                            </td>
-                        </tr>
-                    </table-sticky>
-                </div>
-                <div v-if="hasHeader" class="q-data-table-sticky-right" :style="{right: scroll.vert}">
-                    <table-sticky right
-                                  head
-                                  :sticky-cols="rightStickyColumns"
-                                  :scroll="scroll"
-                                  :cols="cols"
-                                  :sorting="sorting"
-                                  @sort="setSortField"
-                                  :selection="config.selection"></table-sticky>
-                </div>
-            </template>
-        </div>
-
-        <table-pagination v-if="config.pagination"
-                          :pagination="pagination"
-                          :entries="pagination.entries"
-                          :labels="labels"
-                          @paged="paged"
-                          @rowsperpage="rowsPerPage"
-                          @gotopage="goToPage"></table-pagination>
+    <div class="q-data-table-toolbar upper-toolbar row reverse-wrap items-center justify-end q-data-table-selection"
+         v-show="toolbar === 'selection'">
+      <div class="col">
+        {{ rowsSelected }}
+        <span v-if="rowsSelected === 1">{{ labels.selected.singular }}</span>
+        <span v-else>{{ labels.selected.plural }}</span>
+        <q-btn flat small color="primary" @click="clearSelection">{{ labels.clear }}</q-btn>
+      </div>
+      <div>
+        <slot name="selection" :rows="selectedRows"></slot>
+      </div>
     </div>
+
+    <table-filter v-if="filteringCols.length"
+                  @search="search"
+                  :filtering="filtering"
+                  :columns="filteringCols"
+                  :labels="labels"></table-filter>
+
+    <template v-if="responsive">
+      <div v-if="message" class="q-data-table-message row flex-center" v-html="message"></div>
+      <div v-else :style="bodyStyle" style="overflow: auto">
+        <table class="q-table horizontal-separator responsive" ref="body">
+          <tbody>
+          <tr v-for="(row, index) in rows" v-ripple="config.rowRipple" :class="getRowClass(row)" @click="emitRowClick(row)">
+            <td v-if="config.selection && !config.hideMobileSelection">
+              <q-checkbox v-if="config.selection === 'multiple'"
+                          v-model="rowSelection[index]"></q-checkbox>
+              <q-radio v-else v-model="rowSelection[0]" :val="index"></q-radio>
+            </td>
+            <td v-for="col in cols"
+                :data-th="config.hideMobileHeader ? false : col.label"
+                :style="formatStyle(col, row[col.field])"
+                :class="formatClass(col, row[col.field])">
+              <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
+                <span v-html="format(row, col)"></span>
+              </slot>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </template>
+
+    <div v-else
+         class="q-data-table-container"
+         @wheel="mouseWheel"
+         @mousewheel="mouseWheel"
+         @DOMMouseScroll="mouseWheel">
+      <div v-if="hasHeader" class="q-data-table-head" ref="head" :style="{marginRight: scroll.vert}">
+        <table-content head
+                       :cols="cols"
+                       :sorting="sorting"
+                       :scroll="scroll"
+                       :selection="config.selection"
+                       @sort="setSortField"></table-content>
+      </div>
+      <div
+        class="q-data-table-body"
+        :style="bodyStyle"
+        ref="body"
+        @scroll="scrollHandler"
+      >
+        <div v-if="message" class="q-data-table-message row flex-center" v-html="message"></div>
+        <table-content v-else :cols="cols" :selection="config.selection">
+          <tr v-for="row in rows" :style="rowStyle" @click="emitRowClick(row)">
+            <td v-if="config.selection"></td>
+            <td v-if="leftStickyColumns" :colspan="leftStickyColumns"></td>
+            <td v-for="col in regularCols"
+                :style="formatStyle(col, row[col.field])"
+                :class="formatClass(col, row[col.field])">
+              <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
+                <span v-html="format(row, col)"></span>
+              </slot>
+            </td>
+            <td v-if="rightStickyColumns" :colspan="rightStickyColumns"></td>
+          </tr>
+        </table-content>
+      </div>
+
+      <template v-if="!message && (leftStickyColumns || config.selection)">
+        <div
+          class="q-data-table-sticky-left"
+          ref="stickyLeft"
+          :style="{bottom: scroll.horiz}"
+        >
+          <table-sticky :no-header="!hasHeader"
+                        :sticky-cols="leftStickyColumns"
+                        :cols="cols"
+                        :sorting="sorting"
+                        :selection="config.selection">
+            <tr v-for="(row, index) in rows" :style="rowStyle" @click="emitRowClick(row)">
+              <td v-if="config.selection">
+                <q-checkbox v-if="config.selection === 'multiple'"
+                            v-model="rowSelection[index]"></q-checkbox>
+                <q-radio v-else v-model="rowSelection[0]" :val="index"></q-radio>
+              </td>
+              <td v-for="col in leftCols"
+                  :style="formatStyle(col, row[col.field])"
+                  :class="formatClass(col, row[col.field])">
+                <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
+                  <span v-html="format(row, col)"></span>
+                </slot>
+              </td>
+            </tr>
+          </table-sticky>
+        </div>
+        <div v-if="hasHeader" class="q-data-table-sticky-left" :style="{bottom: scroll.horiz}">
+          <table-sticky head
+                        :sticky-cols="leftStickyColumns"
+                        :scroll="scroll"
+                        :cols="cols"
+                        :sorting="sorting"
+                        @sort="setSortField"
+                        :selection="config.selection"></table-sticky>
+        </div>
+      </template>
+
+      <template v-if="!message && rightStickyColumns">
+        <div
+          class="q-data-table-sticky-right"
+          ref="stickyRight"
+          :style="{right: scroll.vert, bottom: scroll.horiz}"
+        >
+          <table-sticky :no-header="!hasHeader"
+                        right
+                        :sticky-cols="rightStickyColumns"
+                        :cols="cols"
+                        :sorting="sorting"
+                        :selection="config.selection">
+            <tr v-for="row in rows" :style="rowStyle" @click="emitRowClick(row)">
+              <td v-if="config.selection" class="invisible"></td>
+              <td :colspan="cols.length - rightStickyColumns" class="invisible"></td>
+              <td v-for="col in rightCols"
+                  :style="formatStyle(col, row[col.field])"
+                  :class="formatClass(col, row[col.field])">
+                <slot :name="'col-'+col.field" :row="row" :col="col" :data="row[col.field]">
+                  <span v-html="format(row, col)"></span>
+                </slot>
+              </td>
+            </tr>
+          </table-sticky>
+        </div>
+        <div v-if="hasHeader" class="q-data-table-sticky-right" :style="{right: scroll.vert}">
+          <table-sticky right
+                        head
+                        :sticky-cols="rightStickyColumns"
+                        :scroll="scroll"
+                        :cols="cols"
+                        :sorting="sorting"
+                        @sort="setSortField"
+                        :selection="config.selection"></table-sticky>
+        </div>
+      </template>
+    </div>
+
+    <table-pagination v-if="config.pagination"
+                      :pagination="pagination"
+                      :entries="pagination.entries"
+                      :labels="labels"
+                      @paged="paged"
+                      @rowsperpage="rowsPerPage"
+                      @gotopage="goToPage"></table-pagination>
+  </div>
 </template>
 
 <script>
@@ -214,6 +214,7 @@
   import { QCheckbox } from '../checkbox'
   import { QRadio } from '../radio'
   import { QTooltip } from '../tooltip'
+  import Ripple from '../../directives/ripple'
 
   export default {
     name: 'q-data-table',
@@ -226,12 +227,13 @@
       TableContent,
       QTooltip
     },
+    directives: {Ripple},
     mixins: [ColumnSelection, Filter, I18n, Pagination, Responsive, RowSelection, Scroll, Sort, StickyColumns],
     props: {
       basic: Boolean,
       data: {
         type: Array,
-        default() {
+        default () {
           return []
         }
       },
@@ -241,12 +243,12 @@
       },
       config: {
         type: Object,
-        default() {
+        default () {
           return {}
         }
       }
     },
-    data() {
+    data () {
       return {
         selected: false,
         toolbar: '',
@@ -254,10 +256,10 @@
       }
     },
     computed: {
-      rows() {
+      rows () {
         let length = this.data.length
 
-        if(!length){
+        if (!length) {
           return []
         }
 
@@ -267,82 +269,94 @@
           row.__index = i
         })
 
-        if(this.basic){
-          if(this.filtering.terms){
+        if (this.basic) {
+          if (this.filtering.terms) {
             rows = this.filter(rows)
           }
 
-          if(this.sorting.field){
+          if (this.sorting.field) {
             this.sort(rows)
           }
 
           this.pagination.entries = rows.length
-          if(this.pagination.rowsPerPage > 0){
+          if (this.pagination.rowsPerPage > 0) {
             rows = this.paginate(rows)
           }
         }
 
         return rows
       },
-      rowStyle() {
-        if(this.config.rowHeight){
+      rowStyle () {
+        if (this.config.rowHeight) {
           return { height: this.config.rowHeight }
         }
       },
-      bodyStyle() {
+      bodyStyle () {
         return this.config.bodyStyle || {}
       },
-      hasToolbar() {
+      hasToolbar () {
         return this.config.title || this.config.columnPicker || this.config.refresh
       },
-      hasHeader() {
+      hasHeader () {
         return !this.config.noHeader
       }
     },
     methods: {
-      paged(offset) {
+      paged (offset) {
         this.$emit('paged', offset)
       },
-      rowsPerPage(rows) {
+      rowsPerPage (rows) {
         this.$emit('rowsperpage', rows)
       },
-      goToPage(page) {
+      goToPage (page) {
         this.$emit('gotopage', page)
       },
-      search(terms) {
+      search (terms) {
         this.$emit('search', terms)
       },
-      resetBody() {
+      resetBody () {
         let body = this.$refs.body
 
-        if(body){
+        if (body) {
           body.scrollTop = 0
         }
         this.pagination.page = 1
       },
-      format(row, col) {
+      format (row, col) {
         return col.format ? col.format(row[col.field], row) : row[col.field]
       },
-      refresh(state) {
-        if(state === false){
+      getRowClass (row) {
+        if (typeof this.config.rowClass === 'function') {
+          return this.config.rowClass(row)
+        }
+      },
+      refresh (state) {
+        if (state === false) {
           this.refreshing = false
         }
-        else if(state === true || !this.refreshing){
+        else if (state === true || !this.refreshing) {
           this.refreshing = true
           this.$emit('refresh', () => {
             this.refreshing = false
           })
         }
       },
-      formatStyle(col, value) {
+      formatStyle (col, value) {
         return typeof col.style === 'function' ? col.style(value) : col.style
       },
-      formatClass(col, value) {
+      formatClass (col, value) {
         return typeof col.classes === 'function' ? col.classes(value) : col.classes
+      },
+      checkMobileColumns () {
+        this.handleResponsive()
+        if (this.responsive && this.config.mobileColumns) {
+          this.columnSelection = this.config.mobileColumns
+        }
       }
     },
-    mounted() {
+    mounted () {
       this.$emit('mounted')
+      this.checkMobileColumns()
     }
   }
 </script>
