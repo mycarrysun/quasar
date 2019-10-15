@@ -13591,6 +13591,18 @@ function isActive$1 () {
   return appIsInProgress
 }
 
+/**
+ * @preserve
+ * Show the loading spinner
+ * @param {{
+ *   delay?: Number,
+ *   message?: Boolean | String,
+ *   spinnerSize?: Number,
+ *   spinnerColor?: String,
+ *   messageColor?: String,
+ *   spinner?: QSpinner
+ * }} [config] - The configuration for the loading spinner
+ */
 function show (ref) {
   if ( ref === void 0 ) ref = {};
   var delay = ref.delay; if ( delay === void 0 ) delay = 500;

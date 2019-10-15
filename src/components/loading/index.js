@@ -14,6 +14,18 @@ function isActive () {
   return appIsInProgress
 }
 
+/**
+ * @preserve
+ * Show the loading spinner
+ * @param {{
+ *   delay?: Number,
+ *   message?: Boolean | String,
+ *   spinnerSize?: Number,
+ *   spinnerColor?: String,
+ *   messageColor?: String,
+ *   spinner?: QSpinner
+ * }} [config] - The configuration for the loading spinner
+ */
 function show ({
   delay = 500,
   message = false,
