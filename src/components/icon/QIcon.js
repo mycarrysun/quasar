@@ -6,7 +6,8 @@ export default {
     mat: String,
     ios: String,
     color: String,
-    size: String
+    size: String,
+    brand: Boolean
   },
   render (h, ctx) {
     let name, text
@@ -23,7 +24,13 @@ export default {
       name = ''
     }
     else if (icon.startsWith('fa-')) {
-      name = `fa ${icon}`
+      name = `${icon}`
+      if (ctx.props.brand) {
+        name += ' fab'
+      }
+      else {
+        name += ' fa'
+      }
     }
     else if (icon.startsWith('ion-') || icon.startsWith('icon-')) {
       name = `${icon}`

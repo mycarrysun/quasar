@@ -217,8 +217,7 @@ export default {
       return !this.disable && !this.readonly
     },
     autocompleteVal () {
-      // generate a unique value always
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+      return 'disabled'
     }
   },
   methods: {
@@ -229,6 +228,7 @@ export default {
       if (this.editable) {
         this.$emit('input', '')
         this.$emit('change', '')
+        this.$emit('cleared')
       }
     },
 

@@ -23,9 +23,9 @@
                 <div class="count" :class="countClasses" v-if="count > 0">
                     <span>{{count}}</span>
                 </div>
-                <q-icon v-if="icon" :name="icon" :class="{'on-left': !round}"></q-icon>
+                <q-icon v-if="icon" :name="icon" :class="{'on-left': !round}" :brand="brandIcon"></q-icon>
                 <slot></slot>
-                <q-icon v-if="!round && iconRight" :name="iconRight" class="on-right"></q-icon>
+                <q-icon v-if="!round && iconRight" :name="iconRight" class="on-right" :brand="brandIcon"></q-icon>
             </template>
         </span>
     </button>
@@ -74,10 +74,11 @@
         default: 0
       },
       countColor: String,
-      countBgColor: String
+      countBgColor: String,
+      brandIcon: Boolean
     },
     data: () => ({
-      _loading: false,
+      _loading: false
     }),
     watch: {
       value (val) {
