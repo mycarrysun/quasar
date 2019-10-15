@@ -24,7 +24,7 @@ function isActive () {
  *   spinnerColor?: String,
  *   messageColor?: String,
  *   spinner?: QSpinner
- * }} [config] - The configuration for the loading spinner
+ * }} [ref] - The configuration for the loading spinner
  */
 function show ({
   delay = 500,
