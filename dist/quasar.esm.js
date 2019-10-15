@@ -13627,7 +13627,7 @@ function isActive$1 () {
  *   spinnerColor?: String,
  *   messageColor?: String,
  *   spinner?: QSpinner
- * }} [config] - The configuration for the loading spinner
+ * }} [ref] - The configuration for the loading spinner
  */
 function show (ref) {
   if ( ref === void 0 ) ref = {};
