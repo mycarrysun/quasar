@@ -21,6 +21,11 @@ export default {
   },
   render (h) {
     return h('div', {
+      attrs: {
+        'aria-label': this.label,
+        role: 'tab',
+        'aria-selected': this.active
+      },
       staticClass: 'q-tab column flex-center relative-position',
       'class': this.classes,
       on: {
