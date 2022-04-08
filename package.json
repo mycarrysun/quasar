@@ -105,6 +105,9 @@
   },
   "dependencies": {
     "moment-timezone": "^0.5.14",
-    "node-sass": "^4.7.2"
+    "node-sass": "^4.9.2"
+  },
+  "engines": {
+    "node": "10"
   }
 }
