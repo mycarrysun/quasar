@@ -11,4 +11,3 @@ cordova
 *.sublime*
 .idea/
 debug.log
-package-lock.json

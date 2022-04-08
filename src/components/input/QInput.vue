@@ -62,6 +62,7 @@
     <input
       v-else
       ref="input"
+      :aria-label="floatLabel || stackLabel"
       class="col q-input-target q-no-input-spinner"
       :class="inputClasses"
 
