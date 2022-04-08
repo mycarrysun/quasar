@@ -34,6 +34,7 @@
 
         <textarea
           ref="input"
+          :aria-label="floatLabel || stackLabel"
           class="col q-input-target q-input-area"
 
           :name="name"
@@ -58,6 +59,7 @@
     <input
       v-else
       ref="input"
+      :aria-label="floatLabel || stackLabel"
       class="col q-input-target"
       :class="[`text-${align}`]"
 
