@@ -59,7 +59,7 @@
     <input
       v-else
       ref="input"
-      :aria-label="(floatLabel || stackLabel || '').replace(' *', '')"
+      :aria-label="(floatLabel || stackLabel || placeholder || '').replace(' *', '')"
       class="col q-input-target"
       :class="[`text-${align}`]"
 
