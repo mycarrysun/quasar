@@ -34,7 +34,7 @@
 
         <textarea
           ref="input"
-          :aria-label="floatLabel || stackLabel"
+          :aria-label="(floatLabel || stackLabel || placeholder).replace(' *', '')"
           class="col q-input-target q-input-area"
 
           :name="name"
