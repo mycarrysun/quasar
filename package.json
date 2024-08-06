@@ -82,7 +82,7 @@
     "rollup-plugin-buble": "^0.15.0",
     "rollup-plugin-json": "^2.1.0",
     "rollup-plugin-local-resolve": "^1.0.7",
-    "rollup-plugin-vue": "2.3.1",
+    "rollup-plugin-vue": "2.5.4",
     "rtlcss": "^2.2.0",
     "shelljs": "^0.7.0",
     "stylint": "^1.5.6",
@@ -104,10 +104,9 @@
     "quasar-extras": "0.x"
   },
   "dependencies": {
-    "moment-timezone": "^0.5.14",
-    "node-sass": "^4.9.2"
+    "moment-timezone": "^0.5.14"
   },
   "engines": {
-    "node": "10"
+    "node": "22"
   }
 }
